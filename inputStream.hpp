@@ -4,27 +4,14 @@
 #include <memory>
 
 #include "optional.hpp"
+#include "utils.hpp"
 
-// Provide a read function which reads from a stream, and returns one character if data is available
+// Provide a read function which reads from a input stream, and returns one character if data is available
 // or -1 if no data is available.
 
-class Stream
+class InputStream
 {
 private:
-    // constexpr uint8_t CALLBACK_STRING = 1;
-    // constexpr uint8_t CALLBACK_INT = 2;
-    // constexpr uint8_t CALLBACK_BYTES = 3;
-    // struct CallbackFunction{
-    //     uint8_t callbackType;
-    //     union{
-    //         std::function<void(std::string)> callbackString;
-    //         std::function<void(int32_t)> callbackVarint;
-    //         struct{
-    //             std::size_t nrBytes;
-    //             std::function<void(uin8_t *)> callbackBytes;
-    //         }
-    //     }
-    // };
     std::queue<std::function<void(void)>> _callbackUpdates;
     const std::function<int32_t(void)> _read;
     uint8_t *const _buffer;
@@ -32,17 +19,17 @@ private:
     std::size_t _bufferIndexStart = 0;
     std::size_t _bufferIndexEnd = 0;
 
-    void reverse(std::size_t count, uint8_t *data)
+    void readAvailableData()
     {
-        std::size_t i = 0, ii = count - 1;
-        uint8_t tmp;
-        while (i < ii)
+        while (true)
         {
-            tmp = data[i];
-            data[i] = data[ii];
-            data[ii] = tmp;
-            i++;
-            ii--;
+            auto byte = this->_read();
+            std::cout << "read: " << byte << "\n";
+            auto done = byte == -1;
+            if (done)
+                break;
+            // TODO: verify that byte never is > 255 (it should not be)
+            this->pushByte(static_cast<uint8_t>(byte));
         }
     }
 
@@ -72,7 +59,6 @@ private:
         }
     }
 
-    // All peak functions does not advance the buffer
     tl::optional<uint8_t> peakByte()
     {
         auto bufferSize = this->bufferSize();
@@ -114,31 +100,43 @@ private:
         return tl::nullopt;
     }
 
-    tl::optional<int32_t> peakVarint(bool dontKnow)
+    tl::optional<int32_t> peakVarint()
     {
+        int32_t b = 0;
+        int32_t result = 0;
+        uint8_t varIntBuffer[5];
+        auto peekedBytes = peakBytes(5, varIntBuffer);
+        for (auto i = 0; i <= 4; i++)
+        {
+            if (peekedBytes <= i)
+                return tl::nullopt;
+            uint8_t b = varIntBuffer[i];
+            result |= (b & 0x7F) << (i * 7);
+            if ((b & 0x80) == 0)
+            {
+                std::cout << "peaked varint: " << result << "\n";
+                return tl::optional<int32_t>(result);
+            }
+        }
+        // This should never happen, (invalid 32-bit integer)
         return tl::nullopt;
     }
 
-    void peakBytes(std::size_t count, uint8_t *res)
+    std::size_t peakBytes(std::size_t count, uint8_t *res)
     {
         auto bufferSize = this->bufferSize();
         std::cout << "peaked bytes "
                   << "buffer size: " << bufferSize << "\n";
-        if (bufferSize >= count)
+
+        std::size_t i = 0, ii = this->_bufferIndexStart;
+        while (i < count && bufferSize > i)
         {
-            std::size_t i = 0, ii = this->_bufferIndexStart;
-            while (i < count)
-            {
-                res[i] = this->_buffer[ii];
-                std::cout << "peaked bytes [" << i << "]: " << static_cast<int32_t>(this->_buffer[ii]) << "\n";
-                i = i + 1;
-                ii = (ii + 1) % this->_bufferCapacity;
-            }
+            res[i] = this->_buffer[ii];
+            std::cout << "peaked bytes [" << i << "]: " << static_cast<int32_t>(this->_buffer[ii]) << "\n";
+            i = i + 1;
+            ii = (ii + 1) % this->_bufferCapacity;
         }
-        else
-        {
-            // TODO: handle wait (not enouth bytes on buffer)
-        }
+        return i + 1;
     }
 
     tl::optional<int16_t> readShort()
@@ -151,15 +149,35 @@ private:
         return value;
     }
 
-    // Advances the start index of buffer
-    void readBytes(std::size_t count, uint8_t *res)
+    tl::optional<int32_t> readVarint()
     {
-        this->peakBytes(count, res);
-        this->moveBuffer(count);
+        auto data = this->peakVarint();
+        if (data)
+        {
+            // Calculate how many bytes where needed when peeking
+            auto nrBytes = 1;
+            while (data.value() >> (nrBytes * 7) != 0)
+            {
+                nrBytes++;
+            }
+            std::cout << "readVarint: nrBytes " << nrBytes << "\n";
+            this->moveBuffer(nrBytes);
+        }
+        return data;
+    }
+    // Advances the start index of buffer
+    bool readBytes(std::size_t count, uint8_t *res)
+    {
+        bool ok = this->peakBytes(count, res);
+        if (ok)
+        {
+            this->moveBuffer(count);
+        }
+        return ok;
     }
 
 public:
-    Stream(
+    InputStream(
         const std::function<int32_t(void)> read,
         uint8_t *const buffer,
         const std::size_t bufferCapacity)
@@ -174,41 +192,41 @@ public:
         // Need a shared pointer to be able to manipulate in callback and
         // Remember next time it's called in update
         auto stringLength = std::make_shared<tl::optional<int16_t>>(tl::nullopt);
-        this->_callbackUpdates.push([=]() -> void {
-            while (true)
-            {
-                auto byte = this->_read();
-                std::cout << "read: " << byte << "\n";
-                auto done = byte == -1;
-                if (done)
-                    break;
-                // TODO: verify that byte never is > 255 (it should not be)
-                this->pushByte(static_cast<uint8_t>(byte));
-            }
-            if (!(*stringLength))
-            {
+        this->_callbackUpdates.push([=]() {
+            this->readAvailableData();
+            if (!*stringLength)
                 *stringLength = readShort();
-            }
-            std::cout << "buffer size: " << this->bufferSize() << "\n";
             auto done = *stringLength && this->bufferSize() >= stringLength->value();
             if (done)
             {
                 auto size = static_cast<std::size_t>(stringLength->value());
+                // TODO: Prone to errors if throwing exceptions in callback function
+                // Fix somehow.
                 char *data = new char[size];
-                std::cout << "done: size " << size << "\n";
-                this->readBytes(size, reinterpret_cast<uint8_t *>(data));
-                std::string result;
-                result.assign(data, size);
-                callback(result);
+                bool ok = this->readBytes(size, reinterpret_cast<uint8_t *>(data));
+                if (ok)
+                {
+                    std::string result;
+                    result.assign(data, size);
+                    callback(result);
+                    this->_callbackUpdates.pop();
+                }
                 free(data);
-                this->_callbackUpdates.pop();
             }
         });
-        std::cout << "Added to callback\n";
     }
 
     void asyncReadVarint(std::function<void(int32_t)> callback)
     {
+        this->_callbackUpdates.push([=]() {
+            this->readAvailableData();
+            auto ok = this->readVarint();
+            if (ok)
+            {
+                callback(ok.value());
+                this->_callbackUpdates.pop();
+            }
+        });
     }
 
     void asyncReadBytes(std::size_t nrBytes, std::function<void(uint8_t *)> callback)
