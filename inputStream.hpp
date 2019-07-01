@@ -110,6 +110,7 @@ private:
         {
             if (peekedBytes <= i)
                 return tl::nullopt;
+
             uint8_t b = varIntBuffer[i];
             result |= (b & 0x7F) << (i * 7);
             if ((b & 0x80) == 0)
@@ -136,7 +137,7 @@ private:
             i = i + 1;
             ii = (ii + 1) % this->_bufferCapacity;
         }
-        return i + 1;
+        return i;
     }
 
     tl::optional<int16_t> readShort()
