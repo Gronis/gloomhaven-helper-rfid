@@ -63,10 +63,11 @@ private:
     {
         auto bufferSize = this->bufferSize();
         uint8_t data;
-        if (bufferSize >= 1)
+        std::size_t count = 1;
+        if (bufferSize >= count)
         {
-            peakBytes(1, &data);
-            return tl::optional<uint8_t>(data);
+            std::size_t actualCount = peakBytes(count, &data);
+            return actualCount == count ? tl::optional<uint8_t>(data) : tl::nullopt;
         }
         return tl::nullopt;
     }
@@ -75,13 +76,14 @@ private:
     {
         auto bufferSize = this->bufferSize();
         uint16_t data;
-        if (bufferSize >= 2)
+        std::size_t count = 2;
+        if (bufferSize >= count)
         {
             uint8_t *dataAsArray = reinterpret_cast<uint8_t *>(&data);
-            peakBytes(2, dataAsArray);
-            reverse(2, dataAsArray);
+            std::size_t actualCount = peakBytes(count, dataAsArray);
+            reverse(count, dataAsArray);
             std::cout << "peaked short: " << data << "\n";
-            return tl::optional<int16_t>(data);
+            return actualCount == count ? tl::optional<int16_t>(data) : tl::nullopt;
         }
         return tl::nullopt;
     }
@@ -90,12 +92,13 @@ private:
     {
         auto bufferSize = this->bufferSize();
         uint32_t data;
-        if (bufferSize >= 4)
+        std::size_t count = 4;
+        if (bufferSize >= count)
         {
             uint8_t *dataAsArray = reinterpret_cast<uint8_t *>(&data);
-            peakBytes(4, dataAsArray);
-            reverse(4, dataAsArray);
-            return tl::optional<int32_t>(data);
+            std::size_t actualCount = peakBytes(count, dataAsArray);
+            reverse(count, dataAsArray);
+            return actualCount == count ? tl::optional<int32_t>(data) : tl::nullopt;
         }
         return tl::nullopt;
     }
@@ -140,12 +143,32 @@ private:
         return i;
     }
 
+    tl::optional<int8_t> readByte()
+    {
+        auto value = this->peakByte();
+        if (value)
+        {
+            this->moveBuffer(1);
+        }
+        return value;
+    }
+
     tl::optional<int16_t> readShort()
     {
         auto value = this->peakShort();
         if (value)
         {
             this->moveBuffer(2);
+        }
+        return value;
+    }
+
+    tl::optional<int32_t> readInt()
+    {
+        auto value = this->peakInt();
+        if (value)
+        {
+            this->moveBuffer(4);
         }
         return value;
     }
@@ -169,12 +192,14 @@ private:
     // Advances the start index of buffer
     bool readBytes(std::size_t count, uint8_t *res)
     {
-        bool ok = this->peakBytes(count, res);
-        if (ok)
+        std::size_t actualCount = this->peakBytes(count, res);
+        if (actualCount == count)
         {
             this->moveBuffer(count);
+            return true;
         }
-        return ok;
+        return false;
+        ;
     }
 
 public:
@@ -204,7 +229,7 @@ public:
                 // TODO: Prone to errors if throwing exceptions in callback function
                 // Fix somehow.
                 char *data = new char[size];
-                bool ok = this->readBytes(size, reinterpret_cast<uint8_t *>(data));
+                int32_t ok = this->readBytes(size, reinterpret_cast<uint8_t *>(data));
                 if (ok)
                 {
                     std::string result;
@@ -230,8 +255,25 @@ public:
         });
     }
 
-    void asyncReadBytes(std::size_t nrBytes, std::function<void(uint8_t *)> callback)
+    void asyncReadBytes(std::size_t count, std::function<void(uint8_t *)> callback)
     {
+        this->_callbackUpdates.push([=]() {
+            this->readAvailableData();
+            bool done = this->bufferSize() >= count;
+            if (done)
+            {
+                // TODO: Prone to errors if throwing exceptions in callback function
+                // Fix somehow.
+                uint8_t *data = new uint8_t[count];
+                bool ok = this->readBytes(count, data);
+                if (ok)
+                {
+                    callback(data);
+                    this->_callbackUpdates.pop();
+                }
+                free(data);
+            }
+        });
     }
 
     void update()
