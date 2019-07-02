@@ -12,7 +12,7 @@
 class InputStream
 {
 private:
-    std::queue<std::function<void(void)>> _callbackUpdates;
+    std::queue<std::function<bool(void)>> _taskQueue;
     const std::function<int32_t(void)> _read;
     uint8_t *const _buffer;
     const std::size_t _bufferCapacity;
@@ -42,6 +42,7 @@ private:
     {
         this->_bufferIndexStart = (this->_bufferIndexStart + steps + this->_bufferCapacity) % this->_bufferCapacity;
         std::cout << "moved buffer size: " << this->bufferSize() << "\n";
+        // TODO: Check and report of we move passed the buffer end. (Buffer underflow?)
     }
 
     // Advances the end index of buffer
@@ -213,12 +214,12 @@ public:
     {
     }
 
-    void asyncReadUTFString(std::function<void(std::string)> callback)
+    void queueReadUTFString(std::function<void(std::string)> callback)
     {
         // Need a shared pointer to be able to manipulate in callback and
         // Remember next time it's called in update
         auto stringLength = std::make_shared<tl::optional<int16_t>>(tl::nullopt);
-        this->_callbackUpdates.push([=]() {
+        this->_taskQueue.push([=]() {
             this->readAvailableData();
             if (!*stringLength)
                 *stringLength = readShort();
@@ -235,29 +236,33 @@ public:
                     std::string result;
                     result.assign(data, size);
                     callback(result);
-                    this->_callbackUpdates.pop();
+                    this->_taskQueue.pop();
+                    return true;
                 }
                 free(data);
             }
+            return false;
         });
     }
 
-    void asyncReadVarint(std::function<void(int32_t)> callback)
+    void queueReadVarint(std::function<void(int32_t)> callback)
     {
-        this->_callbackUpdates.push([=]() {
+        this->_taskQueue.push([=]() {
             this->readAvailableData();
             auto ok = this->readVarint();
             if (ok)
             {
                 callback(ok.value());
-                this->_callbackUpdates.pop();
+                this->_taskQueue.pop();
+                return true;
             }
+            return false;
         });
     }
 
-    void asyncReadBytes(std::size_t count, std::function<void(uint8_t *)> callback)
+    void queueReadBytes(std::size_t count, std::function<void(uint8_t *)> callback)
     {
-        this->_callbackUpdates.push([=]() {
+        this->_taskQueue.push([=]() {
             this->readAvailableData();
             bool done = this->bufferSize() >= count;
             if (done)
@@ -269,20 +274,28 @@ public:
                 if (ok)
                 {
                     callback(data);
-                    this->_callbackUpdates.pop();
+                    this->_taskQueue.pop();
                 }
                 free(data);
+                return true;
             }
+            return false;
         });
     }
 
-    void update()
+    void update(std::function<void(void)> ifEmptyCallThis)
     {
-        if (!this->_callbackUpdates.empty())
+        auto stalled = false;
+        while (!stalled && !this->_taskQueue.empty())
         {
             std::cout << "Running Update\n";
-            auto updateFunction = this->_callbackUpdates.front();
-            updateFunction();
+            auto task = this->_taskQueue.front();
+            auto done = task();
+            stalled = !done;
+        }
+        if (this->_taskQueue.empty())
+        {
+            ifEmptyCallThis();
         }
     }
 };
