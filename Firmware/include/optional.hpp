@@ -1552,19 +1552,25 @@ public:
     {
         if (has_value())
             return this->m_value;
+#ifndef ARDUINO
         throw bad_optional_access();
+#endif
     }
     TL_OPTIONAL_11_CONSTEXPR const T &value() const &
     {
         if (has_value())
             return this->m_value;
+#ifndef ARDUINO
         throw bad_optional_access();
+#endif
     }
     TL_OPTIONAL_11_CONSTEXPR T &&value() &&
     {
         if (has_value())
             return std::move(this->m_value);
+#ifndef ARDUINO
         throw bad_optional_access();
+#endif
     }
 
 #ifndef TL_OPTIONAL_NO_CONSTRR
@@ -1572,7 +1578,9 @@ public:
     {
         if (has_value())
             return std::move(this->m_value);
+#ifndef ARDUINO
         throw bad_optional_access();
+#endif
     }
 #endif
 

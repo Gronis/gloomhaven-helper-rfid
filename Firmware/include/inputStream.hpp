@@ -1,3 +1,6 @@
+#ifndef __INPUT_STREAM_H__
+#define __INPUT_STREAM_H__
+
 #include <functional>
 #include <string>
 #include <queue>
@@ -24,7 +27,8 @@ private:
         while (true)
         {
             auto byte = this->_read();
-            std::cout << "read: " << byte << "\n";
+            // TODO: Use compatible print function
+            // std::cout << "read: " << byte << "\n";
             auto done = byte == -1;
             if (done)
                 break;
@@ -41,7 +45,8 @@ private:
     void moveBuffer(int32_t steps)
     {
         this->_bufferIndexStart = (this->_bufferIndexStart + steps + this->_bufferCapacity) % this->_bufferCapacity;
-        std::cout << "moved buffer size: " << this->bufferSize() << "\n";
+        // TODO: Use compatible print function
+        // std::cout << "moved buffer size: " << this->bufferSize() << "\n";
         // TODO: Check and report of we move passed the buffer end. (Buffer underflow?)
     }
 
@@ -83,7 +88,8 @@ private:
             uint8_t *dataAsArray = reinterpret_cast<uint8_t *>(&data);
             std::size_t actualCount = peakBytes(count, dataAsArray);
             reverse(count, dataAsArray);
-            std::cout << "peaked short: " << data << "\n";
+            // TODO: Use compatible print function
+            // std::cout << "peaked short: " << data << "\n";
             return actualCount == count ? tl::optional<int16_t>(data) : tl::nullopt;
         }
         return tl::nullopt;
@@ -119,7 +125,8 @@ private:
             result |= (b & 0x7F) << (i * 7);
             if ((b & 0x80) == 0)
             {
-                std::cout << "peaked varint: " << result << "\n";
+                // TODO: Use compatible print function
+                // std::cout << "peaked varint: " << result << "\n";
                 return tl::optional<int32_t>(result);
             }
         }
@@ -130,14 +137,15 @@ private:
     std::size_t peakBytes(std::size_t count, uint8_t *res)
     {
         auto bufferSize = this->bufferSize();
-        std::cout << "peaked bytes "
-                  << "buffer size: " << bufferSize << "\n";
+        // TODO: Use compatible print function
+        // std::cout << "peaked bytes " << "buffer size: " << bufferSize << "\n";
 
         std::size_t i = 0, ii = this->_bufferIndexStart;
         while (i < count && bufferSize > i)
         {
             res[i] = this->_buffer[ii];
-            std::cout << "peaked bytes [" << i << "]: " << static_cast<int32_t>(this->_buffer[ii]) << "\n";
+            // TODO: Use compatible print function
+            // std::cout << "peaked bytes [" << i << "]: " << static_cast<int32_t>(this->_buffer[ii]) << "\n";
             i = i + 1;
             ii = (ii + 1) % this->_bufferCapacity;
         }
@@ -185,7 +193,8 @@ private:
             {
                 nrBytes++;
             }
-            std::cout << "readVarint: nrBytes " << nrBytes << "\n";
+            // TODO: Use compatible print function
+            // std::cout << "readVarint: nrBytes " << nrBytes << "\n";
             this->moveBuffer(nrBytes);
         }
         return data;
@@ -288,7 +297,8 @@ public:
         auto stalled = false;
         while (!stalled && !this->_taskQueue.empty())
         {
-            std::cout << "Running Update\n";
+            // TODO: Use compatible print function
+            // std::cout << "Running Update\n";
             auto task = this->_taskQueue.front();
             auto done = task();
             stalled = !done;
@@ -299,3 +309,5 @@ public:
         }
     }
 };
+
+#endif // __INPUT_STREAM_H__
