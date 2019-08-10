@@ -1,6 +1,7 @@
 #include <vector>
 #include <stdint.h>
 
+#include "message.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
 #include "packet.hpp"
@@ -31,6 +32,22 @@ std::size_t input_buffer_index = 0;
 void receive(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
 {
     ghr::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
+    ghr::Message msg(data, dataLength);
+    if (event[0] == 's')
+    {
+        ghr::print("Got int: ", msg.readInt(true), "\n");
+        ghr::print("Got int: ", msg.readInt(true), "\n");
+        ghr::print("Got int: ", msg.readInt(true), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+        ghr::print("Got bool: ", msg.readBoolean(), "\n");
+    }
 }
 
 const int32_t read_dummy_data()
