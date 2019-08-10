@@ -27,13 +27,17 @@
  */
 
 #include <vector>
-//#include <iostream>
 #include <stdint.h>
 
+#ifdef ARDUINO
 #include <Arduino.h>
 #include <rdm6300.h>
 #include <SoftwareSerial.h>
+#else
+#include <iostream>
+#endif // ARDUINO
 
+#include "print.hpp"
 #include "inputStream.hpp"
 #include "utils.hpp"
 
@@ -67,33 +71,6 @@ void updateBlinkingSequence()
   }
 }
 
-void setup()
-{
-  /* Serial1 is the debug! remember to bridge GPIO-01 to GPIO-02 (D4 and TX on ESP8266) */
-  Serial1.begin(115200);
-
-  pinMode(READ_LED_PIN, OUTPUT);
-  digitalWrite(READ_LED_PIN, LOW);
-
-  rdm6300.begin(RDM6300_RX_PIN);
-  Serial1.println("\nPlace RFID tag near the rdm6300...");
-  startBlinkingSequence();
-}
-int main();
-
-void loop()
-{
-  /* if non-zero tag_id, update() returns true- a new tag is near! */
-  if (rdm6300.update())
-  {
-    Serial1.println(rdm6300.get_tag_id(), DEC);
-    startBlinkingSequence();
-    main();
-  }
-  updateBlinkingSequence();
-  delay(10);
-}
-
 // const std::vector<const int32_t> input_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1};
 const std::vector<int32_t> input_buffer{
     0x00, -1, 0x05, 0x76, -1, 0x20, 0x37, -1, 0x2e, 0x36, -1, 0x00, 0x00, 0x01, 0x73, -1,
@@ -118,14 +95,7 @@ std::size_t input_buffer_index = 0;
 
 void receive(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
 {
-  Serial1.print("Event: ");
-  Serial1.print(event.c_str());
-  Serial1.print(", payload: ");
-  Serial1.print(payload.c_str());
-  Serial1.print(", data length: ");
-  Serial1.print(dataLength);
-  Serial1.print("\n");
-  //std::cout << "Event: " << event << ", payload: " << payload << ", data length: " << dataLength << "\n";
+  ghr::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
 }
 
 const int32_t read_dummy_data()
@@ -140,57 +110,58 @@ const std::size_t bufferCapacity = 1024;
 uint8_t buffer[bufferCapacity];
 InputStream input(&read_dummy_data, buffer, bufferCapacity);
 
-int main()
+auto getMsg = []() {
+  auto event = std::make_shared<std::string>();
+  auto payload = std::make_shared<std::string>();
+  input.queueReadUTFString([=](std::string message) {
+    std::size_t index = message.find(" ");
+    if (index != -1)
+    {
+      *event = trim(message.substr(0, index));
+      *payload = trim(message.substr(index + 1));
+    }
+    else
+    {
+      *event = trim(message);
+      *payload = "";
+    }
+  });
+  input.queueReadVarint([=](int32_t dataLength) {
+    if (dataLength > 0)
+    {
+      input.queueReadBytes(dataLength, [=](uint8_t *data) {
+        receive(*event, *payload, data, dataLength);
+      });
+    }
+    else
+    {
+      receive(*event, *payload, nullptr, 0);
+    }
+  });
+};
+
+void setup()
 {
-  // input.queueReadVarint([](int32_t result) {
-  //     std::cout << "Result: \"" << result << "\"\n";
-  // });
-  // input.queueReadVarint([](int32_t result) {
-  //     std::cout << "Result: \"" << result << "\"\n";
-  // });
-  // input.queueReadVarint([](int32_t result) {
-  //     std::cout << "Result: \"" << result << "\"\n";
-  // });
-  // input.queueReadUTFString([](std::string result) {
-  //     std::cout << "Result: \"" << result << "\"\n";
-  // });
+  /* Serial1 is the debug! remember to bridge GPIO-01 to GPIO-02 (D4 and TX on ESP8266) */
+  Serial1.begin(115200);
 
-  // input.onData([]() {
+  pinMode(READ_LED_PIN, OUTPUT);
+  digitalWrite(READ_LED_PIN, LOW);
 
-  // });
+  rdm6300.begin(RDM6300_RX_PIN);
+  Serial1.println("\nPlace RFID tag near the rdm6300...");
+  startBlinkingSequence();
+}
 
-  auto getMsg = []() {
-    auto event = std::make_shared<std::string>();
-    auto payload = std::make_shared<std::string>();
-    input.queueReadUTFString([=](std::string message) {
-      std::size_t index = message.find(" ");
-      if (index != -1)
-      {
-        *event = trim(message.substr(0, index));
-        *payload = trim(message.substr(index + 1));
-      }
-      else
-      {
-        *event = trim(message);
-        *payload = "";
-      }
-    });
-    input.queueReadVarint([=](int32_t dataLength) {
-      if (dataLength > 0)
-      {
-        input.queueReadBytes(dataLength, [=](uint8_t *data) {
-          receive(*event, *payload, data, dataLength);
-        });
-      }
-      else
-      {
-        receive(*event, *payload, nullptr, 0);
-      }
-    });
-  };
-
-  for (auto i = 0; i < 10; i++)
+void loop()
+{
+  /* if non-zero tag_id, update() returns true- a new tag is near! */
+  if (rdm6300.update())
   {
-    input.update(getMsg);
+    Serial1.println(rdm6300.get_tag_id(), DEC);
+    startBlinkingSequence();
   }
+  updateBlinkingSequence();
+  input.update(getMsg);
+  delay(10);
 }
