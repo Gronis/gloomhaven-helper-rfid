@@ -2,7 +2,8 @@
 #define __ATTACK_MODIFIER_H__
 
 #include <vector>
-#include <iostream>
+
+#include "print.hpp"
 
 namespace ghr
 {
@@ -58,11 +59,11 @@ std::vector<AttackModifier> getAttackModifierValues()
         AttackModifier::value22};
 }
 
-} // namespace ghr
-
-std::ostream &operator<<(std::ostream &os, ghr::AttackModifier const &p)
+void print(AttackModifier &arg)
 {
-    return os << (unsigned int)p;
+    ghr::print((unsigned int)arg);
 }
+
+} // namespace ghr
 
 #endif // __ATTACK_MODIFIER_H__

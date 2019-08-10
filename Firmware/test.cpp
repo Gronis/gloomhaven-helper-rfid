@@ -62,7 +62,7 @@ void receive(std::string event, std::string payload, uint8_t *data, std::size_t 
         ghr::print("Got player init: ", msg.readEnum(ghr::getPlayerInitValues()), "\n");
         msg.readEnumArray(attackModifiers, ghr::getAttackModifierValues());
 
-        for (auto am : attackModifiers)
+        for (auto &&am : attackModifiers)
         {
             ghr::print("attack modifier: ", am, "\n");
         }

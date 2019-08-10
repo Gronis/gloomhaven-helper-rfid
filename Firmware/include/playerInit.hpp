@@ -2,7 +2,8 @@
 #define __PLAYER_INIT_H__
 
 #include <vector>
-#include <iostream>
+
+#include "print.hpp"
 
 namespace ghr
 {
@@ -26,24 +27,28 @@ std::vector<PlayerInit> getPlayerInitValues()
         PlayerInit::value5};
 }
 
-} // namespace ghr
-
-std::ostream &operator<<(std::ostream &os, ghr::PlayerInit const &p)
+void print(PlayerInit &arg)
 {
-    switch (p)
+    switch (arg)
     {
-    case ghr::PlayerInit::PLANNING_ROUND:
-        return os << "planning round";
-    case ghr::PlayerInit::PLAYING_ROUND:
-        return os << "playing round";
-    case ghr::PlayerInit::value3:
-        return os << "value3";
-    case ghr::PlayerInit::value4:
-        return os << "value4";
-    case ghr::PlayerInit::value5:
-        return os << "value5";
+    case PlayerInit::PLANNING_ROUND:
+        ghr::print("planning round");
+        break;
+    case PlayerInit::PLAYING_ROUND:
+        ghr::print("playing round");
+        break;
+    case PlayerInit::value3:
+        ghr::print("value3");
+        break;
+    case PlayerInit::value4:
+        ghr::print("value4");
+        break;
+    case PlayerInit::value5:
+        ghr::print("value5");
+        break;
     }
-    return os;
 }
+
+} // namespace ghr
 
 #endif // __PLAYER_INIT_H__

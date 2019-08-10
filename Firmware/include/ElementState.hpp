@@ -2,7 +2,8 @@
 #define __ELEMENT_STATE_H__
 
 #include <vector>
-#include <iostream>
+
+#include "print.hpp"
 
 namespace ghr
 {
@@ -20,20 +21,22 @@ std::vector<ElementState> getElementStateValues()
         ElementState::STRONG};
 }
 
-} // namespace ghr
-
-std::ostream &operator<<(std::ostream &os, ghr::ElementState const &p)
+void print(ElementState &arg)
 {
-    switch (p)
+    switch (arg)
     {
-    case ghr::ElementState::INERT:
-        return os << "inert";
-    case ghr::ElementState::WANING:
-        return os << "waning";
-    case ghr::ElementState::STRONG:
-        return os << "strong";
+    case ElementState::INERT:
+        ghr::print("inert");
+        break;
+    case ElementState::WANING:
+        ghr::print("waning");
+        break;
+    case ElementState::STRONG:
+        ghr::print("strong");
+        break;
     }
-    return os;
 }
+
+} // namespace ghr
 
 #endif // __ELEMENT_STATE_H__
