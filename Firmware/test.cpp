@@ -3,6 +3,7 @@
 
 #include "print.hpp"
 #include "inputStream.hpp"
+#include "packet.hpp"
 #include "utils.hpp"
 
 // const std::vector<const int32_t> input_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1};
@@ -42,7 +43,8 @@ const int32_t read_dummy_data()
 }
 const std::size_t bufferCapacity = 1024;
 uint8_t buffer[bufferCapacity];
-InputStream input(&read_dummy_data, buffer, bufferCapacity);
+ghr::InputStream input(&read_dummy_data, buffer, bufferCapacity);
+ghr::Packet packet(receive, input);
 
 int main()
 {
@@ -63,38 +65,8 @@ int main()
 
     // });
 
-    auto getMsg = []() {
-        auto event = std::make_shared<std::string>();
-        auto payload = std::make_shared<std::string>();
-        input.queueReadUTFString([=](std::string message) {
-            std::size_t index = message.find(" ");
-            if (index != -1)
-            {
-                *event = trim(message.substr(0, index));
-                *payload = trim(message.substr(index + 1));
-            }
-            else
-            {
-                *event = trim(message);
-                *payload = "";
-            }
-        });
-        input.queueReadVarint([=](int32_t dataLength) {
-            if (dataLength > 0)
-            {
-                input.queueReadBytes(dataLength, [=](uint8_t *data) {
-                    receive(*event, *payload, data, dataLength);
-                });
-            }
-            else
-            {
-                receive(*event, *payload, nullptr, 0);
-            }
-        });
-    };
-
     for (auto i = 0; i < 10; i++)
     {
-        input.update(getMsg);
+        packet.update();
     }
 }

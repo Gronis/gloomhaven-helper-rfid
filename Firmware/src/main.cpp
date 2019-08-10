@@ -37,6 +37,8 @@
 #include <iostream>
 #endif // ARDUINO
 
+#include "led.hpp"
+#include "packet.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
 #include "utils.hpp"
@@ -45,31 +47,9 @@
 
 #define READ_LED_PIN 16 // D0
 
-#define ANALOG_WRITE_HIGH 1024
-
 // SoftwareSerial rfid = SoftwareSerial(RDM6300_RX_PIN, 3);
 
 Rdm6300 rdm6300;
-
-unsigned long blinkingMillisStart;
-
-void startBlinkingSequence()
-{
-  blinkingMillisStart = millis();
-}
-
-void updateBlinkingSequence()
-{
-  unsigned long deltaTime = millis() - blinkingMillisStart;
-  if (deltaTime > 314)
-  {
-    analogWrite(READ_LED_PIN, 0);
-  }
-  else
-  {
-    analogWrite(READ_LED_PIN, ANALOG_WRITE_HIGH * (1 - cos(((double)deltaTime) / 50)) / 2);
-  }
-}
 
 // const std::vector<const int32_t> input_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1};
 const std::vector<int32_t> input_buffer{
@@ -108,49 +88,17 @@ const int32_t read_dummy_data()
 }
 const std::size_t bufferCapacity = 1024;
 uint8_t buffer[bufferCapacity];
-InputStream input(&read_dummy_data, buffer, bufferCapacity);
-
-auto getMsg = []() {
-  auto event = std::make_shared<std::string>();
-  auto payload = std::make_shared<std::string>();
-  input.queueReadUTFString([=](std::string message) {
-    std::size_t index = message.find(" ");
-    if (index != -1)
-    {
-      *event = trim(message.substr(0, index));
-      *payload = trim(message.substr(index + 1));
-    }
-    else
-    {
-      *event = trim(message);
-      *payload = "";
-    }
-  });
-  input.queueReadVarint([=](int32_t dataLength) {
-    if (dataLength > 0)
-    {
-      input.queueReadBytes(dataLength, [=](uint8_t *data) {
-        receive(*event, *payload, data, dataLength);
-      });
-    }
-    else
-    {
-      receive(*event, *payload, nullptr, 0);
-    }
-  });
-};
+ghr::InputStream input(&read_dummy_data, buffer, bufferCapacity);
+ghr::Packet packet(receive, input);
+ghr::Led led(READ_LED_PIN);
 
 void setup()
 {
   /* Serial1 is the debug! remember to bridge GPIO-01 to GPIO-02 (D4 and TX on ESP8266) */
   Serial1.begin(115200);
 
-  pinMode(READ_LED_PIN, OUTPUT);
-  digitalWrite(READ_LED_PIN, LOW);
-
   rdm6300.begin(RDM6300_RX_PIN);
   Serial1.println("\nPlace RFID tag near the rdm6300...");
-  startBlinkingSequence();
 }
 
 void loop()
@@ -159,9 +107,9 @@ void loop()
   if (rdm6300.update())
   {
     Serial1.println(rdm6300.get_tag_id(), DEC);
-    startBlinkingSequence();
+    led.blink(1);
   }
-  updateBlinkingSequence();
-  input.update(getMsg);
+  led.update();
+  packet.update();
   delay(10);
 }

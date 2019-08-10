@@ -1,5 +1,9 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
+
+namespace ghr
+{
+
 template <typename T>
 void reverse(std::size_t count, T *data)
 {
@@ -41,4 +45,5 @@ static inline std::string trim(std::string s)
     return s;
 }
 
+} // namespace ghr
 #endif // __UTILS_H__

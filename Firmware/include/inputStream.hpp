@@ -13,6 +13,9 @@
 // Provide a read function which reads from a input stream, and returns one character if data is available
 // or -1 if no data is available.
 
+namespace ghr
+{
+
 class InputStream
 {
 private:
@@ -307,5 +310,7 @@ public:
         }
     }
 };
+
+} // namespace ghr
 
 #endif // __INPUT_STREAM_H__
