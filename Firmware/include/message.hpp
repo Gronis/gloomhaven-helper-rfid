@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string>
 
+#include "optional.hpp"
 #include "encoding.hpp"
 
 namespace ghr
@@ -36,14 +37,83 @@ public:
         ghr::writeInt(this->__data, this->__position, value, optimizePositive);
     }
 
+    uint8_t readByte()
+    {
+        return ghr::readByte(this->__data, this->__position);
+    }
+
+    void writeByte(uint8_t value)
+    {
+        ghr::writeByte(this->__data, this->__position, value);
+    }
+
     bool readBoolean()
     {
-        return ghr::readBoolean(this->__data, this->__position);
+        return readByte();
     }
 
     void writeBoolean(bool value)
     {
-        ghr::writeBoolean(this->__data, this->__position, value);
+        writeByte(value);
+    }
+
+    template <typename T>
+    void writeEnum(T value)
+    {
+        writeInt(value, true);
+    }
+
+    template <typename T>
+    T readEnum(std::vector<T> values)
+    {
+        return values[readInt(true)];
+    }
+
+    template <typename T>
+    void writeEnumOrNull(tl::optional<T> value)
+    {
+        if (!value)
+            writeByte(0);
+        else
+            writeInt(value.value() + 1, true);
+    }
+
+    template <typename T>
+    tl::optional<T> readEnumOrNull(std::vector<T> values)
+    {
+        int value = readInt(true);
+        if (value == 0)
+            return tl::nullopt;
+        return tl::optional<T>(values[value - 1]);
+    }
+
+    template <typename T>
+    int writeArrayStart(std::vector<T> vec)
+    {
+        int size = vec.size();
+        writeInt(size, true);
+        return size;
+    }
+
+    template <typename T>
+    void writeEnumArray(std::vector<T> vec)
+    {
+        int length = vec.size();
+        writeInt(length, true);
+        if (length == 0)
+            return;
+        for (int i = 0, n = vec.size(); i < n; i++)
+            writeEnum(vec[i]);
+    }
+
+    template <typename T>
+    std::vector<T> readEnumArray(std::vector<T> vec, std::vector<T> values)
+    {
+        int length = readInt(true);
+        vec.reserve(length);
+        for (int i = 0; i < length; i++)
+            vec.push_back(readEnum(values));
+        return vec;
     }
 };
 
