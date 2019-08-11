@@ -2,11 +2,14 @@
 #define __GAME_STATE_H__
 
 #include <vector>
+#include <map>
 
 #include "optional.hpp"
 #include "print.hpp"
 
 // Model
+#include "actor.hpp"
+#include "monsterAbilityDeck.hpp"
 #include "attackModifier.hpp"
 #include "playerInit.hpp"
 #include "elementState.hpp"
@@ -28,15 +31,17 @@ struct GameState
     bool can_draw;
     bool needs_shuffle;
     PlayerInit player_init;
-    std::vector<AttackModifier> attackModifiers;
-    tl::optional<AttackModifier> attackModifier1;
-    tl::optional<AttackModifier> attackModifier2;
+    std::vector<AttackModifier> attack_modifiers;
+    tl::optional<AttackModifier> attack_modifier1;
+    tl::optional<AttackModifier> attack_modifier2;
     ElementState fire;
     ElementState ice;
     ElementState air;
     ElementState earth;
     ElementState light;
     ElementState dark;
+    std::map<int, MonsterAbilityDeck> ability_decks;
+    std::vector<Actor> actors;
 
     GameState() : round(0),
                   scenario_number(0),
@@ -51,15 +56,17 @@ struct GameState
                   can_draw(false),
                   needs_shuffle(false),
                   player_init(PlayerInit::value1),
-                  attackModifiers({}),
-                  attackModifier1(tl::nullopt),
-                  attackModifier2(tl::nullopt),
-                  fire(ElementState::INERT),
-                  ice(ElementState::INERT),
-                  air(ElementState::INERT),
-                  earth(ElementState::INERT),
-                  light(ElementState::INERT),
-                  dark(ElementState::INERT)
+                  attack_modifiers({}),
+                  attack_modifier1(tl::nullopt),
+                  attack_modifier2(tl::nullopt),
+                  fire(ElementState::Inert),
+                  ice(ElementState::Inert),
+                  air(ElementState::Inert),
+                  earth(ElementState::Inert),
+                  light(ElementState::Inert),
+                  dark(ElementState::Inert),
+                  ability_decks(),
+                  actors()
     {
     }
 };
@@ -79,17 +86,17 @@ void print(GameState &arg)
     ghr::print("can draw: ", arg.can_draw, "\n");
     ghr::print("needs shuffle: ", arg.needs_shuffle, "\n");
     ghr::print("player init: ", arg.player_init, "\n");
-    for (auto &&am : arg.attackModifiers)
+    for (auto &&am : arg.attack_modifiers)
     {
         ghr::print("attack modifier: ", am, "\n");
     }
-    if (arg.attackModifier1)
+    if (arg.attack_modifier1)
     {
-        ghr::print("attack modifier 1: ", arg.attackModifier1.value(), "\n");
+        ghr::print("attack modifier 1: ", arg.attack_modifier1.value(), "\n");
     }
-    if (arg.attackModifier2)
+    if (arg.attack_modifier2)
     {
-        ghr::print("attack modifier 2: ", arg.attackModifier2.value(), "\n");
+        ghr::print("attack modifier 2: ", arg.attack_modifier2.value(), "\n");
     }
     ghr::print("fire state:  ", arg.fire, "\n");
     ghr::print("ics state:   ", arg.ice, "\n");
@@ -97,6 +104,15 @@ void print(GameState &arg)
     ghr::print("earth state: ", arg.earth, "\n");
     ghr::print("light state: ", arg.light, "\n");
     ghr::print("dark state:  ", arg.dark, "\n");
+    for (auto &&ab : arg.ability_decks)
+    {
+        MonsterAbilityDeck deck = ab.second;
+        ghr::print("monster ability deck: ", deck);
+    }
+    for (auto &&a : arg.actors)
+    {
+        ghr::print("actor: ", a);
+    }
 }
 
 } // namespace ghr

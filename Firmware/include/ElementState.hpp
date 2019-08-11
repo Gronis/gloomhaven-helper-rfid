@@ -9,30 +9,30 @@ namespace ghr
 {
 enum class ElementState
 {
-    INERT,
-    WANING,
-    STRONG
+    Inert,
+    Waning,
+    Strong
 };
 std::vector<ElementState> getElementStateValues()
 {
     return {
-        ElementState::INERT,
-        ElementState::WANING,
-        ElementState::STRONG};
+        ElementState::Inert,
+        ElementState::Waning,
+        ElementState::Strong};
 }
 
 void print(ElementState &arg)
 {
     switch (arg)
     {
-    case ElementState::INERT:
-        ghr::print("inert");
+    case ElementState::Inert:
+        ghr::print("Inert");
         break;
-    case ElementState::WANING:
-        ghr::print("waning");
+    case ElementState::Waning:
+        ghr::print("Waning");
         break;
-    case ElementState::STRONG:
-        ghr::print("strong");
+    case ElementState::Strong:
+        ghr::print("Strong");
         break;
     }
 }

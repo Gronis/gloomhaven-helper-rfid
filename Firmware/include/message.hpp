@@ -6,6 +6,7 @@
 
 #include "optional.hpp"
 #include "encoding.hpp"
+#include "readString.hpp"
 
 namespace ghr
 {
@@ -29,22 +30,22 @@ public:
 
     int readInt(bool optimizePositive)
     {
-        return ghr::readInt(this->__data, this->__position, optimizePositive);
+        return ghr::readInt(__data, __position, optimizePositive);
     }
 
     void writeInt(int value, bool optimizePositive)
     {
-        ghr::writeInt(this->__data, this->__position, value, optimizePositive);
+        ghr::writeInt(__data, __position, value, optimizePositive);
     }
 
     uint8_t readByte()
     {
-        return ghr::readByte(this->__data, this->__position);
+        return ghr::readByte(__data, __position);
     }
 
     void writeByte(uint8_t value)
     {
-        ghr::writeByte(this->__data, this->__position, value);
+        ghr::writeByte(__data, __position, value);
     }
 
     bool readBoolean()
@@ -55,6 +56,16 @@ public:
     void writeBoolean(bool value)
     {
         writeByte(value);
+    }
+
+    tl::optional<std::string> readString()
+    {
+        return ghr::readString(__data, __position);
+    }
+
+    void writeString(tl::optional<std::string>)
+    {
+        // TODO: implement
     }
 
     template <typename T>
@@ -107,13 +118,12 @@ public:
     }
 
     template <typename T>
-    std::vector<T> readEnumArray(std::vector<T> vec, std::vector<T> values)
+    void readEnumArray(std::vector<T> &vec, std::vector<T> values)
     {
         int length = readInt(true);
         vec.reserve(length);
         for (int i = 0; i < length; i++)
             vec.push_back(readEnum(values));
-        return vec;
     }
 };
 
