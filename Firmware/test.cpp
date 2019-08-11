@@ -1,3 +1,12 @@
+// Sockets
+#include <stdio.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <string.h>
+#include <thread>
+#include <chrono>
+
 #include <vector>
 #include <stdint.h>
 
@@ -8,6 +17,9 @@
 #include "inputStream.hpp"
 #include "packet.hpp"
 #include "utils.hpp"
+
+const uint16_t port = 58888;
+const char *host = "127.0.0.1";
 
 // const std::vector<const int32_t> input_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1};
 // const std::vector<int32_t> input_buffer{
@@ -83,7 +95,6 @@ const std::vector<int32_t> input_buffer{
 // const std::vector<const int32_t> input_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1, 0x00, -1, 0x05, 0x76, -1, 0x20, 0x37, -1, 0x2e, 0x36};
 // const std::vector<const int32_t> input_buffer{0xa0, -1, 0x01};
 // const std::vector<const int32_t> input_buffer{0xa0, -1, 0x01, -1, -1, 0xa0, -1, 0x01, 0xa0, 0x01};
-std::size_t input_buffer_index = 0;
 
 void on_packet(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
 {
@@ -102,40 +113,62 @@ void on_packet(std::string event, std::string payload, uint8_t *data, std::size_
     }
 }
 
-const int32_t read_dummy_data()
-{
-    if (input_buffer_index < input_buffer.size())
-    {
-        return input_buffer[input_buffer_index++];
-    }
-    return -1;
-}
-const std::size_t bufferCapacity = 1024;
-uint8_t buffer[bufferCapacity];
-ghr::InputStream input(&read_dummy_data, buffer, bufferCapacity);
-ghr::Packet packet(on_packet, input);
-
 int main()
 {
-    // input.queueReadVarint([](int32_t result) {
-    //     std::cout << "Result: \"" << result << "\"\n";
-    // });
-    // input.queueReadVarint([](int32_t result) {
-    //     std::cout << "Result: \"" << result << "\"\n";
-    // });
-    // input.queueReadVarint([](int32_t result) {
-    //     std::cout << "Result: \"" << result << "\"\n";
-    // });
-    // input.queueReadUTFString([](std::string result) {
-    //     std::cout << "Result: \"" << result << "\"\n";
-    // });
-
-    // input.onData([]() {
-
-    // });
-
-    for (auto i = 0; i < 10; i++)
+    ghr::print("Start\n");
+    int sock = 0, valread;
+    struct sockaddr_in serv_addr;
+    const std::size_t bufferCapacity = 1024;
+    uint8_t buffer[bufferCapacity];
+    std::size_t end = 0, current = 0;
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
+        printf("\n Socket creation error \n");
+        return -1;
+    }
+
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(port);
+
+    // Convert IPv4 and IPv6 addresses from text to binary form
+    if (inet_pton(AF_INET, host, &serv_addr.sin_addr) <= 0)
+    {
+        printf("\nInvalid address/ Address not supported \n");
+        return -1;
+    }
+
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    {
+        printf("\nConnection Failed \n");
+        return -1;
+    }
+    ghr::print("Connected\n");
+
+    auto read_network_data = [&]() {
+        if (end == -1)
+        {
+            return -1;
+        }
+        if (current < end)
+        {
+            ghr::print("Got: ", (int)buffer[current], ", current: ", current, "\n");
+            return (int)buffer[current++];
+        }
+        return -1;
+    };
+
+    ghr::InputStream input(read_network_data, buffer, bufferCapacity);
+    ghr::Packet packet(on_packet, input);
+
+    while (true)
+    {
+        if (current >= end)
+        {
+            end = read(sock, (char *)buffer, bufferCapacity);
+            ghr::print("Read network: ", end, "\n");
+            current = 0;
+        }
         packet.update();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
