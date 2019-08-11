@@ -6,6 +6,7 @@
 #include "optional.hpp"
 #include "print.hpp"
 
+#include "monsterInstance.hpp"
 #include "monsterActor.hpp"
 #include "playerActor.hpp"
 
@@ -15,10 +16,13 @@ struct Actor
 {
     //private:
     bool __is_player;
-    union {
-        MonsterActor __monster;
-        PlayerActor __player;
-    };
+    // TODO: put in a union. For this to work, copy constructor, destructor and assignment operator
+    // must be implemented (See further down). However, arduino crashes with the current
+    // implementation. This solusion is less memory efficient, but it works.
+    MonsterActor __monster;
+    PlayerActor __player;
+    // union {
+    // };
 
     //public:
     bool turn_completed = false;
@@ -31,32 +35,59 @@ struct Actor
     {
     }
 
-    Actor(const Actor &actor)
-    {
-        __is_player = actor.__is_player;
-        if (__is_player)
-        {
-            __player = actor.__player;
-        }
-        else
-        {
-            __monster = actor.__monster;
-        }
-        turn_completed = actor.turn_completed;
-        instances = actor.instances;
-    }
+    // TODO: Use copy constructor, destructor, assignment operator when union is used (see top).
+    //
+    // Actor(const Actor &other)
+    // {
+    //     __is_player = other.__is_player;
+    //     if (__is_player)
+    //     {
+    //         __player = other.__player;
+    //     }
+    //     else
+    //     {
+    //         __monster = other.__monster;
+    //     }
+    //     turn_completed = other.turn_completed;
+    //     instances.reserve(other.instances.size());
+    //     for (auto &&instance : other.instances)
+    //     {
+    //         instances.push_back(instance);
+    //     }
+    // }
 
-    ~Actor()
-    {
-        if (__is_player)
-        {
-            __player.~PlayerActor();
-        }
-        else
-        {
-            __monster.~MonsterActor();
-        }
-    }
+    // ~Actor()
+    // {
+    //     if (__is_player)
+    //     {
+    //         (&__player)->PlayerActor::~PlayerActor();
+    //     }
+    //     else
+    //     {
+    //         (&__monster)->MonsterActor::~MonsterActor();
+    //     }
+    //     (&instances)->vector<MonsterInstance>::~vector<MonsterInstance>();
+    // }
+
+    // Actor &operator=(Actor &other)
+    // {
+    //     __is_player = other.__is_player;
+    //     if (other.__is_player)
+    //     {
+    //         __player = other.__player;
+    //     }
+    //     else
+    //     {
+    //         __monster = other.__monster;
+    //     }
+    //     turn_completed = other.turn_completed;
+    //     instances.reserve(other.instances.size());
+    //     for (auto &&instance : other.instances)
+    //     {
+    //         instances.push_back(instance);
+    //     }
+    //     return *this;
+    // }
 
     tl::optional<MonsterActor &> getMonster()
     {

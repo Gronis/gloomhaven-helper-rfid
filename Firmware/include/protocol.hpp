@@ -88,11 +88,9 @@ Actor __parsePlayerActor(Message &msg)
     msg.readEnumArray(player.conditions_current_turn, getConditionValues());
     player.exhausted = msg.readBoolean();
 
-    print("parsing player\n");
-    print(player);
-
     Actor actor(player);
     __parseCommonActor(msg, actor);
+    print("returning after parsing player actor\n");
     return actor;
 }
 
@@ -133,8 +131,6 @@ void parseGameState(Message &msg, GameState &state)
     state.light = msg.readEnum(ghr::getElementStateValues());
     state.dark = msg.readEnum(ghr::getElementStateValues());
 
-    print("Size of actor: ", sizeof(Actor), "\n");
-
     for (int i = 0, n = msg.readInt(true); i < n; i++)
     {
         auto deck = MonsterAbilityDeck(msg.readInt(true));
@@ -154,15 +150,19 @@ void parseGameState(Message &msg, GameState &state)
         if (msg.readBoolean())
         {
             Actor actor = __parsePlayerActor(msg);
-            state.actors.push_back(std::move(actor));
+            print(actor);
+            print("parsed player actor retured. pushing to gamestate\n");
+            state.actors.push_back(actor);
             print("parsing player end\n");
         }
         else
         {
-            Actor &&actor = __parseMonsterActor(msg);
-            state.actors.push_back(std::move(actor));
+            Actor actor = __parseMonsterActor(msg);
+            print(actor);
+            //state.actors.push_back(actor);
             print("parsing monster end\n");
         }
+        print("deleted temp actor successfully\n");
     }
 
     print(state);

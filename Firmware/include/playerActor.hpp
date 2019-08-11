@@ -6,6 +6,7 @@
 
 #include "print.hpp"
 
+#include "condition.hpp"
 #include "characterClass.hpp"
 
 namespace ghr

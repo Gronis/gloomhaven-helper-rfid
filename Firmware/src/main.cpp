@@ -37,9 +37,8 @@
 #include <iostream>
 #endif // ARDUINO
 
-#include "attackModifier.hpp"
-#include "elementState.hpp"
-#include "playerInit.hpp"
+#include "gameState.hpp"
+#include "protocol.hpp"
 #include "message.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
@@ -72,10 +71,8 @@ const std::vector<int32_t> input_buffer{
     0x06, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00
 
 };
-// const std::vector<const int32_t> input_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1, 0x00, -1, 0x05, 0x76, -1, 0x20, 0x37, -1, 0x2e, 0x36};
-// const std::vector<const int32_t> input_buffer{0xa0, -1, 0x01};
-// const std::vector<const int32_t> input_buffer{0xa0, -1, 0x01, -1, -1, 0xa0, -1, 0x01, 0xa0, 0x01};
 std::size_t input_buffer_index = 0;
+ghr::GameState state;
 
 void receive(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
 {
@@ -92,35 +89,7 @@ void receive(std::string event, std::string payload, uint8_t *data, std::size_t 
     msg.readByte();
     msg.readByte();
 
-    ghr::print("Got round: ", msg.readInt(true), "\n");
-    ghr::print("Got scen nr: ", msg.readInt(true), "\n");
-    ghr::print("Got scen lvl: ", msg.readInt(true), "\n");
-    ghr::print("Got track standees: ", msg.readBoolean(), "\n");
-    ghr::print("Got rand standees: ", msg.readBoolean(), "\n");
-    ghr::print("Got elite first: ", msg.readBoolean(), "\n");
-    ghr::print("Got expire cond: ", msg.readBoolean(), "\n");
-    ghr::print("Got solo: ", msg.readBoolean(), "\n");
-    ghr::print("Got hide stats: ", msg.readBoolean(), "\n");
-    ghr::print("Got calc stats: ", msg.readBoolean(), "\n");
-    ghr::print("Got can draw: ", msg.readBoolean(), "\n");
-    ghr::print("Got needs shuffle: ", msg.readBoolean(), "\n");
-    ghr::print("Got player init: ", msg.readEnum(ghr::getPlayerInitValues()), "\n");
-    msg.readEnumArray(attackModifiers, ghr::getAttackModifierValues());
-
-    for (auto &&am : attackModifiers)
-    {
-      ghr::print("attack modifier: ", am, "\n");
-    }
-
-    ghr::print("Got attack modifier 1: ", msg.readEnumOrNull(ghr::getAttackModifierValues()).has_value(), "\n");
-    ghr::print("Got attack modifier 2: ", msg.readEnumOrNull(ghr::getAttackModifierValues()).has_value(), "\n");
-
-    ghr::print("Got fire state:  ", msg.readEnum(ghr::getElementStateValues()), "\n");
-    ghr::print("Got ics state:   ", msg.readEnum(ghr::getElementStateValues()), "\n");
-    ghr::print("Got air state:   ", msg.readEnum(ghr::getElementStateValues()), "\n");
-    ghr::print("Got earth state: ", msg.readEnum(ghr::getElementStateValues()), "\n");
-    ghr::print("Got light state: ", msg.readEnum(ghr::getElementStateValues()), "\n");
-    ghr::print("Got dark state:  ", msg.readEnum(ghr::getElementStateValues()), "\n");
+    ghr::parseGameState(msg, state);
   }
 }
 

@@ -2417,13 +2417,17 @@ public:
     {
         if (has_value())
             return *m_value;
+#ifndef ARDUINO
         throw bad_optional_access();
+#endif
     }
     TL_OPTIONAL_11_CONSTEXPR const T &value() const
     {
         if (has_value())
             return *m_value;
+#ifndef ARDUINO
         throw bad_optional_access();
+#endif
     }
 
     /// Returns the stored value if there is one, otherwise returns `u`
