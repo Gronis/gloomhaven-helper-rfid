@@ -10,8 +10,8 @@ namespace ghr
 enum class PlayerInit
 {
     // These are guessed
-    PLANNING_ROUND,
-    PLAYING_ROUND,
+    value1,
+    value2,
     value3,
     value4,
     value5
@@ -20,8 +20,8 @@ enum class PlayerInit
 std::vector<PlayerInit> getPlayerInitValues()
 {
     return {
-        PlayerInit::PLANNING_ROUND,
-        PlayerInit::PLAYING_ROUND,
+        PlayerInit::value1,
+        PlayerInit::value2,
         PlayerInit::value3,
         PlayerInit::value4,
         PlayerInit::value5};
@@ -31,11 +31,11 @@ void print(PlayerInit &arg)
 {
     switch (arg)
     {
-    case PlayerInit::PLANNING_ROUND:
-        ghr::print("planning round");
+    case PlayerInit::value1:
+        ghr::print("value1");
         break;
-    case PlayerInit::PLAYING_ROUND:
-        ghr::print("playing round");
+    case PlayerInit::value2:
+        ghr::print("value2");
         break;
     case PlayerInit::value3:
         ghr::print("value3");

@@ -1,9 +1,7 @@
 #include <vector>
 #include <stdint.h>
 
-#include "AttackModifier.hpp"
-#include "ElementState.hpp"
-#include "playerInit.hpp"
+#include "gameState.hpp"
 #include "message.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
@@ -32,14 +30,13 @@ const std::vector<int32_t> input_buffer{
 // const std::vector<const int32_t> input_buffer{0xa0, -1, 0x01, -1, -1, 0xa0, -1, 0x01, 0xa0, 0x01};
 std::size_t input_buffer_index = 0;
 
-void receive(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
+void on_packet(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
 {
     ghr::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
     ghr::Message msg(data, dataLength);
     if (event[0] == 's')
     {
-
-        std::vector<ghr::AttackModifier> attackModifiers = {};
+        ghr::GameState state;
 
         // 4 bytes representing message number. Throw away for now
         msg.readByte();
@@ -47,44 +44,30 @@ void receive(std::string event, std::string payload, uint8_t *data, std::size_t 
         msg.readByte();
         msg.readByte();
 
-        ghr::print("Got round: ", msg.readInt(true), "\n");
-        ghr::print("Got scen nr: ", msg.readInt(true), "\n");
-        ghr::print("Got scen lvl: ", msg.readInt(true), "\n");
-        ghr::print("Got track standees: ", msg.readBoolean(), "\n");
-        ghr::print("Got rand standees: ", msg.readBoolean(), "\n");
-        ghr::print("Got elite first: ", msg.readBoolean(), "\n");
-        ghr::print("Got expire cond: ", msg.readBoolean(), "\n");
-        ghr::print("Got solo: ", msg.readBoolean(), "\n");
-        ghr::print("Got hide stats: ", msg.readBoolean(), "\n");
-        ghr::print("Got calc stats: ", msg.readBoolean(), "\n");
-        ghr::print("Got can draw: ", msg.readBoolean(), "\n");
-        ghr::print("Got needs shuffle: ", msg.readBoolean(), "\n");
-        ghr::print("Got player init: ", msg.readEnum(ghr::getPlayerInitValues()), "\n");
-        msg.readEnumArray(attackModifiers, ghr::getAttackModifierValues());
+        state.round = msg.readInt(true);
+        state.scenario_number = msg.readInt(true);
+        state.scenario_level = msg.readInt(true);
+        state.track_standees = msg.readBoolean();
+        state.random_standees = msg.readBoolean();
+        state.elites_first = msg.readBoolean();
+        state.expire_conditions = msg.readBoolean();
+        state.solo = msg.readBoolean();
+        state.hide_stats = msg.readBoolean();
+        state.calculate_stats = msg.readBoolean();
+        state.can_draw = msg.readBoolean();
+        state.needs_shuffle = msg.readBoolean();
+        state.player_init = msg.readEnum(ghr::getPlayerInitValues());
+        msg.readEnumArray(state.attackModifiers, ghr::getAttackModifierValues());
+        state.attackModifier1 = msg.readEnumOrNull(ghr::getAttackModifierValues());
+        state.attackModifier2 = msg.readEnumOrNull(ghr::getAttackModifierValues());
+        state.fire = msg.readEnum(ghr::getElementStateValues());
+        state.ice = msg.readEnum(ghr::getElementStateValues());
+        state.air = msg.readEnum(ghr::getElementStateValues());
+        state.earth = msg.readEnum(ghr::getElementStateValues());
+        state.light = msg.readEnum(ghr::getElementStateValues());
+        state.dark = msg.readEnum(ghr::getElementStateValues());
 
-        for (auto &&am : attackModifiers)
-        {
-            ghr::print("attack modifier: ", am, "\n");
-        }
-
-        ghr::print("Got attack modifier 1: ", msg.readEnumOrNull(ghr::getAttackModifierValues()).has_value(), "\n");
-        ghr::print("Got attack modifier 2: ", msg.readEnumOrNull(ghr::getAttackModifierValues()).has_value(), "\n");
-
-        ghr::print("Got fire state:  ", msg.readEnum(ghr::getElementStateValues()), "\n");
-        ghr::print("Got ics state:   ", msg.readEnum(ghr::getElementStateValues()), "\n");
-        ghr::print("Got air state:   ", msg.readEnum(ghr::getElementStateValues()), "\n");
-        ghr::print("Got earth state: ", msg.readEnum(ghr::getElementStateValues()), "\n");
-        ghr::print("Got light state: ", msg.readEnum(ghr::getElementStateValues()), "\n");
-        ghr::print("Got dark state:  ", msg.readEnum(ghr::getElementStateValues()), "\n");
-
-        // state.attackModifier1 = readEnumOrNull(input, AttackModifier.values);
-        // state.attackModifier2 = readEnumOrNull(input, AttackModifier.values);
-        // state.fire = readEnum(input, ElementState.values);
-        // state.ice = readEnum(input, ElementState.values);
-        // state.air = readEnum(input, ElementState.values);
-        // state.earth = readEnum(input, ElementState.values);
-        // state.light = readEnum(input, ElementState.values);
-        // state.dark = readEnum(input, ElementState.values);
+        ghr::print(state);
     }
 }
 
@@ -99,7 +82,7 @@ const int32_t read_dummy_data()
 const std::size_t bufferCapacity = 1024;
 uint8_t buffer[bufferCapacity];
 ghr::InputStream input(&read_dummy_data, buffer, bufferCapacity);
-ghr::Packet packet(receive, input);
+ghr::Packet packet(on_packet, input);
 
 int main()
 {
