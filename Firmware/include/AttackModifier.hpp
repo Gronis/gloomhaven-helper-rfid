@@ -9,59 +9,63 @@ namespace ghr
 {
 enum class AttackModifier
 {
-    value1,
-    value2,
-    value3,
-    value4,
-    value5,
-    value6,
-    value7,
-    value8,
-    value9,
-    value10,
-    value11,
-    value12,
-    value13,
-    value14,
-    value15,
-    value16,
-    value17,
-    value18,
-    value19,
-    value20,
-    value21,
-    value22,
+    Zero,
+    Plus1,
+    Plus2,
+    Minus1,
+    Minus2,
+    Miss,
+    Crit,
+    Bless,
+    Curse,
 };
 std::vector<AttackModifier> getAttackModifierValues()
 {
     return {
-        AttackModifier::value1,
-        AttackModifier::value2,
-        AttackModifier::value3,
-        AttackModifier::value4,
-        AttackModifier::value5,
-        AttackModifier::value6,
-        AttackModifier::value7,
-        AttackModifier::value8,
-        AttackModifier::value9,
-        AttackModifier::value10,
-        AttackModifier::value11,
-        AttackModifier::value12,
-        AttackModifier::value13,
-        AttackModifier::value14,
-        AttackModifier::value15,
-        AttackModifier::value16,
-        AttackModifier::value17,
-        AttackModifier::value18,
-        AttackModifier::value19,
-        AttackModifier::value20,
-        AttackModifier::value21,
-        AttackModifier::value22};
+        AttackModifier::Zero,
+        AttackModifier::Plus1,
+        AttackModifier::Plus2,
+        AttackModifier::Minus1,
+        AttackModifier::Minus2,
+        AttackModifier::Miss,
+        AttackModifier::Crit,
+        AttackModifier::Bless,
+        AttackModifier::Curse,
+    };
 }
 
 void print(AttackModifier &arg)
 {
-    ghr::print((unsigned int)arg);
+    switch (arg)
+    {
+    case AttackModifier::Zero:
+        ghr::print("0");
+        break;
+    case AttackModifier::Plus1:
+        ghr::print("+1");
+        break;
+    case AttackModifier::Plus2:
+        ghr::print("+2");
+        break;
+    case AttackModifier::Minus1:
+        ghr::print("-1");
+        break;
+    case AttackModifier::Minus2:
+        ghr::print("-2");
+        break;
+    case AttackModifier::Miss:
+        ghr::print("x0");
+        break;
+    case AttackModifier::Crit:
+        ghr::print("x2");
+        break;
+    case AttackModifier::Bless:
+        ghr::print("x2*");
+        break;
+    case AttackModifier::Curse:
+        ghr::print("x0*");
+        break;
+    }
 }
 
 } // namespace ghr

@@ -10,15 +10,15 @@ namespace ghr
 enum class ElementState
 {
     Inert,
-    Waning,
-    Strong
+    Strong,
+    Waning
 };
 std::vector<ElementState> getElementStateValues()
 {
     return {
         ElementState::Inert,
-        ElementState::Waning,
-        ElementState::Strong};
+        ElementState::Strong,
+        ElementState::Waning};
 }
 
 void print(ElementState &arg)

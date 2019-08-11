@@ -10,8 +10,8 @@ namespace ghr
 enum class Condition
 {
     value1,
+    value2,
     Summon,
-    value3,
     Stuned,
     Immobilized,
     Disarmed,
@@ -33,8 +33,8 @@ std::vector<Condition> getConditionValues()
 {
     return {
         Condition::value1,
+        Condition::value2,
         Condition::Summon,
-        Condition::value3,
         Condition::Stuned,
         Condition::Immobilized,
         Condition::Disarmed,
@@ -60,11 +60,11 @@ void print(Condition &arg)
     case Condition::value1:
         ghr::print("value1");
         break;
+    case Condition::value2:
+        ghr::print("value2");
+        break;
     case Condition::Summon:
         ghr::print("Summon");
-        break;
-    case Condition::value3:
-        ghr::print("value3");
         break;
     case Condition::Stuned:
         ghr::print("Stuned");

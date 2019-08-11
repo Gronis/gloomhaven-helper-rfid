@@ -69,6 +69,12 @@ struct GameState
                   actors()
     {
     }
+    void clear()
+    {
+        attack_modifiers.clear();
+        actors.clear();
+        ability_decks.clear();
+    }
 };
 
 void print(GameState &arg)

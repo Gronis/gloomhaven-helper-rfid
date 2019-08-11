@@ -33,8 +33,8 @@
 #include <Arduino.h>
 #include <rdm6300.h>
 #include <SoftwareSerial.h>
+#include <ESP8266WiFi.h>
 #else
-#include <iostream>
 #endif // ARDUINO
 
 #include "gameState.hpp"
@@ -53,6 +53,13 @@
 // SoftwareSerial rfid = SoftwareSerial(RDM6300_RX_PIN, 3);
 
 Rdm6300 rdm6300;
+
+const char *ssid = "Gloomhaven Helper";
+const char *password = "gloom123";
+const uint16_t port = 58888;
+const char *host = "192.168.4.2";
+WiFiClient client;
+bool connected = false;
 
 // const std::vector<const int32_t> input_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1};
 const std::vector<int32_t> input_buffer{
@@ -88,7 +95,7 @@ void receive(std::string event, std::string payload, uint8_t *data, std::size_t 
     msg.readByte();
     msg.readByte();
     msg.readByte();
-
+    state.clear();
     ghr::parseGameState(msg, state);
   }
 }
@@ -101,9 +108,19 @@ const int32_t read_dummy_data()
   }
   return -1;
 }
+
+const int32_t read()
+{
+  if (client.available())
+  {
+    return client.read();
+  }
+  return -1;
+}
+
 const std::size_t bufferCapacity = 1024;
 uint8_t buffer[bufferCapacity];
-ghr::InputStream input(&read_dummy_data, buffer, bufferCapacity);
+ghr::InputStream input(&read, buffer, bufferCapacity);
 ghr::Packet packet(receive, input);
 ghr::Led led(READ_LED_PIN);
 
@@ -112,12 +129,30 @@ void setup()
   /* Serial1 is the debug! remember to bridge GPIO-01 to GPIO-02 (D4 and TX on ESP8266) */
   Serial1.begin(115200);
 
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(ssid, password); // Start the access point
+  Serial1.print("Access Point \"");
+  Serial1.print(ssid);
+  Serial1.println("\" started");
+
+  Serial1.print("IP address:\t");
+  Serial1.println(WiFi.softAPIP()); // Send the IP address of the ESP8266 to the computer
+
   rdm6300.begin(RDM6300_RX_PIN);
   Serial1.println("\nPlace RFID tag near the rdm6300...");
 }
 
 void loop()
 {
+  if (!connected)
+  {
+    Serial1.println("Connecting");
+  }
+  if (!connected && client.connect(host, port))
+  {
+    Serial1.println("Connected!");
+    connected = true;
+  }
   /* if non-zero tag_id, update() returns true- a new tag is near! */
   if (rdm6300.update())
   {

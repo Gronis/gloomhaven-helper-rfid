@@ -97,11 +97,11 @@ Actor __parsePlayerActor(Message &msg)
 Actor __parseMonsterActor(Message &msg)
 {
     MonsterActor monster = MonsterActor();
-    Actor actor(monster);
-    monster.data = msg.readInt(true);
     monster.id = msg.readInt(true);
+    monster.level = msg.readInt(true);
     monster.is_normal = msg.readBoolean();
     monster.is_elite = msg.readBoolean();
+    Actor actor(monster);
     __parseCommonActor(msg, actor);
     return actor;
 }
@@ -134,11 +134,11 @@ void parseGameState(Message &msg, GameState &state)
     for (int i = 0, n = msg.readInt(true); i < n; i++)
     {
         auto deck = MonsterAbilityDeck(msg.readInt(true));
-        state.ability_decks[deck.id] = deck;
         deck.shown = msg.readBoolean();
         deck.was_shown = msg.readBoolean();
         for (int ii = 0, nn = msg.readInt(true); ii < nn; ii++)
             deck.abilities.push_back(msg.readInt(true));
+        state.ability_decks[deck.id] = deck;
     }
 
     int n = msg.readInt(true);
@@ -159,7 +159,7 @@ void parseGameState(Message &msg, GameState &state)
         {
             Actor actor = __parseMonsterActor(msg);
             print(actor);
-            //state.actors.push_back(actor);
+            state.actors.push_back(actor);
             print("parsing monster end\n");
         }
         print("deleted temp actor successfully\n");
