@@ -1,2 +1,5 @@
-a.out
+.pio
 .vscode
+.DS_Store
+.piolibdeps
+a.out
