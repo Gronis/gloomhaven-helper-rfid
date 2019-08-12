@@ -57,9 +57,47 @@ Rdm6300 rdm6300;
 const char *ssid = "Gloomhaven Helper";
 const char *password = "gloom123";
 const uint16_t port = 58888;
-const char *host = "192.168.4.2";
+String host;
 WiFiClient client;
 bool connected = false;
+boolean waitingDHCP = false;
+char last_mac[18];
+
+// Manage incoming device connection on ESP access point
+void onNewStation(WiFiEventSoftAPModeStationConnected sta_info)
+{
+  Serial1.println("New Station :");
+  sprintf(last_mac, "%02X:%02X:%02X:%02X:%02X:%02X", MAC2STR(sta_info.mac));
+  Serial1.printf("MAC address : %s\n", last_mac);
+  Serial1.printf("Id : %d\n", sta_info.aid);
+  waitingDHCP = true;
+}
+
+boolean deviceIP(char *mac_device, String &cb)
+{
+
+  struct station_info *station_list = wifi_softap_get_station_info();
+
+  while (station_list != NULL)
+  {
+    char station_mac[18] = {0};
+    sprintf(station_mac, "%02X:%02X:%02X:%02X:%02X:%02X", MAC2STR(station_list->bssid));
+    String station_ip = IPAddress((&station_list->ip)->addr).toString();
+
+    if (strcmp(mac_device, station_mac) == 0)
+    {
+      waitingDHCP = false;
+      cb = station_ip;
+      return true;
+    }
+
+    station_list = STAILQ_NEXT(station_list, next);
+  }
+
+  wifi_softap_free_station_info();
+  cb = "";
+  return false;
+}
 
 // const std::vector<const int32_t> input_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1};
 const std::vector<int32_t> input_buffer{
@@ -140,24 +178,43 @@ void setup()
 
   rdm6300.begin(RDM6300_RX_PIN);
   Serial1.println("\nPlace RFID tag near the rdm6300...");
+  led.blink(10000, 0.15);
+
+  static WiFiEventHandler e1;
+  e1 = WiFi.onSoftAPModeStationConnected(onNewStation);
 }
 
 void loop()
 {
-  if (!connected)
+  if (!client.connected())
   {
-    Serial1.println("Connecting");
+    if (waitingDHCP)
+    {
+      if (deviceIP(last_mac, host))
+      {
+        ghr::print("New host: ", host, "\n");
+      }
+      if (host.length() > 0)
+      {
+        led.blink(0, 1.0);
+        ghr::print("Connecting to ", host, "\n");
+        if (client.connect(host, port))
+        {
+          Serial1.println("Connected!");
+          connected = true;
+          led.blink(3, 4.0);
+        }
+      }
+    }
   }
-  if (!connected && client.connect(host, port))
+  if (client.connected())
   {
-    Serial1.println("Connected!");
-    connected = true;
-  }
-  /* if non-zero tag_id, update() returns true- a new tag is near! */
-  if (rdm6300.update())
-  {
-    Serial1.println(rdm6300.get_tag_id(), DEC);
-    led.blink(1);
+    /* if non-zero tag_id, update() returns true- a new tag is near! */
+    if (rdm6300.update())
+    {
+      Serial1.println(rdm6300.get_tag_id(), DEC);
+      led.blink(1, 1.0);
+    }
   }
   led.update();
   packet.update();

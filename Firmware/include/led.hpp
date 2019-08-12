@@ -14,17 +14,20 @@ class Led
 private:
     unsigned long __end_time;
     unsigned int __pin;
+    double __speed;
 
 public:
     Led(unsigned int pin) : __pin(pin)
     {
         pinMode(pin, OUTPUT);
         digitalWrite(pin, LOW);
-        this->blink(0);
+        this->blink(0, 1.0);
     }
-    void blink(unsigned int nr_blinks)
+    void blink(unsigned int nr_blinks, double speed)
     {
-        this->__end_time = millis() + 314 * nr_blinks;
+        this->__speed = speed;
+        this->__end_time = millis() + (unsigned long)(314 * nr_blinks / __speed);
+        update();
     }
 
     void update()
@@ -36,7 +39,7 @@ public:
         }
         else
         {
-            analogWrite(this->__pin, ANALOG_WRITE_HIGH * (1 - cos(((double)deltaTime) / 50)) / 2);
+            analogWrite(this->__pin, ANALOG_WRITE_HIGH * (1 - cos(((double)deltaTime * __speed) / 50)) / 2);
         }
     }
 };
