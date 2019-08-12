@@ -28,6 +28,10 @@ public:
     {
     }
 
+    std::size_t getPosition(){
+        return __position;
+    }
+
     int readInt(bool optimizePositive)
     {
         return ghr::readInt(__data, __position, optimizePositive);
@@ -56,6 +60,24 @@ public:
     void writeBoolean(bool value)
     {
         writeByte(value);
+    }
+
+    int readFullInt()
+    {
+        int value;
+        reinterpret_cast<uint8_t *>(&value)[3] = readByte();
+        reinterpret_cast<uint8_t *>(&value)[2] = readByte();
+        reinterpret_cast<uint8_t *>(&value)[1] = readByte();
+        reinterpret_cast<uint8_t *>(&value)[0] = readByte();
+        return value;
+    }
+
+    void writeFullInt(int value)
+    {
+        writeByte(reinterpret_cast<uint8_t *>(&value)[3]);
+        writeByte(reinterpret_cast<uint8_t *>(&value)[2]);
+        writeByte(reinterpret_cast<uint8_t *>(&value)[1]);
+        writeByte(reinterpret_cast<uint8_t *>(&value)[0]);
     }
 
     tl::optional<std::string> readString()

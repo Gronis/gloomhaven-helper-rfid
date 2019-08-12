@@ -42,7 +42,7 @@
 #include "message.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
-#include "packet.hpp"
+#include "header.hpp"
 #include "utils.hpp"
 #include "led.hpp"
 
@@ -57,9 +57,8 @@ Rdm6300 rdm6300;
 const char *ssid = "Gloomhaven Helper";
 const char *password = "gloom123";
 const uint16_t port = 58888;
-String host;
+String last_host;
 WiFiClient client;
-bool connected = false;
 boolean waitingDHCP = false;
 char last_mac[18];
 
@@ -159,7 +158,7 @@ const int32_t read()
 const std::size_t bufferCapacity = 1024;
 uint8_t buffer[bufferCapacity];
 ghr::InputStream input(&read, buffer, bufferCapacity);
-ghr::Packet packet(receive, input);
+ghr::Header header(receive, input);
 ghr::Led led(READ_LED_PIN);
 
 void setup()
@@ -186,24 +185,23 @@ void setup()
 
 void loop()
 {
-  if (!client.connected())
+  if (waitingDHCP)
   {
-    if (waitingDHCP)
+    if (deviceIP(last_mac, last_host))
     {
-      if (deviceIP(last_mac, host))
+      ghr::print("New host connected: ", last_host, "\n");
+    }
+    if (last_host.length() > 0)
+    {
+      led.blink(0, 1.0);
+      ghr::print("Connecting to ", last_host, "\n");
+      WiFiClient tmp_client;
+      if (tmp_client.connect(last_host, port))
       {
-        ghr::print("New host: ", host, "\n");
-      }
-      if (host.length() > 0)
-      {
-        led.blink(0, 1.0);
-        ghr::print("Connecting to ", host, "\n");
-        if (client.connect(host, port))
-        {
-          Serial1.println("Connected!");
-          connected = true;
-          led.blink(3, 4.0);
-        }
+        Serial1.println("Connected!");
+        last_host = "";
+        client = tmp_client;
+        led.blink(3, 4.0);
       }
     }
   }
@@ -217,6 +215,6 @@ void loop()
     }
   }
   led.update();
-  packet.update();
+  header.update();
   delay(10);
 }
