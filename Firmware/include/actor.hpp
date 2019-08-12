@@ -97,6 +97,15 @@ struct Actor
     {
         return __is_player ? tl::optional<PlayerActor &>(__player) : tl::nullopt;
     }
+
+    tl::optional<const MonsterActor &> getMonster() const
+    {
+        return __is_player ? tl::nullopt : tl::optional<const MonsterActor &>(__monster);
+    }
+    tl::optional<const PlayerActor &> getPlayer() const
+    {
+        return __is_player ? tl::optional<const PlayerActor &>(__player) : tl::nullopt;
+    }
 };
 
 void print(Actor &arg)

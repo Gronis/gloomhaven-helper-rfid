@@ -61,8 +61,11 @@ public:
 
     void send_data(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
     {
-        __write_header(event, payload, dataLength);
+        //We have one byte = 0 extra in the end of the message
+        __write_header(event, payload, dataLength + 1);
         __output.writeBytes(data, dataLength);
+        uint8_t zero[3] = {0, 0, 0};
+        __output.writeBytes(zero, 1);
     }
 
     void update()

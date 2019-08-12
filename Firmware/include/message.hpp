@@ -6,7 +6,6 @@
 
 #include "optional.hpp"
 #include "encoding.hpp"
-#include "readString.hpp"
 
 namespace ghr
 {
@@ -86,9 +85,9 @@ public:
         return ghr::readString(__data, __position);
     }
 
-    void writeString(tl::optional<std::string>)
+    void writeString(tl::optional<std::string> value)
     {
-        // TODO: implement
+        ghr::writeString(__data, __position, value);
     }
 
     template <typename T>

@@ -14,7 +14,7 @@
 namespace ghr
 {
 
-void __parseCommonActor(Message &msg, Actor &actor)
+void __readCommonActor(Message &msg, Actor &actor)
 {
     print("parsing common actor\n");
     actor.turn_completed = msg.readBoolean();
@@ -64,7 +64,7 @@ void __parseCommonActor(Message &msg, Actor &actor)
     print("parding common actor done\n");
 }
 
-Actor __parsePlayerActor(Message &msg)
+Actor __readPlayerActor(Message &msg)
 {
     PlayerActor player;
     auto name = msg.readString();
@@ -89,12 +89,12 @@ Actor __parsePlayerActor(Message &msg)
     player.exhausted = msg.readBoolean();
 
     Actor actor(player);
-    __parseCommonActor(msg, actor);
+    __readCommonActor(msg, actor);
     print("returning after parsing player actor\n");
     return actor;
 }
 
-Actor __parseMonsterActor(Message &msg)
+Actor __readMonsterActor(Message &msg)
 {
     MonsterActor monster = MonsterActor();
     monster.id = msg.readInt(true);
@@ -102,7 +102,7 @@ Actor __parseMonsterActor(Message &msg)
     monster.is_normal = msg.readBoolean();
     monster.is_elite = msg.readBoolean();
     Actor actor(monster);
-    __parseCommonActor(msg, actor);
+    __readCommonActor(msg, actor);
     return actor;
 }
 
@@ -149,7 +149,7 @@ void readGameState(Message &msg, GameState &state)
 
         if (msg.readBoolean())
         {
-            Actor actor = __parsePlayerActor(msg);
+            Actor actor = __readPlayerActor(msg);
             print(actor);
             print("parsed player actor retured. pushing to gamestate\n");
             state.actors.push_back(actor);
@@ -157,7 +157,7 @@ void readGameState(Message &msg, GameState &state)
         }
         else
         {
-            Actor actor = __parseMonsterActor(msg);
+            Actor actor = __readMonsterActor(msg);
             print(actor);
             state.actors.push_back(actor);
             print("parsing monster end\n");
@@ -166,6 +166,58 @@ void readGameState(Message &msg, GameState &state)
     }
 
     print(state);
+}
+
+void __writeCommonActor(Message &msg, const Actor &actor)
+{
+    msg.writeBoolean(actor.turn_completed);
+    for (int i = 0, n = msg.writeArrayStart(actor.instances); i < n; i++)
+    {
+        const MonsterInstance &monster = actor.instances[i];
+        msg.writeInt(monster.number, true);
+        msg.writeEnum(monster.type);
+        if (monster.type == MonsterType::Summon)
+        {
+            msg.writeEnum(monster.summon_color);
+            msg.writeInt(monster.summon_move, true);
+            msg.writeInt(monster.summon_attack, true);
+            msg.writeInt(monster.summon_range, true);
+        }
+        msg.writeBoolean(monster.is_new);
+        msg.writeInt(monster.hp, true);
+        msg.writeInt(monster.hp_max, true);
+        msg.writeEnumArray(monster.conditions);
+        msg.writeEnumArray(monster.conditions_expired);
+        msg.writeEnumArray(monster.conditions_current_turn);
+    }
+}
+void __writePlayerActor(Message &msg, const Actor &actor)
+{
+    const auto &player = actor.getPlayer().value();
+    msg.writeString(player.name == "nameless" ? tl::nullopt : tl::make_optional(player.name));
+    msg.writeEnum(player.character_class);
+    msg.writeInt(player.xp, true);
+    msg.writeInt(player.hp, true);
+    msg.writeInt(player.hp_max, true);
+    msg.writeInt(player.level, true);
+    msg.writeInt(player.loot, true);
+    //msg.writeInt(player.initiative, true);
+    msg.writeInt(78, true);
+    msg.writeEnumArray(player.conditions);
+    msg.writeEnumArray(player.conditions_expired);
+    msg.writeEnumArray(player.conditions_current_turn);
+    msg.writeBoolean(player.exhausted);
+
+    __writeCommonActor(msg, actor);
+}
+void __writeMonsterActor(Message &msg, const Actor &actor)
+{
+    const auto &monster = actor.getMonster().value();
+    msg.writeInt(monster.id, true);
+    msg.writeInt(monster.level, true);
+    msg.writeBoolean(monster.is_normal);
+    msg.writeBoolean(monster.is_elite);
+    __writeCommonActor(msg, actor);
 }
 
 void writeGameState(const GameState &state, Message &msg)
@@ -206,21 +258,20 @@ void writeGameState(const GameState &state, Message &msg)
         }
     }
 
-    // SnapshotArray<Actor> children = gloom.rows.getChildren();
-    // for (int i = 0, n = writeArrayStart(msg, children); i < n; i++)
-    // {
-    //     Actor actor = children.get(i);
-    //     if (actor instanceof PlayerRow)
-    //     {
-    //         msg.writeBoolean(true);
-    //         writePlayerRow(msg, (PlayerRow)actor);
-    //     }
-    //     else
-    //     {
-    //         msg.writeBoolean(false);
-    //         writeMonsterRow(msg, (MonsterRow)actor);
-    //     }
-    // }
+    for (int i = 0, n = msg.writeArrayStart(state.actors); i < n; i++)
+    {
+        Actor actor = state.actors[i];
+        if (actor.getPlayer())
+        {
+            msg.writeBoolean(true);
+            __writePlayerActor(msg, actor);
+        }
+        else if (actor.getMonster())
+        {
+            msg.writeBoolean(false);
+            __writeMonsterActor(msg, actor);
+        }
+    }
 }
 
 } // namespace ghr
