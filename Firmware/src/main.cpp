@@ -133,7 +133,7 @@ void receive(std::string event, std::string payload, uint8_t *data, std::size_t 
     msg.readByte();
     msg.readByte();
     state.clear();
-    ghr::parseGameState(msg, state);
+    ghr::readGameState(msg, state);
   }
 }
 

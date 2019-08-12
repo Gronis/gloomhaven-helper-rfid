@@ -106,7 +106,7 @@ Actor __parseMonsterActor(Message &msg)
     return actor;
 }
 
-void parseGameState(Message &msg, GameState &state)
+void readGameState(Message &msg, GameState &state)
 {
     state.round = msg.readInt(true);
     state.scenario_number = msg.readInt(true);
@@ -166,6 +166,61 @@ void parseGameState(Message &msg, GameState &state)
     }
 
     print(state);
+}
+
+void writeGameState(const GameState &state, Message &msg)
+{
+    msg.writeInt(state.round, true);
+    msg.writeInt(state.scenario_number, true);
+    msg.writeInt(state.scenario_level, true);
+    msg.writeBoolean(state.track_standees);
+    msg.writeBoolean(state.random_standees);
+    msg.writeBoolean(state.elites_first);
+    msg.writeBoolean(state.expire_conditions);
+    msg.writeBoolean(state.solo);
+    msg.writeBoolean(state.hide_stats);
+    msg.writeBoolean(state.calculate_stats);
+    msg.writeBoolean(state.can_draw);
+    msg.writeBoolean(state.needs_shuffle);
+    msg.writeEnum(state.player_init);
+    msg.writeEnumArray(state.attack_modifiers);
+    msg.writeEnumOrNull(state.attack_modifier1);
+    msg.writeEnumOrNull(state.attack_modifier2);
+    msg.writeEnum(state.fire);
+    msg.writeEnum(state.ice);
+    msg.writeEnum(state.air);
+    msg.writeEnum(state.earth);
+    msg.writeEnum(state.light);
+    msg.writeEnum(state.dark);
+
+    msg.writeInt(state.ability_decks.size(), true);
+    for (auto &&deck_pair : state.ability_decks)
+    {
+        auto deck = deck_pair.second;
+        msg.writeInt(deck.id, true);
+        msg.writeBoolean(deck.shown);
+        msg.writeBoolean(deck.was_shown);
+        for (int i = 0, n = msg.writeArrayStart(deck.abilities); i < n; i++)
+        {
+            msg.writeInt(deck.abilities[i], true);
+        }
+    }
+
+    // SnapshotArray<Actor> children = gloom.rows.getChildren();
+    // for (int i = 0, n = writeArrayStart(msg, children); i < n; i++)
+    // {
+    //     Actor actor = children.get(i);
+    //     if (actor instanceof PlayerRow)
+    //     {
+    //         msg.writeBoolean(true);
+    //         writePlayerRow(msg, (PlayerRow)actor);
+    //     }
+    //     else
+    //     {
+    //         msg.writeBoolean(false);
+    //         writeMonsterRow(msg, (MonsterRow)actor);
+    //     }
+    // }
 }
 
 } // namespace ghr

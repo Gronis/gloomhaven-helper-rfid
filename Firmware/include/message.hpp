@@ -28,7 +28,8 @@ public:
     {
     }
 
-    std::size_t getPosition(){
+    std::size_t getPosition()
+    {
         return __position;
     }
 
@@ -93,7 +94,7 @@ public:
     template <typename T>
     void writeEnum(T value)
     {
-        writeInt(value, true);
+        writeInt((int)value, true);
     }
 
     template <typename T>
@@ -108,7 +109,7 @@ public:
         if (!value)
             writeByte(0);
         else
-            writeInt(value.value() + 1, true);
+            writeInt((int)value.value() + 1, true);
     }
 
     template <typename T>
