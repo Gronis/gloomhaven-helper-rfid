@@ -57,6 +57,10 @@ const char *password = "gloom123";
 const uint16_t port = 58888;
 String last_host;
 WiFiClient tcp_connection;
+ghr::GameState state;
+int message_number = 0;
+ghr::Led led(READ_LED_PIN);
+
 boolean waitingDHCP = false;
 char last_mac[18];
 
@@ -94,30 +98,45 @@ bool get_device_ip(char *mac_device, String &cb)
   return false;
 }
 
-ghr::GameState state;
-int message_number = 0;
-
 void on_packet(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
 {
   ghr::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
-  ghr::Message msg(data, dataLength);
-  if (event[0] == 's')
+  if (tcp_connection.connected())
   {
-    std::vector<ghr::AttackModifier> attackModifiers = {};
-    // 4 bytes representing message number. Throw away for now
-    message_number = msg.readFullInt();
-    state.clear();
-    ghr::readGameState(msg, state);
+    ghr::Message msg(data, dataLength);
+    if (event[0] == 's')
+    {
+      std::vector<ghr::AttackModifier> attackModifiers = {};
+      // 4 bytes representing message number. Throw away for now
+      message_number = msg.readFullInt();
+      state.clear();
+      ghr::readGameState(msg, state);
+    }
+    if (event[0] == 'v')
+    {
+      std::string version = payload;
+      if (version == "7.6")
+      {
+        ghr::print("version ", version, " is supported\n");
+      }
+      else
+      {
+        ghr::print("version ", version, " is unsupported. Disconnecting\n");
+        tcp_connection.stop();
+        last_host = "";
+        led.blink(10000, 0.15);
+      }
+    }
   }
 }
 
 void send_packet(ghr::Client client)
 {
-  int new_message_number = message_number + 1;
+  message_number = message_number + 1;
   std::size_t dataCapacity = 1024;
   uint8_t data[dataCapacity];
   ghr::Message msg(data, dataCapacity);
-  msg.writeFullInt(new_message_number);
+  msg.writeFullInt(message_number);
   ghr::writeGameState(state, msg);
   int dataLength = msg.getPosition();
   client.send_data("s", "", data, dataLength);
@@ -155,7 +174,6 @@ uint8_t output_buffer[bufferCapacity];
 ghr::InputStream input(&read, input_buffer, bufferCapacity);
 ghr::OutputStream output(&write, output_buffer, bufferCapacity);
 ghr::Client client(input, output);
-ghr::Led led(READ_LED_PIN);
 
 void setup()
 {
