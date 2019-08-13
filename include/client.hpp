@@ -1,5 +1,5 @@
-#ifndef __HEADER_H__
-#define __HEADER_H__
+#ifndef __CLIENT_H__
+#define __CLIENT_H__
 
 #include <string>
 #include "inputStream.hpp"
@@ -8,7 +8,7 @@
 namespace ghr
 {
 
-class Header
+class Client
 {
 private:
     InputStream __input;
@@ -54,7 +54,7 @@ private:
 
 public:
     std::function<void(std::string, std::string, uint8_t *, std::size_t)> on_data;
-    Header(
+    Client(
         InputStream input,
         OutputStream output) : __input(input),
                                __output(output) {}
@@ -70,8 +70,8 @@ public:
 
     void update()
     {
-        this->__input.update(std::bind(&Header::__read_header, this));
+        this->__input.update(std::bind(&Client::__read_header, this));
     }
 };
 } // namespace ghr
-#endif // __HEADER_H__
+#endif // __CLIENT_H__
