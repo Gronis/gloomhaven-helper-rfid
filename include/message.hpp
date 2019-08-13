@@ -6,6 +6,7 @@
 
 #include "optional.hpp"
 #include "encoding.hpp"
+#include "decoding.hpp"
 
 namespace ghr
 {
@@ -146,6 +147,23 @@ public:
         vec.reserve(length);
         for (int i = 0; i < length; i++)
             vec.push_back(readEnum(values));
+    }
+
+    void writeIntArray(std::vector<int> vec, bool optimizePositive)
+    {
+        int length = vec.size();
+        writeInt(length, true);
+        if (length == 0)
+            return;
+        for (int i = 0, n = vec.size(); i < n; i++)
+            writeInt(vec[i], optimizePositive);
+    }
+    void readIntArray(std::vector<int> &vec, bool optimizePositive)
+    {
+        int length = readInt(true);
+        vec.reserve(length);
+        for (int i = 0; i < length; i++)
+            vec.push_back(readInt(optimizePositive));
     }
 };
 

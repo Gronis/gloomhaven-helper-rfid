@@ -15,6 +15,8 @@ enum class CharacterClass
     Scoundrel,
     Spellweaver,
     Tinkerer,
+    Diviner,
+    // Diviner was added on version 8, so these are incorrect, for lower versions
     TwoMinis,
     Lightning,
     AngryFace,
@@ -39,6 +41,7 @@ std::vector<CharacterClass> getCharacterClassValues()
         CharacterClass::Scoundrel,
         CharacterClass::Spellweaver,
         CharacterClass::Tinkerer,
+        CharacterClass::Diviner,
         CharacterClass::TwoMinis,
         CharacterClass::Lightning,
         CharacterClass::AngryFace,
@@ -80,6 +83,9 @@ void print(CharacterClass &arg)
         break;
     case CharacterClass::Tinkerer:
         ghr::print("Tinkerer");
+        break;
+    case CharacterClass::Diviner:
+        ghr::print("Diviner");
         break;
     case CharacterClass::TwoMinis:
         ghr::print("TwoMinis");

@@ -22,6 +22,7 @@ struct GameState
     int scenario_number;
     int scenario_level;
     bool track_standees;
+    bool ability_cards;
     bool random_standees;
     bool elites_first;
     bool expire_conditions;
@@ -32,6 +33,7 @@ struct GameState
     bool needs_shuffle;
     PlayerInit player_init;
     std::vector<AttackModifier> attack_modifiers;
+    std::vector<AttackModifier> attack_modifiers_discard;
     tl::optional<AttackModifier> attack_modifier1;
     tl::optional<AttackModifier> attack_modifier2;
     ElementState fire;
@@ -40,6 +42,8 @@ struct GameState
     ElementState earth;
     ElementState light;
     ElementState dark;
+    std::vector<int> removed_abilities;
+    int bad_omen;
     std::map<int, MonsterAbilityDeck> ability_decks;
     std::vector<Actor> actors;
 
@@ -47,6 +51,7 @@ struct GameState
                   scenario_number(0),
                   scenario_level(0),
                   track_standees(false),
+                  ability_cards(false),
                   random_standees(false),
                   elites_first(false),
                   expire_conditions(false),
@@ -57,6 +62,7 @@ struct GameState
                   needs_shuffle(false),
                   player_init(PlayerInit::value1),
                   attack_modifiers({}),
+                  attack_modifiers_discard({}),
                   attack_modifier1(tl::nullopt),
                   attack_modifier2(tl::nullopt),
                   fire(ElementState::Inert),
@@ -65,13 +71,17 @@ struct GameState
                   earth(ElementState::Inert),
                   light(ElementState::Inert),
                   dark(ElementState::Inert),
+                  removed_abilities({}),
+                  bad_omen(0),
                   ability_decks(),
                   actors()
     {
     }
     void clear()
     {
+        attack_modifiers_discard.clear();
         attack_modifiers.clear();
+        removed_abilities.clear();
         actors.clear();
         ability_decks.clear();
     }
@@ -83,6 +93,7 @@ void print(GameState &arg)
     ghr::print("scen nr: ", arg.scenario_number, "\n");
     ghr::print("scen lvl: ", arg.scenario_level, "\n");
     ghr::print("track standees: ", arg.track_standees, "\n");
+    ghr::print("ability cards: ", arg.ability_cards, "\n");
     ghr::print("rand standees: ", arg.random_standees, "\n");
     ghr::print("elite first: ", arg.elites_first, "\n");
     ghr::print("expire cond: ", arg.expire_conditions, "\n");
@@ -95,6 +106,10 @@ void print(GameState &arg)
     for (auto &&am : arg.attack_modifiers)
     {
         ghr::print("attack modifier: ", am, "\n");
+    }
+    for (auto &&am : arg.attack_modifiers_discard)
+    {
+        ghr::print("attack modifier discard: ", am, "\n");
     }
     if (arg.attack_modifier1)
     {
@@ -110,6 +125,13 @@ void print(GameState &arg)
     ghr::print("earth state: ", arg.earth, "\n");
     ghr::print("light state: ", arg.light, "\n");
     ghr::print("dark state:  ", arg.dark, "\n");
+    ghr::print("removed abilities: {");
+    for (auto &&ab : arg.removed_abilities)
+    {
+        ghr::print(ab, " ");
+    }
+    ghr::print("}\n");
+    ghr::print("bad omen: ", arg.bad_omen, "\n");
     for (auto &&ab : arg.ability_decks)
     {
         MonsterAbilityDeck deck = ab.second;

@@ -40,9 +40,7 @@ Components needed:
 TODO/fix:
 -
     - When tag is scanned, use the id of the tag and perform action based on id
-    - Add support for different app versions (only 7.6 is tested and works right now)
     - Programming of tags (web interface?)
-    - Bug: Sometimes, if the device is restarted and then a previous client is connected (hosting the Gloomhaven Helper Server) connects, the device does not attempt to connect.
     - Document Schematics
     - Write build guide
     - Design a case
@@ -50,6 +48,7 @@ TODO/fix:
 
 Done:
 -
+    - Add support for different app versions (v7.6 and v8.0 works)
     - Communicate with RFID reader (rmd6300)
     - Connect to tcp server when a client connects (hard coded to port 58888)
     - Read game state from Gloomhaven Helper tcp server

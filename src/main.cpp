@@ -37,7 +37,8 @@
 #endif // ARDUINO
 
 #include "gameState.hpp"
-#include "protocol.hpp"
+#include "protocol/v7_6/protocol.hpp"
+#include "protocol/v8_0/protocol.hpp"
 #include "message.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
@@ -60,6 +61,9 @@ WiFiClient tcp_connection;
 ghr::GameState state;
 int message_number = 0;
 ghr::Led led(READ_LED_PIN);
+
+std::function<void(ghr::GameState &, ghr::Message &)> readGameState;
+std::function<void(const ghr::GameState &, ghr::Message &)> writeGameState;
 
 boolean waitingDHCP = false;
 char last_mac[18];
@@ -110,7 +114,7 @@ void on_packet(std::string event, std::string payload, uint8_t *data, std::size_
       // 4 bytes representing message number. Throw away for now
       message_number = msg.readFullInt();
       state.clear();
-      ghr::readGameState(msg, state);
+      readGameState(state, msg);
     }
     if (event[0] == 'v')
     {
@@ -118,6 +122,14 @@ void on_packet(std::string event, std::string payload, uint8_t *data, std::size_
       if (version == "7.6")
       {
         ghr::print("version ", version, " is supported\n");
+        readGameState = ghr::protocol::v7_6::readGameState;
+        writeGameState = ghr::protocol::v7_6::writeGameState;
+      }
+      else if (version == "8.0")
+      {
+        ghr::print("version ", version, " is supported\n");
+        readGameState = ghr::protocol::v8_0::readGameState;
+        writeGameState = ghr::protocol::v8_0::writeGameState;
       }
       else
       {
@@ -137,7 +149,7 @@ void send_packet(ghr::Client client)
   uint8_t data[dataCapacity];
   ghr::Message msg(data, dataCapacity);
   msg.writeFullInt(message_number);
-  ghr::writeGameState(state, msg);
+  writeGameState(state, msg);
   int dataLength = msg.getPosition();
   client.send_data("s", "", data, dataLength);
   ghr::print("\nSent state\n");

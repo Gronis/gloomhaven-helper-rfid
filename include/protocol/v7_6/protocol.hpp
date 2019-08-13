@@ -1,5 +1,5 @@
-#ifndef __PROTOCOL_H__
-#define __PROTOCOL_H__
+#ifndef __PROTOCOL_V7_6_PROTOCOL_H__
+#define __PROTOCOL_V7_6_PROTOCOL_H__
 
 #include "summonColor.hpp"
 #include "message.hpp"
@@ -13,13 +13,14 @@
 
 namespace ghr
 {
-
+namespace protocol
+{
+namespace v7_6
+{
 void __readCommonActor(Message &msg, Actor &actor)
 {
-    print("parsing common actor\n");
     actor.turn_completed = msg.readBoolean();
     int nn = msg.readInt(true);
-    print("nr monsters:", nn, "\n");
     for (int ii = 0; ii < nn; ii++)
     {
         MonsterInstance monster;
@@ -41,27 +42,9 @@ void __readCommonActor(Message &msg, Actor &actor)
         msg.readEnumArray(monster.conditions_expired, getConditionValues());
         msg.readEnumArray(monster.conditions_current_turn, getConditionValues());
 
-        print("monster:\n");
         print(monster);
         actor.instances.push_back(monster);
-
-        // auto monsterActor = actor.getMonster();
-        // if (monsterActor)
-        // {
-        //     monster.data = monsterActor.value().data;
-        //     monster.stats = monsterActor.value().data.stats[monster.type][monsterActor.value().level];
-        // }
-        // else
-        // {
-        //     monster.data = summonData;
-        //     monster.stats = summonStats;
-        // }
-
-        // MonsterBox box = new MonsterBox(row, monster, row.monstersGroup.getScaleX());
-        // row.boxes.add(box);
-        // row.monstersGroup.addActor(box);
     }
-    print("parding common actor done\n");
 }
 
 Actor __readPlayerActor(Message &msg)
@@ -90,7 +73,6 @@ Actor __readPlayerActor(Message &msg)
 
     Actor actor(player);
     __readCommonActor(msg, actor);
-    print("returning after parsing player actor\n");
     return actor;
 }
 
@@ -106,7 +88,7 @@ Actor __readMonsterActor(Message &msg)
     return actor;
 }
 
-void readGameState(Message &msg, GameState &state)
+void readGameState(GameState &state, Message &msg)
 {
     state.round = msg.readInt(true);
     state.scenario_number = msg.readInt(true);
@@ -143,7 +125,6 @@ void readGameState(Message &msg, GameState &state)
 
     int n = msg.readInt(true);
     state.actors.reserve(n);
-    print("nr actors", n, "\n");
     for (int i = 0; i < n; i++)
     {
 
@@ -151,20 +132,15 @@ void readGameState(Message &msg, GameState &state)
         {
             Actor actor = __readPlayerActor(msg);
             print(actor);
-            print("parsed player actor retured. pushing to gamestate\n");
             state.actors.push_back(actor);
-            print("parsing player end\n");
         }
         else
         {
             Actor actor = __readMonsterActor(msg);
             print(actor);
             state.actors.push_back(actor);
-            print("parsing monster end\n");
         }
-        print("deleted temp actor successfully\n");
     }
-
     print(state);
 }
 
@@ -201,8 +177,7 @@ void __writePlayerActor(Message &msg, const Actor &actor)
     msg.writeInt(player.hp_max, true);
     msg.writeInt(player.level, true);
     msg.writeInt(player.loot, true);
-    //msg.writeInt(player.initiative, true);
-    msg.writeInt(78, true);
+    msg.writeInt(player.initiative, true);
     msg.writeEnumArray(player.conditions);
     msg.writeEnumArray(player.conditions_expired);
     msg.writeEnumArray(player.conditions_current_turn);
@@ -274,6 +249,8 @@ void writeGameState(const GameState &state, Message &msg)
     }
 }
 
+} // namespace v7_6
+} // namespace protocol
 } // namespace ghr
 
-#endif // __PROTOCOL_H__
+#endif // __PROTOCOL_V7_6_PROTOCOL_H__
