@@ -14,6 +14,15 @@ Examples:
     - Scan Element tokens to put the element to strong.
     - Scan Summon token to summon with preset HP, attack, move, range
 
+Video of scanning a tag/card and changing initiative
+-
+
+<video style="width:100%" controls>
+  <source src="https://seafile.robingronberg.se/seafhttp/files/1bea010c-1881-4e7d-bfbe-e064c62a860f/ghh_rfid.mp4" type="video/mp4">
+  <source src="https://seafile.robingronberg.se/seafhttp/files/c277eec2-a163-4c1a-bc97-cdbea153e3cf/ghh_rfid.webm" type="video/webm">
+Your browser does not support the video tag.
+</video>
+
 The app has access to the entire game state, so any action is possible. Each tag can be programmed to perform a specific action.
 
 To implement this, an LR rfid, 125kHz (rmd6300/rmd630) reader is used with an ESP8266 Wifi enabled microcontroller (tested with Wemos Mini lite).
