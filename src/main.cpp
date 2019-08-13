@@ -57,6 +57,7 @@ const char *ssid = "Gloomhaven Helper";
 const char *password = "gloom123";
 const uint16_t port = 58888;
 String last_host;
+String server_host;
 WiFiClient tcp_connection;
 ghr::GameState state;
 int message_number = 0;
@@ -100,6 +101,23 @@ bool get_device_ip(char *mac_device, String &cb)
   wifi_softap_free_station_info();
   cb = "";
   return false;
+}
+
+void connect_to_host(String host)
+{
+  if (host.length() > 0)
+  {
+    led.blink(0, 1.0);
+    ghr::print("Connecting to ", host, "\n");
+    WiFiClient tmp_tcp_connection;
+    if (tmp_tcp_connection.connect(host, port))
+    {
+      ghr::print("Connected!\n");
+      tcp_connection = tmp_tcp_connection;
+      server_host = host;
+      led.blink(3, 4.0);
+    }
+  }
 }
 
 void on_packet(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
@@ -215,17 +233,13 @@ void loop()
       ghr::print("New host connected: ", last_host, "\n");
     }
   }
-  if (last_host.length() > 0 && !tcp_connection.connected())
+  if (!tcp_connection.connected())
   {
-    led.blink(0, 1.0);
-    ghr::print("Connecting to ", last_host, "\n");
-    WiFiClient tmp_tcp_connection;
-    if (tmp_tcp_connection.connect(last_host, port))
-    {
-      ghr::print("Connected!\n");
-      tcp_connection = tmp_tcp_connection;
-      led.blink(3, 4.0);
-    }
+    connect_to_host(last_host);
+  }
+  if (!tcp_connection.connected())
+  {
+    connect_to_host(server_host);
   }
   if (tcp_connection.connected())
   {
