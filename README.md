@@ -14,7 +14,7 @@ Examples:
     - Scan Element tokens to put the element to strong.
     - Scan Summon token to summon with preset HP, attack, move, range
 
-[Video](https://seafile.robingronberg.se/seafhttp/files/1bea010c-1881-4e7d-bfbe-e064c62a860f/ghh_rfid.mp4) of scanning a tag/card and changing initiative
+[Video](https://seafile.robingronberg.se/f/2d55fbea824c434eb6b7/) of scanning a tag/card and changing initiative
 -
 
 The app has access to the entire game state, so any action is possible. Each tag can be programmed to perform a specific action.
