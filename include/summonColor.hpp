@@ -32,7 +32,7 @@ std::vector<SummonColor> getSummonColorValues()
     };
 }
 
-void print(SummonColor &arg)
+void print(const SummonColor &arg)
 {
     switch (arg)
     {

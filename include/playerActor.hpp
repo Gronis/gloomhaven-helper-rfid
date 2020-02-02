@@ -42,7 +42,7 @@ struct PlayerActor
     }
 };
 
-void print(PlayerActor &arg)
+void print(const PlayerActor &arg)
 {
     print("   {\n");
     print("       name: ", arg.name, "\n");

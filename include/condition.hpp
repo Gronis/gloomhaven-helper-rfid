@@ -53,7 +53,7 @@ std::vector<Condition> getConditionValues()
         Condition::value19};
 }
 
-void print(Condition &arg)
+void print(const Condition &arg)
 {
     switch (arg)
     {

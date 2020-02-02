@@ -87,7 +87,7 @@ struct GameState
     }
 };
 
-void print(GameState &arg)
+void print(const GameState &arg)
 {
     ghr::print("round: ", arg.round, "\n");
     ghr::print("scen nr: ", arg.scenario_number, "\n");

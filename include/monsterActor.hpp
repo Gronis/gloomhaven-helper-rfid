@@ -15,7 +15,7 @@ struct MonsterActor
     MonsterActor() : id(0), level(0), is_normal(false), is_elite(false), ability(tl::nullopt) {}
 };
 
-void print(MonsterActor &arg)
+void print(const MonsterActor &arg)
 {
     print("  {\n");
     print("    id:        ", arg.id, "\n");

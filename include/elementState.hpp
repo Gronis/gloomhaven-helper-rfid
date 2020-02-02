@@ -21,7 +21,7 @@ std::vector<ElementState> getElementStateValues()
         ElementState::Waning};
 }
 
-void print(ElementState &arg)
+void print(const ElementState &arg)
 {
     switch (arg)
     {

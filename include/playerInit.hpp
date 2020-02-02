@@ -27,7 +27,7 @@ std::vector<PlayerInit> getPlayerInitValues()
         PlayerInit::value5};
 }
 
-void print(PlayerInit &arg)
+void print(const PlayerInit &arg)
 {
     switch (arg)
     {
