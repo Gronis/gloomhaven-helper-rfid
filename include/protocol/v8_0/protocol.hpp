@@ -245,9 +245,9 @@ void writeGameState(const GameState &state, Message &msg)
     msg.writeInt(state.bad_omen, true);
 
     msg.writeInt(state.ability_decks.size(), true);
-    for (auto &&deck_pair : state.ability_decks)
+    for (const auto deck_pair : state.ability_decks)
     {
-        auto deck = deck_pair.second;
+        const auto deck = deck_pair.second;
         msg.writeInt(deck.id, true);
         msg.writeBoolean(deck.shuffle);
         __writeMonsterAbility(msg, deck.shown_ability);
@@ -263,7 +263,7 @@ void writeGameState(const GameState &state, Message &msg)
 
     for (int i = 0, n = msg.writeArrayStart(state.actors); i < n; i++)
     {
-        Actor actor = state.actors[i];
+        const Actor actor = state.actors[i];
         if (actor.getPlayer())
         {
             msg.writeBoolean(true);

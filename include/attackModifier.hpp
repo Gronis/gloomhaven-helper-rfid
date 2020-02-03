@@ -7,18 +7,23 @@
 
 namespace ghr
 {
-enum class AttackModifier
+struct AttackModifierNS
 {
-    Zero,
-    Plus1,
-    Plus2,
-    Minus1,
-    Minus2,
-    Miss,
-    Crit,
-    Bless,
-    Curse,
+    enum Value{
+        Zero,
+        Plus1,
+        Plus2,
+        Minus1,
+        Minus2,
+        Miss,
+        Crit,
+        Bless,
+        Curse,
+    };
 };
+
+using AttackModifier = AttackModifierNS::Value;
+
 std::vector<AttackModifier> getAttackModifierValues()
 {
     return {
@@ -34,7 +39,7 @@ std::vector<AttackModifier> getAttackModifierValues()
     };
 }
 
-void print(AttackModifier &arg)
+void print(const AttackModifier &arg)
 {
     switch (arg)
     {

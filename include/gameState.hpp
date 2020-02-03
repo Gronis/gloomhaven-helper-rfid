@@ -103,11 +103,11 @@ void print(const GameState &arg)
     ghr::print("can draw: ", arg.can_draw, "\n");
     ghr::print("needs shuffle: ", arg.needs_shuffle, "\n");
     ghr::print("player init: ", arg.player_init, "\n");
-    for (auto &&am : arg.attack_modifiers)
+    for (const auto am : arg.attack_modifiers)
     {
         ghr::print("attack modifier: ", am, "\n");
     }
-    for (auto &&am : arg.attack_modifiers_discard)
+    for (const auto am : arg.attack_modifiers_discard)
     {
         ghr::print("attack modifier discard: ", am, "\n");
     }
@@ -126,18 +126,18 @@ void print(const GameState &arg)
     ghr::print("light state: ", arg.light, "\n");
     ghr::print("dark state:  ", arg.dark, "\n");
     ghr::print("removed abilities: {");
-    for (auto &&ab : arg.removed_abilities)
+    for (const auto ab : arg.removed_abilities)
     {
         ghr::print(ab, " ");
     }
     ghr::print("}\n");
     ghr::print("bad omen: ", arg.bad_omen, "\n");
-    for (auto &&ab : arg.ability_decks)
+    for (const auto ab : arg.ability_decks)
     {
-        MonsterAbilityDeck deck = ab.second;
+        const MonsterAbilityDeck deck = ab.second;
         ghr::print("monster ability deck: ", deck);
     }
-    for (auto &&a : arg.actors)
+    for (const auto a : arg.actors)
     {
         ghr::print("actor: ", a);
     }

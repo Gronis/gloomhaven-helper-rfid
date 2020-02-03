@@ -5,18 +5,24 @@
 
 namespace ghr
 {
-enum class SummonColor
+struct SummonColorNS
 {
-    None,
-    Turquise,
-    Green,
-    Yellow,
-    Orange,
-    White,
-    Purple,
-    Pink,
-    Red,
+    enum Value{
+        None,
+        Turquise,
+        Green,
+        Yellow,
+        Orange,
+        White,
+        Purple,
+        Pink,
+        Red,
+    };
 };
+
+using SummonColor = SummonColorNS::Value;
+
+
 std::vector<SummonColor> getSummonColorValues()
 {
     return {

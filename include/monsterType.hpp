@@ -2,28 +2,34 @@
 #define __MONSTER_TYPE_H__
 
 #include "print.hpp"
+#include <vector>
+
 
 namespace ghr
 {
-enum class MonsterType
-{
-    Normal,
-    Elite,
-    value3,
-    Summon,
-    value5,
-    value6,
-    value7,
-    value8,
-    value9,
-    value10,
-    value11,
-    value12,
-    value13,
-    value14,
-    value15,
-    value16
+struct MonsterTypeNS{
+    enum Value{
+        Normal,
+        Elite,
+        value3,
+        Summon,
+        value5,
+        value6,
+        value7,
+        value8,
+        value9,
+        value10,
+        value11,
+        value12,
+        value13,
+        value14,
+        value15,
+        value16
+    };
 };
+
+using MonsterType = MonsterTypeNS::Value;
+
 std::vector<MonsterType> getMonsterTypeValues()
 {
     return {
@@ -45,7 +51,7 @@ std::vector<MonsterType> getMonsterTypeValues()
         MonsterType::value16};
 }
 
-void print(MonsterType &arg)
+void print(const MonsterType &arg)
 {
     switch (arg)
     {
@@ -101,5 +107,4 @@ void print(MonsterType &arg)
 }
 
 } // namespace ghr
-
 #endif // __MONSTER_TYPE_H__

@@ -28,66 +28,23 @@ struct Actor
     bool turn_completed = false;
     std::vector<MonsterInstance> instances;
 
-    Actor(MonsterActor monster) : __is_player(false), __monster(monster)
+    Actor(const MonsterActor && monster) : __is_player(false), __monster(monster)
     {
     }
-    Actor(PlayerActor player) : __is_player(true), __player(player)
+    Actor(const PlayerActor && player) : __is_player(true), __player(player)
     {
     }
 
-    // TODO: Use copy constructor, destructor, assignment operator when union is used (see top).
-    //
-    // Actor(const Actor &other)
-    // {
-    //     __is_player = other.__is_player;
-    //     if (__is_player)
-    //     {
-    //         __player = other.__player;
-    //     }
-    //     else
-    //     {
-    //         __monster = other.__monster;
-    //     }
-    //     turn_completed = other.turn_completed;
-    //     instances.reserve(other.instances.size());
-    //     for (auto &&instance : other.instances)
-    //     {
-    //         instances.push_back(instance);
-    //     }
-    // }
+    Actor(MonsterActor * monster) : __is_player(false), __monster(*monster)
+    {
+    }
+    Actor(PlayerActor * player) : __is_player(true), __player(*player)
+    {
+    }
 
-    // ~Actor()
-    // {
-    //     if (__is_player)
-    //     {
-    //         (&__player)->PlayerActor::~PlayerActor();
-    //     }
-    //     else
-    //     {
-    //         (&__monster)->MonsterActor::~MonsterActor();
-    //     }
-    //     (&instances)->vector<MonsterInstance>::~vector<MonsterInstance>();
-    // }
-
-    // Actor &operator=(Actor &other)
-    // {
-    //     __is_player = other.__is_player;
-    //     if (other.__is_player)
-    //     {
-    //         __player = other.__player;
-    //     }
-    //     else
-    //     {
-    //         __monster = other.__monster;
-    //     }
-    //     turn_completed = other.turn_completed;
-    //     instances.reserve(other.instances.size());
-    //     for (auto &&instance : other.instances)
-    //     {
-    //         instances.push_back(instance);
-    //     }
-    //     return *this;
-    // }
+    Actor() : __is_player(false)
+    {
+    }
 
     tl::optional<MonsterActor &> getMonster()
     {
@@ -108,16 +65,16 @@ struct Actor
     }
 };
 
-void print(Actor &arg)
+void print(const Actor &arg)
 {
-    auto monster = arg.getMonster();
-    auto player = arg.getPlayer();
+    const auto monster = arg.getMonster();
+    const auto player = arg.getPlayer();
     if (monster)
         print("monster\n", monster.value());
     if (player)
         print("player\n", player.value());
     print("turn_completed: ", arg.turn_completed, "\n");
-    for (auto &&m : arg.instances)
+    for (const auto m : arg.instances)
     {
         print("instance: ", m, "\n");
     }

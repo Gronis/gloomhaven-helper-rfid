@@ -5,31 +5,37 @@
 
 namespace ghr
 {
-enum class CharacterClass
-{
-    Escort,
-    Objective,
-    Brute,
-    Cragheart,
-    Mindtheif,
-    Scoundrel,
-    Spellweaver,
-    Tinkerer,
-    Diviner,
-    // Diviner was added on version 8, so these are incorrect, for lower versions
-    TwoMinis,
-    Lightning,
-    AngryFace,
-    Triangles,
-    Moon,
-    ChuluFace,
-    TrippleArrow,
-    Saw,
-    MusicNote,
-    Circles,
-    Sun,
-    value20
+
+struct CharacterClassNS {
+    enum Value{
+        Escort,
+        Objective,
+        Brute,
+        Cragheart,
+        Mindtheif,
+        Scoundrel,
+        Spellweaver,
+        Tinkerer,
+        Diviner,
+        // Diviner was added on version 8, so these are incorrect, for lower versions
+        TwoMinis,
+        Lightning,
+        AngryFace,
+        Triangles,
+        Moon,
+        ChuluFace,
+        TrippleArrow,
+        Saw,
+        MusicNote,
+        Circles,
+        Sun,
+        value20
+    };
 };
+
+using CharacterClass = CharacterClassNS::Value;
+
+
 std::vector<CharacterClass> getCharacterClassValues()
 {
     return {
@@ -56,7 +62,7 @@ std::vector<CharacterClass> getCharacterClassValues()
         CharacterClass::value20};
 }
 
-void print(CharacterClass &arg)
+void print(const CharacterClass & arg)
 {
     switch (arg)
     {

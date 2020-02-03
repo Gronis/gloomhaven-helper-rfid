@@ -40,6 +40,10 @@ struct PlayerActor
                     exhausted(false)
     {
     }
+
+    explicit operator std::string() const {
+        return "Name: %s" + name;
+    }
 };
 
 void print(const PlayerActor &arg)
@@ -54,17 +58,17 @@ void print(const PlayerActor &arg)
     print("       loot: ", arg.loot, "\n");
     print("       initiative: ", arg.initiative, "\n");
     print("       conditions: ", arg.conditions.size(), "\n");
-    for (auto &&c : arg.conditions)
+    for (const auto c : arg.conditions)
     {
         print("         ", c, "\n");
     }
     print("       conditions expired: ", arg.conditions_expired.size(), "\n");
-    for (auto &&c : arg.conditions_expired)
+    for (const auto c : arg.conditions_expired)
     {
         print("         ", c, "\n");
     }
     print("       conditions current_turn: ", arg.conditions_current_turn.size(), "\n");
-    for (auto &&c : arg.conditions_current_turn)
+    for (const auto c : arg.conditions_current_turn)
     {
         print("         ", c, "\n");
     }

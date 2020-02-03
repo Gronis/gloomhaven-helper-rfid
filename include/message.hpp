@@ -18,13 +18,31 @@ private:
     std::size_t __dataLength;
     std::size_t __position;
 
+    bool __free_on_delete;
+
 public:
+    Message()
+        : __data((uint8_t *)malloc(1024)),
+          __dataLength(1024),
+          __position(0),
+          __free_on_delete(true)
+    {
+    }
+
+    ~Message()
+    {
+        if(__free_on_delete){
+            free(__data);
+        }
+    }
+
     Message(
         uint8_t *data,
         std::size_t dataLength)
         : __data(data),
           __dataLength(dataLength),
-          __position(0)
+          __position(0),
+          __free_on_delete(false)
     {
     }
 

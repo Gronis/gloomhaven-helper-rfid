@@ -7,28 +7,33 @@
 
 namespace ghr
 {
-enum class Condition
+struct ConditionNS
 {
-    value1,
-    value2,
-    Summon,
-    Stuned,
-    Immobilized,
-    Disarmed,
-    Wounded,
-    Muddle,
-    Poisoned,
-    Strengthen,
-    Invisible,
-    value12,
-    value13,
-    value14,
-    value15,
-    value16,
-    value17,
-    value18,
-    value19
+    enum Value {
+        value1,
+        value2,
+        Summon,
+        Stuned,
+        Immobilized,
+        Disarmed,
+        Wounded,
+        Muddle,
+        Poisoned,
+        Strengthen,
+        Invisible,
+        value12,
+        value13,
+        value14,
+        value15,
+        value16,
+        value17,
+        value18,
+        value19
+    };
 };
+
+using Condition = ConditionNS::Value;
+
 std::vector<Condition> getConditionValues()
 {
     return {

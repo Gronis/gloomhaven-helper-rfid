@@ -57,17 +57,17 @@ void print(const MonsterInstance &arg)
     print("       hp: ", arg.hp, "\n");
     print("       hp_max: ", arg.hp_max, "\n");
     print("       conditions: ", arg.conditions.size(), "\n");
-    for (auto &&c : arg.conditions)
+    for (const auto c : arg.conditions)
     {
         print("         ", c, "\n");
     }
     print("       conditions expired: ", arg.conditions_expired.size(), "\n");
-    for (auto &&c : arg.conditions_expired)
+    for (const auto c : arg.conditions_expired)
     {
         print("         ", c, "\n");
     }
     print("       conditions current_turn: ", arg.conditions_current_turn.size(), "\n");
-    for (auto &&c : arg.conditions_current_turn)
+    for (const auto c : arg.conditions_current_turn)
     {
         print("         ", c, "\n");
     }

@@ -7,12 +7,17 @@
 
 namespace ghr
 {
-enum class ElementState
+struct ElementStateNS
 {
-    Inert,
-    Strong,
-    Waning
+    enum Value{
+        Inert,
+        Strong,
+        Waning,
+    };
 };
+
+using ElementState = ElementStateNS::Value;
+
 std::vector<ElementState> getElementStateValues()
 {
     return {

@@ -37,14 +37,14 @@ void print(const MonsterAbilityDeck &arg)
     print("shuffle: ", arg.shuffle, "\n");
     print("shown ability: ", arg.shown_ability ? arg.shown_ability.value() : -1, "\n");
     print("abilties: { ");
-    for (auto a : arg.abilities)
+    for (const auto a : arg.abilities)
     {
         print(a, " ");
     }
     print("}\n");
 
     print("abilties discard: { ");
-    for (auto a : arg.abilities_discard)
+    for (const auto a : arg.abilities_discard)
     {
         print(a, " ");
     }

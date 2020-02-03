@@ -1584,6 +1584,20 @@ public:
     }
 #endif
 
+    void get_value(T& OUTPUT) const
+    {
+        if (has_value()){
+            OUTPUT = this->m_value;
+        }
+    }
+
+    void get_value(T& OUTPUT)
+    {
+        if (has_value()){
+            OUTPUT = this->m_value;
+        }
+    }
+
     /// Returns the stored value if there is one, otherwise returns `u`
     template <class U>
     constexpr T value_or(U &&u) const &
@@ -2428,6 +2442,20 @@ public:
 #ifndef ARDUINO
         throw bad_optional_access();
 #endif
+    }
+
+    void get_value(T& OUTPUT) const
+    {
+        if (has_value()){
+            OUTPUT = this->m_value;
+        }
+    }
+
+    void get_value(T& OUTPUT)
+    {
+        if (has_value()){
+            OUTPUT = this->m_value;
+        }
     }
 
     /// Returns the stored value if there is one, otherwise returns `u`

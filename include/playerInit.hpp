@@ -7,16 +7,20 @@
 
 namespace ghr
 {
-enum class PlayerInit
+struct PlayerInitNS
 {
-    // These are guessed
-    value1,
-    value2,
-    value3,
-    value4,
-    value5
-
+    enum Value{
+        // These are guessed
+        value1,
+        value2,
+        value3,
+        value4,
+        value5,
+    };
 };
+
+using PlayerInit = PlayerInitNS::Value;
+
 std::vector<PlayerInit> getPlayerInitValues()
 {
     return {
