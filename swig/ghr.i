@@ -6,7 +6,7 @@
 %include "std_vector.i"
 %include "std_map.i"
 %include "std_string.i"
-%include "optional.i"
+// %include "optional.i"
 
 %{
     #define SWIG_FILE_WITH_INIT
@@ -33,6 +33,10 @@
     #include "monsterInstance.hpp"
     #include "playerActor.hpp"
     #include "gameState.hpp"
+
+    #include "inputStream.hpp"
+    #include "outputStream.hpp"
+    #include "protocol/v8_0/protocol.hpp"
 
     using namespace ghr;
 %}
@@ -66,6 +70,21 @@
 %include "playerActor.hpp"
 %include "gameState.hpp"
 
+
+%include "inputStream.hpp"
+%include "outputStream.hpp"
+
+%typemap(in) (const uint8_t*, size_t length) {
+  if (!PyByteArray_Check($input)) {
+    SWIG_exception_fail(SWIG_TypeError, "in method '" "$symname" "', argument "
+                       "$argnum"" of type '" "$type""'");
+  }
+  $1 = (const uint8_t*) PyByteArray_AsString($input);
+  $2 = (size_t) PyByteArray_Size($input);
+}
+
+%include "protocol/v8_0/protocol.hpp"
+
 // namespace ghr{
 //     %extend PlayerActor {
 //         char *__str__() {
@@ -94,6 +113,8 @@
 %template(MonsterInstanceVector) std::vector<ghr::MonsterInstance>;
 %template(PlayerActorVector) std::vector<ghr::PlayerActor>;
 
+
+
 // %template(MonsterAbilityDeckLookupMap) std::map<int, MonsterAbilityDeck>;
 
 // %typemap(in) tl::optional<ghr::MonsterActor &> %{
@@ -104,8 +125,8 @@
 // %}
 
 
-%template(OptionalAttackModifier) tl::optional<ghr::AttackModifierNS::Value>;
-%template(OptionalInt) tl::optional<int>;
+// %template(OptionalAttackModifier) tl::optional<ghr::AttackModifierNS::Value>;
+// %template(OptionalInt) tl::optional<int>;
 // %typemap(out) tl::optional<ghr::AttackModifierNS::Value> %{
 //     if(!!$1)
 //         $result = PyObject($1.value());

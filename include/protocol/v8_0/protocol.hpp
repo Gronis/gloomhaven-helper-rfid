@@ -71,7 +71,7 @@ Actor __readPlayerActor(Message &msg)
     msg.readEnumArray(player.conditions_current_turn, getConditionValues());
     player.exhausted = msg.readBoolean();
 
-    Actor actor(player);
+    Actor actor(&player);
     __readCommonActor(msg, actor);
     return actor;
 }
@@ -90,7 +90,7 @@ Actor __readMonsterActor(Message &msg)
     monster.is_normal = msg.readBoolean();
     monster.is_elite = msg.readBoolean();
     monster.ability = __readMonsterAbility(msg);
-    Actor actor(monster);
+    Actor actor(&monster);
     __readCommonActor(msg, actor);
     return actor;
 }

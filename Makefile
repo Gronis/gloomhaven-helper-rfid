@@ -1,10 +1,10 @@
 
 SWIG_TEMPLATE="%module $(notdir $(basename $@)) %feature(\"autodoc\", \"3\"); %{ \#define SWIG_PYTHON_EXTRA_NATIVE_CONTAINERS;  \#include \"$(notdir $(basename $@)).hpp\" %} %include \"$(notdir $(basename $@)).hpp\""
-CC=gcc
-CPP=g++
+CC=clang
+CPP=clang++
 CFLAGS:=`python3-config --cflags`
 LDFLAGS:=`python3-config --ldflags`
-FLAGS:=--std=c++11
+FLAGS:=-std=c++11
 OUTDIR:=out
 INCLUDE:=include
 SOURCE:=src

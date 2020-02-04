@@ -65,7 +65,7 @@ void print(std::string &arg)
 #ifdef ARDUINO
     Serial1.print(arg.c_str());
 #else  // on a pc
-    std::cout << arg;
+    // std::cout << arg;
 #endif // ARDUINO
 }
 
@@ -75,7 +75,7 @@ void print(T &&arg)
 #ifdef ARDUINO
     Serial1.print(arg);
 #else  // on a pc
-    std::cout << arg;
+    // std::cout << arg;
 #endif // ARDUINO
 }
 
