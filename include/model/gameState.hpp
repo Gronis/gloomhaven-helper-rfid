@@ -8,11 +8,11 @@
 #include "print.hpp"
 
 // Model
-#include "actor.hpp"
-#include "monsterAbilityDeck.hpp"
-#include "attackModifier.hpp"
-#include "playerInit.hpp"
-#include "elementState.hpp"
+#include "model/actor.hpp"
+#include "model/monsterAbilityDeck.hpp"
+#include "model/attackModifier.hpp"
+#include "model/playerInit.hpp"
+#include "model/elementState.hpp"
 
 namespace ghr
 {

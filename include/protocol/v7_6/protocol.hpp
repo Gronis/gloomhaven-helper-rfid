@@ -1,15 +1,16 @@
 #ifndef __PROTOCOL_V7_6_PROTOCOL_H__
 #define __PROTOCOL_V7_6_PROTOCOL_H__
 
-#include "summonColor.hpp"
 #include "protocol/message.hpp"
-#include "condition.hpp"
-#include "characterClass.hpp"
-#include "monsterActor.hpp"
-#include "monsterType.hpp"
-#include "monsterInstance.hpp"
-#include "playerActor.hpp"
-#include "gameState.hpp"
+
+#include "model/summonColor.hpp"
+#include "model/condition.hpp"
+#include "model/characterClass.hpp"
+#include "model/monsterActor.hpp"
+#include "model/monsterType.hpp"
+#include "model/monsterInstance.hpp"
+#include "model/playerActor.hpp"
+#include "model/gameState.hpp"
 
 namespace ghr
 {

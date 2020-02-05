@@ -15,24 +15,26 @@
     // #include "optional.hpp"
 
     // Include enums first. Somehow swig will intruduce memory leaks if included in this order
-    #include "attackModifier.hpp"
-    #include "characterClass.hpp"
-    #include "condition.hpp"
-    #include "elementState.hpp"
-    #include "monsterType.hpp"
-    #include "playerInit.hpp"
-    #include "summonColor.hpp"
+    #include "model/attackModifier.hpp"
+    #include "model/characterClass.hpp"
+    #include "model/condition.hpp"
+    #include "model/elementState.hpp"
+    #include "model/monsterType.hpp"
+    #include "model/playerInit.hpp"
+    #include "model/summonColor.hpp"
 
     // Include classes
-    #include "actor.hpp"
+    #include "model/actor.hpp"
+    #include "model/monsterAbilityDeck.hpp"
+    #include "model/monsterActor.hpp"
+    #include "model/monsterInstance.hpp"
+    #include "model/playerActor.hpp"
+    #include "model/gameState.hpp"
+
+    #include "protocol/message.hpp"
+
     #include "decoding.hpp"
     #include "encoding.hpp"
-    #include "protocol/message.hpp"
-    #include "monsterAbilityDeck.hpp"
-    #include "monsterActor.hpp"
-    #include "monsterInstance.hpp"
-    #include "playerActor.hpp"
-    #include "gameState.hpp"
 
     using namespace ghr;
     using namespace ghr::protocol;
@@ -48,25 +50,26 @@
 %rename(SummonColor) SummonColorNS;
 
 // Include enums first. Somehow swig will intruduce memory leaks if included in this order
-%include "attackModifier.hpp"
-%include "characterClass.hpp"
-%include "condition.hpp"
-%include "elementState.hpp"
-%include "monsterType.hpp"
-%include "playerInit.hpp"
-%include "summonColor.hpp"
+%include "model/attackModifier.hpp"
+%include "model/characterClass.hpp"
+%include "model/condition.hpp"
+%include "model/elementState.hpp"
+%include "model/monsterType.hpp"
+%include "model/playerInit.hpp"
+%include "model/summonColor.hpp"
 
 // Include classes
-%include "actor.hpp"
+%include "model/actor.hpp"
+%include "model/monsterAbilityDeck.hpp"
+%include "model/monsterActor.hpp"
+%include "model/monsterInstance.hpp"
+%include "model/playerActor.hpp"
+%include "model/gameState.hpp"
+
+%include "protocol/message.hpp"
+
 %include "decoding.hpp"
 %include "encoding.hpp"
-%include "protocol/message.hpp"
-%include "monsterAbilityDeck.hpp"
-%include "monsterActor.hpp"
-%include "monsterInstance.hpp"
-%include "playerActor.hpp"
-%include "gameState.hpp"
-
 // namespace ghr{
 //     %extend PlayerActor {
 //         char *__str__() {

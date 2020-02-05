@@ -5,9 +5,9 @@
 
 #include "print.hpp"
 
-#include "condition.hpp"
-#include "monsterType.hpp"
-#include "summonColor.hpp"
+#include "model/condition.hpp"
+#include "model/monsterType.hpp"
+#include "model/summonColor.hpp"
 
 namespace ghr
 {

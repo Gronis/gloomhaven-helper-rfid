@@ -6,9 +6,9 @@
 #include "optional.hpp"
 #include "print.hpp"
 
-#include "monsterInstance.hpp"
-#include "monsterActor.hpp"
-#include "playerActor.hpp"
+#include "model/monsterInstance.hpp"
+#include "model/monsterActor.hpp"
+#include "model/playerActor.hpp"
 
 namespace ghr
 {

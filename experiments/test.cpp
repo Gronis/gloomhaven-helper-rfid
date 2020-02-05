@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 #include "protocol.hpp"
-#include "gameState.hpp"
+#include "model/gameState.hpp"
 #include "protocol/message.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"

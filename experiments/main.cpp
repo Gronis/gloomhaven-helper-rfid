@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #include "print.hpp"
-#include "gameState.hpp"
+#include "model/gameState.hpp"
 
 #include "protocol/deserializer.hpp"
 #include "protocol/header.hpp"

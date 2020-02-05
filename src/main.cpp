@@ -36,7 +36,7 @@
 #else
 #endif // ARDUINO
 
-#include "gameState.hpp"
+#include "model/gameState.hpp"
 #include "protocol/v7_6/protocol.hpp"
 #include "protocol/v8_0/protocol.hpp"
 #include "protocol/message.hpp"

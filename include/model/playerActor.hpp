@@ -6,8 +6,8 @@
 
 #include "print.hpp"
 
-#include "condition.hpp"
-#include "characterClass.hpp"
+#include "model/condition.hpp"
+#include "model/characterClass.hpp"
 
 namespace ghr
 {
