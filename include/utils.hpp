@@ -4,6 +4,18 @@
 namespace ghr
 {
 
+// Copy bytes from src to dest until count or till buffer is full.
+std::size_t copyBytes(
+    const uint8_t *src, uint8_t *dest, std::size_t count, const std::size_t bufferSize)
+{
+    if(count >= bufferSize)
+    {
+        count = bufferSize;
+    }
+    std::memcpy(reinterpret_cast<void*>(dest),reinterpret_cast<const void*>(src),count);
+    return count;
+}
+
 template <typename T>
 void reverse(std::size_t count, T *data)
 {

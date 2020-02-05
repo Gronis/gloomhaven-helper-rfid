@@ -14,13 +14,17 @@ WRAPPER_DIR:=swig
 
 python: $(OUTDIR) $(OUTDIR)/_ghr.so $(OUTDIR)/ghr.py
 
+main: $(OUTDIR) $(OUTDIR)/main
 test: $(OUTDIR) $(OUTDIR)/test
 
 clean:
 	rm -r $(OUTDIR)
 
+$(OUTDIR)/main:
+	$(CPP)  $(FLAGS) experiments/main.cpp -I$(INCLUDE) -o $(OUTDIR)/main
+
 $(OUTDIR)/test:
-	$(CPP)  $(FLAGS) experiments/main.cpp -I$(INCLUDE) -o $(OUTDIR)/test
+	$(CPP)  $(FLAGS) experiments/test.cpp -I$(INCLUDE) -o $(OUTDIR)/test
 
 $(OUTDIR):
 	mkdir -p $(OUTDIR)

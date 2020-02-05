@@ -6,10 +6,11 @@
 #include <queue>
 #include <memory>
 
-#include "encoding.hpp"
 #include "print.hpp"
 #include "optional.hpp"
 #include "utils.hpp"
+
+#include "protocol/encoding.hpp"
 
 // Provide a read function which reads from a input stream, and returns one character if data is available
 // or -1 if no data is available.

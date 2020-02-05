@@ -5,8 +5,9 @@
 #include <string>
 
 #include "optional.hpp"
-#include "encoding.hpp"
-#include "decoding.hpp"
+
+#include "protocol/deserializer.hpp"
+#include "protocol/serializer.hpp"
 
 namespace ghr
 {
@@ -55,22 +56,58 @@ public:
 
     int readInt(bool optimizePositive)
     {
-        return ghr::readInt(__data, __position, optimizePositive);
+        tl::optional<int32_t> result;
+        __position += ghr::protocol::readVarInt(
+            __data + __position, __dataLength - __position, optimizePositive, result);
+        return result? result.value() : 0;
     }
 
     void writeInt(int value, bool optimizePositive)
     {
-        ghr::writeInt(__data, __position, value, optimizePositive);
+        __position += ghr::protocol::writeVarInt(
+            __data +  __position, __dataLength - __position, optimizePositive, value);
     }
 
     uint8_t readByte()
     {
-        return ghr::readByte(__data, __position);
+        tl::optional<uint8_t> result;
+        __position += ghr::protocol::readByte(
+            __data + __position, __dataLength - __position, result);
+        return result? result.value() : 0;
     }
 
     void writeByte(uint8_t value)
     {
-        ghr::writeByte(__data, __position, value);
+        __position += ghr::protocol::writeByte(
+            __data +  __position, __dataLength - __position, value);
+    }
+
+    int readFullInt()
+    {
+        tl::optional<int32_t> result;
+        __position += ghr::protocol::readInt(
+            __data + __position, __dataLength - __position, result);
+        return result? result.value() : 0;
+    }
+
+    void writeFullInt(int value)
+    {
+        __position += ghr::protocol::writeInt(
+            __data +  __position, __dataLength - __position, value);
+    }
+
+    tl::optional<std::string> readString()
+    {
+        tl::optional<std::string> result;
+        __position += ghr::protocol::readString(
+            __data + __position, __dataLength - __position, result);
+        return result;
+    }
+
+    void writeString(tl::optional<std::string> value)
+    {
+        __position += ghr::protocol::writeString(
+            __data +  __position, __dataLength - __position, value);
     }
 
     bool readBoolean()
@@ -81,34 +118,6 @@ public:
     void writeBoolean(bool value)
     {
         writeByte(value);
-    }
-
-    int readFullInt()
-    {
-        int value;
-        reinterpret_cast<uint8_t *>(&value)[3] = readByte();
-        reinterpret_cast<uint8_t *>(&value)[2] = readByte();
-        reinterpret_cast<uint8_t *>(&value)[1] = readByte();
-        reinterpret_cast<uint8_t *>(&value)[0] = readByte();
-        return value;
-    }
-
-    void writeFullInt(int value)
-    {
-        writeByte(reinterpret_cast<uint8_t *>(&value)[3]);
-        writeByte(reinterpret_cast<uint8_t *>(&value)[2]);
-        writeByte(reinterpret_cast<uint8_t *>(&value)[1]);
-        writeByte(reinterpret_cast<uint8_t *>(&value)[0]);
-    }
-
-    tl::optional<std::string> readString()
-    {
-        return ghr::readString(__data, __position);
-    }
-
-    void writeString(tl::optional<std::string> value)
-    {
-        ghr::writeString(__data, __position, value);
     }
 
     template <typename T>

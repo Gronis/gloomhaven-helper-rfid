@@ -33,8 +33,8 @@
 
     #include "protocol/message.hpp"
 
-    #include "decoding.hpp"
-    #include "encoding.hpp"
+    #include "protocol/decoding.hpp"
+    #include "protocol/encoding.hpp"
 
     using namespace ghr;
     using namespace ghr::protocol;
@@ -68,8 +68,8 @@
 
 %include "protocol/message.hpp"
 
-%include "decoding.hpp"
-%include "encoding.hpp"
+%include "protocol/decoding.hpp"
+%include "protocol/encoding.hpp"
 // namespace ghr{
 //     %extend PlayerActor {
 //         char *__str__() {

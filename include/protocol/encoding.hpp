@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string>
 
+#include "print.hpp"
 #include "optional.hpp"
 
 namespace ghr
