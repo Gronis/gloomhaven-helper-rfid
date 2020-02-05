@@ -28,6 +28,25 @@ ghr._print(s)
 
 s.round = 3
 s.dark = ghr.ElementState.Strong
+
+```
+
+```python
+import socket
+import ghr
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect(('localhost', 58888))
+
+data = s.recv(1024)
+msg = ghr.Message(bytearray(data))
+
+state = ghr.GameState()
+
+state.clear();
+ghr.readGameState(state, msg)
+
+print(state)
 ```
 
 # TODO:

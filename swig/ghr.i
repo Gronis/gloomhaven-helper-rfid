@@ -8,6 +8,30 @@
 %include "std_string.i"
 // %include "optional.i"
 
+%typecheck(SWIG_TYPECHECK_STRING) (uint8_t *data, std::size_t dataLength)
+{
+  $1 = PyByteArray_Check($input) ? 1 : 0;
+}
+
+%typemap(in) (uint8_t *data, std::size_t dataLength) {
+  if (!PyByteArray_Check($input)) {
+    SWIG_exception_fail(SWIG_TypeError, "in method '" "$symname" "', argument "
+                       "$argnum"" of type '" "$type""'");
+  }
+  $1 = (uint8_t*) PyByteArray_AsString($input);
+  $2 = (size_t) PyByteArray_Size($input);
+}
+
+// This is wrong!
+%typemap(out) (uint8_t*, std::size_t length) {
+  if (!PyByteArray_Check($input)) {
+    SWIG_exception_fail(SWIG_TypeError, "in method '" "$symname" "', argument "
+                       "$argnum"" of type '" "$type""'");
+  }
+  $1 = (const uint8_t*) PyByteArray_AsString($input);
+  $2 = (size_t) PyByteArray_Size($input);
+}
+
 %{
     #define SWIG_FILE_WITH_INIT
     #define SWIG_PYTHON_EXTRA_NATIVE_CONTAINERS
@@ -73,15 +97,6 @@
 
 %include "inputStream.hpp"
 %include "outputStream.hpp"
-
-%typemap(in) (const uint8_t*, size_t length) {
-  if (!PyByteArray_Check($input)) {
-    SWIG_exception_fail(SWIG_TypeError, "in method '" "$symname" "', argument "
-                       "$argnum"" of type '" "$type""'");
-  }
-  $1 = (const uint8_t*) PyByteArray_AsString($input);
-  $2 = (size_t) PyByteArray_Size($input);
-}
 
 %include "protocol/v8_0/protocol.hpp"
 
