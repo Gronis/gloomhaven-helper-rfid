@@ -10,26 +10,17 @@
 
 %typecheck(SWIG_TYPECHECK_STRING) (uint8_t *data, std::size_t dataLength)
 {
-  $1 = PyByteArray_Check($input) ? 1 : 0;
+  $1 = PyBytes_Check($input) ? 1 : 0;
 }
 
+// SEE: https://docs.python.org/3/c-api/bytes.html
 %typemap(in) (uint8_t *data, std::size_t dataLength) {
-  if (!PyByteArray_Check($input)) {
+  if (!PyBytes_Check($input)) {
     SWIG_exception_fail(SWIG_TypeError, "in method '" "$symname" "', argument "
                        "$argnum"" of type '" "$type""'");
   }
-  $1 = (uint8_t*) PyByteArray_AsString($input);
-  $2 = (size_t) PyByteArray_Size($input);
-}
-
-// This is wrong!
-%typemap(out) (uint8_t*, std::size_t length) {
-  if (!PyByteArray_Check($input)) {
-    SWIG_exception_fail(SWIG_TypeError, "in method '" "$symname" "', argument "
-                       "$argnum"" of type '" "$type""'");
-  }
-  $1 = (const uint8_t*) PyByteArray_AsString($input);
-  $2 = (size_t) PyByteArray_Size($input);
+  $1 = (uint8_t*) PyBytes_AsString($input);
+  $2 = (size_t) PyBytes_Size($input);
 }
 
 %{

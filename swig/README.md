@@ -39,7 +39,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(('localhost', 58888))
 
 data = s.recv(1024)
-msg = ghr.Message(bytearray(data))
+msg = ghr.Message(data)
 
 state = ghr.GameState()
 

@@ -62,11 +62,7 @@ void print(double &&arg)
 
 void print(std::string &arg)
 {
-#ifdef ARDUINO
-    Serial1.print(arg.c_str());
-#else  // on a pc
-    // std::cout << arg;
-#endif // ARDUINO
+    printf("debug: %s", arg.c_str());
 }
 
 template <typename T>
