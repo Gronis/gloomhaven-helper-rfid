@@ -2,5 +2,5 @@
 .vscode
 .DS_Store
 .piolibdeps
-a.out
+a.out*
 out/
