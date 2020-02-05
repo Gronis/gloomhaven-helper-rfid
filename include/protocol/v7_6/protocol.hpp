@@ -129,7 +129,6 @@ void readGameState(GameState &state, Message &msg)
     state.actors.reserve(n);
     for (int i = 0; i < n; i++)
     {
-
         if (msg.readBoolean())
         {
             Actor actor = __readPlayerActor(msg);

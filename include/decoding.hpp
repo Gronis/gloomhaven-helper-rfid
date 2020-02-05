@@ -100,12 +100,7 @@ std::string readAscii(uint8_t *data, std::size_t &pos)
     {
         b = readByte(data, end);
     } while ((b & 0x80) == 0);
-    // end = start;
-    // do
-    // {
-    //     b = readByte(data, end);
 
-    // } while ((b & 0x80) == 0);
     data[end - 1] &= 0x7F; // Mask end of ascii bit.
 
     std::string value;

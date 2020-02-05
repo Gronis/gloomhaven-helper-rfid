@@ -53,7 +53,6 @@ int main()
                     ghr::protocol::Message m(bufferPos, head.length);
                     ghr::GameState s;
                     ghr::protocol::v7_6::readGameState(s, m);
-                    ghr::print(s);
                 }
                 else
                 {
