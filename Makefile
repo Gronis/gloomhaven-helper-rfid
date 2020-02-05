@@ -10,12 +10,17 @@ INCLUDE:=include
 SOURCE:=src
 WRAPPER_DIR:=swig
 
-.PHONY: python clean
+.PHONY: python test clean
 
 python: $(OUTDIR) $(OUTDIR)/_ghr.so $(OUTDIR)/ghr.py
 
+test: $(OUTDIR) $(OUTDIR)/test
+
 clean:
 	rm -r $(OUTDIR)
+
+$(OUTDIR)/test:
+	$(CPP)  $(FLAGS) experiments/main.cpp -I$(INCLUDE) -o $(OUTDIR)/test
 
 $(OUTDIR):
 	mkdir -p $(OUTDIR)
