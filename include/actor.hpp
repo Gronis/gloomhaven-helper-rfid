@@ -28,10 +28,10 @@ struct Actor
     bool turn_completed = false;
     std::vector<MonsterInstance> instances;
 
-    Actor(const MonsterActor && monster) : __is_player(false), __monster(monster)
+    Actor(const MonsterActor & monster) : __is_player(false), __monster(monster)
     {
     }
-    Actor(const PlayerActor && player) : __is_player(true), __player(player)
+    Actor(const PlayerActor & player) : __is_player(true), __player(player)
     {
     }
 

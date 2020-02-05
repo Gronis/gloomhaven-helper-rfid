@@ -1,5 +1,5 @@
-#ifndef __MESSAGE_H__
-#define __MESSAGE_H__
+#ifndef __PROTOCOL_MESSAGE_H__
+#define __PROTOCOL_MESSAGE_H__
 
 #include <stdint.h>
 #include <string>
@@ -9,6 +9,8 @@
 #include "decoding.hpp"
 
 namespace ghr
+{
+namespace protocol
 {
 
 class Message
@@ -185,6 +187,7 @@ public:
     }
 };
 
+} // namespace protocol
 } // namespace ghr
 
-#endif // __MESSAGE_H__
+#endif // __PROTOCOL_MESSAGE_H__

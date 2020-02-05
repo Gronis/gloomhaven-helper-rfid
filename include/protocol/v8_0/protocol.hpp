@@ -2,7 +2,7 @@
 #define __PROTOCOL_V8_0_PROTOCOL_H__
 
 #include "summonColor.hpp"
-#include "message.hpp"
+#include "protocol/message.hpp"
 #include "condition.hpp"
 #include "characterClass.hpp"
 #include "monsterActor.hpp"

@@ -12,7 +12,7 @@
 
 #include "protocol.hpp"
 #include "gameState.hpp"
-#include "message.hpp"
+#include "protocol/message.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
 #include "client.hpp"

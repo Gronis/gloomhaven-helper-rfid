@@ -2,7 +2,7 @@
 #define __PROTOCOL_V7_6_PROTOCOL_H__
 
 #include "summonColor.hpp"
-#include "message.hpp"
+#include "protocol/message.hpp"
 #include "condition.hpp"
 #include "characterClass.hpp"
 #include "monsterActor.hpp"
@@ -112,6 +112,7 @@ void readGameState(GameState &state, Message &msg)
     state.earth = msg.readEnum(ghr::getElementStateValues());
     state.light = msg.readEnum(ghr::getElementStateValues());
     state.dark = msg.readEnum(ghr::getElementStateValues());
+
 
     for (int i = 0, n = msg.readInt(true); i < n; i++)
     {

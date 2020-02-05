@@ -27,7 +27,7 @@
     #include "actor.hpp"
     #include "decoding.hpp"
     #include "encoding.hpp"
-    #include "message.hpp"
+    #include "protocol/message.hpp"
     #include "monsterAbilityDeck.hpp"
     #include "monsterActor.hpp"
     #include "monsterInstance.hpp"
@@ -35,6 +35,7 @@
     #include "gameState.hpp"
 
     using namespace ghr;
+    using namespace ghr::protocol;
 %}
 
 // Rename all enums
@@ -59,7 +60,7 @@
 %include "actor.hpp"
 %include "decoding.hpp"
 %include "encoding.hpp"
-%include "message.hpp"
+%include "protocol/message.hpp"
 %include "monsterAbilityDeck.hpp"
 %include "monsterActor.hpp"
 %include "monsterInstance.hpp"
@@ -88,7 +89,6 @@
 // Define templates for classes
 %template(ActorVector) std::vector<ghr::Actor>;
 %template(GameStateVector) std::vector<ghr::GameState>;
-%template(MessageVector) std::vector<ghr::Message>;
 %template(MonsterAbilityDeckVector) std::vector<ghr::MonsterAbilityDeck>;
 %template(MonsterActorVector) std::vector<ghr::MonsterActor>;
 %template(MonsterInstanceVector) std::vector<ghr::MonsterInstance>;

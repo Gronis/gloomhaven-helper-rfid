@@ -39,7 +39,7 @@
 #include "gameState.hpp"
 #include "protocol/v7_6/protocol.hpp"
 #include "protocol/v8_0/protocol.hpp"
-#include "message.hpp"
+#include "protocol/message.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
 #include "outputStream.hpp"
