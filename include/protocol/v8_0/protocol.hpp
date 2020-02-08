@@ -1,7 +1,7 @@
 #ifndef __PROTOCOL_V8_0_PROTOCOL_H__
 #define __PROTOCOL_V8_0_PROTOCOL_H__
 
-#include "protocol/message.hpp"
+#include "protocol/buffer.hpp"
 
 #include "model/summonColor.hpp"
 #include "model/condition.hpp"
@@ -18,7 +18,7 @@ namespace protocol
 {
 namespace v8_0
 {
-void __readCommonActor(Message &msg, Actor &actor)
+void __readCommonActor(Buffer &msg, Actor &actor)
 {
     actor.turn_completed = msg.readBoolean();
     int nn = msg.readInt(true);
@@ -48,7 +48,7 @@ void __readCommonActor(Message &msg, Actor &actor)
     }
 }
 
-Actor __readPlayerActor(Message &msg)
+Actor __readPlayerActor(Buffer &msg)
 {
     PlayerActor player;
     auto name = msg.readString();
@@ -77,13 +77,13 @@ Actor __readPlayerActor(Message &msg)
     return actor;
 }
 
-tl::optional<int> __readMonsterAbility(Message &msg)
+tl::optional<int> __readMonsterAbility(Buffer &msg)
 {
     int ability_id = msg.readInt(true);
     return ability_id == 0 ? tl::nullopt : tl::make_optional(ability_id - 1);
 }
 
-Actor __readMonsterActor(Message &msg)
+Actor __readMonsterActor(Buffer &msg)
 {
     MonsterActor monster = MonsterActor();
     monster.id = msg.readInt(true);
@@ -96,7 +96,7 @@ Actor __readMonsterActor(Message &msg)
     return actor;
 }
 
-void readGameState(GameState &state, Message &msg)
+void readGameState(GameState &state, Buffer &msg)
 {
     state.round = msg.readInt(true);
     state.scenario_number = msg.readInt(true);
@@ -157,7 +157,7 @@ void readGameState(GameState &state, Message &msg)
     print(state);
 }
 
-void __writeCommonActor(Message &msg, const Actor &actor)
+void __writeCommonActor(Buffer &msg, const Actor &actor)
 {
     // Note: Same as v7_6
     msg.writeBoolean(actor.turn_completed);
@@ -181,7 +181,7 @@ void __writeCommonActor(Message &msg, const Actor &actor)
         msg.writeEnumArray(monster.conditions_current_turn);
     }
 }
-void __writePlayerActor(Message &msg, const Actor &actor)
+void __writePlayerActor(Buffer &msg, const Actor &actor)
 {
     // Note: Same as v7_6
     const auto &player = actor.getPlayer().value();
@@ -202,12 +202,12 @@ void __writePlayerActor(Message &msg, const Actor &actor)
     __writeCommonActor(msg, actor);
 }
 
-void __writeMonsterAbility(Message &msg, tl::optional<int> ability)
+void __writeMonsterAbility(Buffer &msg, tl::optional<int> ability)
 {
     msg.writeInt(ability ? (ability.value() + 1) : 0, true);
 }
 
-void __writeMonsterActor(Message &msg, const Actor &actor)
+void __writeMonsterActor(Buffer &msg, const Actor &actor)
 {
     const auto &monster = actor.getMonster().value();
     msg.writeInt(monster.id, true);
@@ -218,7 +218,7 @@ void __writeMonsterActor(Message &msg, const Actor &actor)
     __writeCommonActor(msg, actor);
 }
 
-void writeGameState(const GameState &state, Message &msg)
+void writeGameState(const GameState &state, Buffer &msg)
 {
     msg.writeInt(state.round, true);
     msg.writeInt(state.scenario_number, true);

@@ -32,6 +32,5 @@ s.dark = ghr.ElementState.Strong
 
 # TODO:
 
-* Using `tl::optional` does not work very well with swig. Trying to find out how to fix. Right now, all members which are wrapped inside a `tl::optional` might be inaccessible from the python interface.
 * Expose a serilize and deserilize interface.
 * Verify and possibly implement additional support, if necessary, for `v8.2` `8.3` and `8.3.1` of Gloomhaven Helper.

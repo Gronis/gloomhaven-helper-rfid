@@ -39,7 +39,7 @@
 #include "model/gameState.hpp"
 #include "protocol/v7_6/protocol.hpp"
 #include "protocol/v8_0/protocol.hpp"
-#include "protocol/message.hpp"
+#include "protocol/buffer.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
 #include "outputStream.hpp"
@@ -63,8 +63,8 @@ ghr::GameState state;
 int message_number = 0;
 ghr::Led led(READ_LED_PIN);
 
-std::function<void(ghr::GameState &, ghr::Message &)> readGameState;
-std::function<void(const ghr::GameState &, ghr::Message &)> writeGameState;
+std::function<void(ghr::GameState &, ghr::Buffer &)> readGameState;
+std::function<void(const ghr::GameState &, ghr::Buffer &)> writeGameState;
 
 boolean waitingDHCP = false;
 char last_mac[18];
@@ -125,7 +125,7 @@ void on_packet(std::string event, std::string payload, uint8_t *data, std::size_
   ghr::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
   if (tcp_connection.connected())
   {
-    ghr::Message msg(data, dataLength);
+    ghr::Buffer msg(data, dataLength);
     if (event[0] == 's')
     {
       std::vector<ghr::AttackModifier> attackModifiers = {};
@@ -165,7 +165,7 @@ void send_packet(ghr::Client client)
   message_number = message_number + 1;
   std::size_t dataCapacity = 1024;
   uint8_t data[dataCapacity];
-  ghr::Message msg(data, dataCapacity);
+  ghr::Buffer msg(data, dataCapacity);
   msg.writeFullInt(message_number);
   writeGameState(state, msg);
   int dataLength = msg.getPosition();

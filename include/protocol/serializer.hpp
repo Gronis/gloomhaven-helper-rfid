@@ -86,10 +86,8 @@ std::size_t writeAscii(uint8_t *buffer, const std::size_t bufferSize, const std:
     std::size_t count = 0;
     const uint8_t *dataArr = reinterpret_cast<const uint8_t *>(data.c_str());
     count += copyBytes(dataArr, buffer + count, data.length(), bufferSize - count);
-    ghr::print("Wrote ascii string: \n");
     if(count != data.length())
     {
-        ghr::print("Failed to write ascii string, wrote: ", count, " should be ", data.length(), "\n");
         return 0;
     }
     buffer[count - 1] |= 0x80;

@@ -5,20 +5,22 @@ CPP=g++
 CFLAGS:=`python3-config --cflags`
 LDFLAGS:=`python3-config --ldflags`
 FLAGS:=--std=c++11
-OUTDIR:=out
+OUTDIR:=out/ghh
 INCLUDE:=include
 SOURCE:=src
 WRAPPER_DIR:=swig
+PYTHON_DIR:=python
 
 .PHONY: python test clean
 
-python: $(OUTDIR) $(OUTDIR)/_ghr.so $(OUTDIR)/ghr.py
+#$(OUTDIR)/$(PYTHON_MODULE) $(OUTDIR)/$(PYTHON_MODULE)/_ghr.so $(OUTDIR)/$(PYTHON_MODULE)/ghr.py
+python: $(OUTDIR) $(addprefix $(OUTDIR)/, _ghr.so ghr.py __init__.py)
 
 main: $(OUTDIR) $(OUTDIR)/main
 test: $(OUTDIR) $(OUTDIR)/test
 
 clean:
-	rm -r $(OUTDIR)
+	rm -rf $(OUTDIR)
 
 $(OUTDIR)/main:
 	$(CPP)  $(FLAGS) experiments/main.cpp -I$(INCLUDE) -o $(OUTDIR)/main
@@ -28,6 +30,9 @@ $(OUTDIR)/test:
 
 $(OUTDIR):
 	mkdir -p $(OUTDIR)
+
+$(OUTDIR)/__init__.py: $(PYTHON_DIR)/__init__.py
+	cp $(PYTHON_DIR)/__init__.py $(OUTDIR)/__init__.py
 
 $(OUTDIR)/%.py: $(WRAPPER_DIR)/%.i
 	swig -python -c++ -I$(INCLUDE) $<

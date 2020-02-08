@@ -1,4 +1,5 @@
-%include <std_common.i>
+%include "std_common.i"
+%include "typemaps.i"
 
 %{
 #include "optional.hpp"
@@ -15,82 +16,48 @@ namespace tl {
     optional(const optional& other);
     template <class T> optional(const optional<T> &other);
 
-    %apply T & OUTPUT { T &value };
-    void get_value(T& OUTPUT) const;
-    void get_value(T& OUTPUT);
 
-    T &value() &;
-    const T &value() const &;
-    T &&value() &&;
-    const T &&value() const &&;
+    void value(T *out) const;
+    void value(T *out);
+
+
     constexpr bool has_value() const noexcept;
 
 
-    // T value;
   };
-}
-
-namespace swig {
-  template <typename T>  struct traits<tl::optional< T > > {
-    typedef pointer_category category;
-    static const char* type_name() {
-      return "tl::optional<" #T " >";
-    }
-  };
-  template <class T> struct traits_asval<tl::optional<T> >  {
-    typedef tl::optional<T> value_type;
-    static int get_value(PyObject* value,  tl::optional<T> *val)
-    {
-      if (val) {
-        T *value_ptr = &(val->value());
-        int res = swig::asval((PyObject*)value, value_ptr);
-        if (!SWIG_IsOK(res)) return res;
-        return res;
-      } else {
-        T *value_ptr = 0;
-        int res = swig::asval((PyObject*)value, 0);
-        if (!SWIG_IsOK(res)) return res;
-        return res;
-      }
-    }
-    static int asval(PyObject *obj, tl::optional<T> *val) {
-      int res = SWIG_ERROR;
-      res = get_value(obj, val);
-      if (res == SWIG_ERROR) {
-        value_type *p = 0;
-        swig_type_info *descriptor = swig::type_info<value_type>();
-        res = descriptor ? SWIG_ConvertPtr(obj, (void **)&p, descriptor, 0) : SWIG_ERROR;
-        if (SWIG_IsOK(res) && val)  *val = *p;
-      }
-      return res;
-
-    }
-  };
-  // template <>  struct traits_asval< tl::optional< T > > {
-  //   typedef std::remove_const<std::remove_reference<T>::type>::type value_type;
-  //   static int asval(PyObject *obj, value_type *val) {
-  //     return SWIG_AsVal_int (obj, (int *)val);
-  //   }
-  // };
-  // template <>  struct traits_from< tl::optional< T > > {
-  //   typedef std::remove_const<std::remove_reference<T>::type>::type value_type;
-  //   static PyObject *from(const value_type& val) {
-  //     return SWIG_From_int  ((int)val);
-  //   }
-  // };
-
+  template <class T>
+  constexpr optional<T> make_optional(T &&arg);
 }
 
 
-%typemap(out) tl::optional<typename T> %{
+
+%define template_optional_base(__type__, __name__)
+
+
+%typemap(directorin) tl::optional<__type__> %{
+    if($input == Py_None)
+        $1 = __type__();
+    else
+        $1 = PyObject(tl::make_optional($input));
+%}
+
+%typemap(in, numinputs=0) __type__ *out (__type__ temp) {
+  $1 = &temp;
+}
+%template(Optional ## __name__) tl::optional<__type__>;
+%template() tl::optional<__type__ &>;
+%{
+  template tl::optional<__type__> tl::make_optional(__type__ &&);
+%}
+namespace tl{
+  constexpr optional<__type__> make_optional(__type__ arg);
+}
+%enddef
+
+%define template_optional_object(__type__, __name__)
+%typemap(out) tl::optional<__type__ &> %{
   if((&$1)->has_value()){
-      using T = std::remove_const<std::remove_reference<$1_ltype::value_type>::type>::type;
-      T *res ;
-      res = (T *)new T();
-      *res = (&$1)->value();
-      //$result = PyObject((&$1)->value());
-      // $descriptor(T *)
-      $result = SWIG_NewPointerObj(SWIG_as_voidptr(res), SWIGTYPE_p_ghr__MonsterActor, SWIG_POINTER_NEW | 0);
+      $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(SWIG_as_voidptr(&($1.value())), $descriptor(__type__ *), (SWIG_POINTER_NO_NULL | 0)));
   }
   else
   {
@@ -98,14 +65,34 @@ namespace swig {
       Py_INCREF(Py_None);
   }
 %}
+%typemap(argout) __type__ *out {
+  $result = SWIG_Python_AppendOutput($result, SWIG_NewPointerObj(SWIG_as_voidptr($1), $descriptor(__type__ *), (SWIG_POINTER_NO_NULL |  0 )));
+}
+template_optional_base(__type__, __name__);
+%enddef
 
-// %typemap(out) tl::optional<int> %{
-//   if((&$1)->has_value()){
-//       $result = PyLong_FromLong(*$1);
-//   }
-//   else
-//   {
-//       $result = Py_None;
-//       Py_INCREF(Py_None);
-//   }
-// %}
+
+%define template_optional_integral(__type__, __name__)
+%typemap(out) tl::optional<__type__ &> %{
+  if((&$1)->has_value()){
+      using T = std::remove_const<std::remove_reference<__type__>::type>::type;
+      T *res ;
+      res = (T *)new T();
+      *res = (&$1)->value();
+      $result = SWIG_From_int(*res)
+  }
+  else
+  {
+      $result = Py_None;
+      Py_INCREF(Py_None);
+  }
+%}
+%typemap(argout) __type__ *out {
+  $result = SWIG_From_int(*$1);
+}
+template_optional_base(__type__, __name__);
+%enddef
+
+//     //   return SWIG_From_float(*value);
+//     //   return SWIG_From_std_string(*value);
+//     //   return SWIG_NewPointerObj(SWIG_as_voidptr(value), $descriptor(__type__ *), (SWIG_POINTER_OWN |  0 ));

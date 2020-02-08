@@ -1584,17 +1584,17 @@ public:
     }
 #endif
 
-    void get_value(T& OUTPUT) const
+    void value(T *out) const
     {
         if (has_value()){
-            OUTPUT = this->m_value;
+            *out = this->m_value;
         }
     }
 
-    void get_value(T& OUTPUT)
+    void value(T *out)
     {
         if (has_value()){
-            OUTPUT = this->m_value;
+            *out = this->m_value;
         }
     }
 
@@ -2444,17 +2444,17 @@ public:
 #endif
     }
 
-    void get_value(T& OUTPUT) const
+    void value(T *out) const
     {
         if (has_value()){
-            OUTPUT = this->m_value;
+            *out = this->m_value;
         }
     }
 
-    void get_value(T& OUTPUT)
+    void value(T *out)
     {
         if (has_value()){
-            OUTPUT = this->m_value;
+            *out = this->m_value;
         }
     }
 

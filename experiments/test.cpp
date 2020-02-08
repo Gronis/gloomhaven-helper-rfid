@@ -13,7 +13,7 @@
 #include "protocol/v8_0/protocol.hpp"
 #include "protocol/v7_6/protocol.hpp"
 #include "model/gameState.hpp"
-#include "protocol/message.hpp"
+#include "protocol/buffer.hpp"
 #include "print.hpp"
 #include "inputStream.hpp"
 #include "client.hpp"
@@ -149,7 +149,7 @@ int main()
         return value;
     };
 
-    ghr::OutputStream output(write_dummy_data, output_buffer, bufferCapacity);
+    ghr::OutputStream output(write_network_data, output_buffer, bufferCapacity);
     ghr::InputStream input(read_network_data, input_buffer, bufferCapacity);
     ghr::Client client(input, output);
 
@@ -157,21 +157,21 @@ int main()
         int new_message_number = message_number + 1;
         std::size_t dataCapacity = 1024;
         uint8_t data[dataCapacity];
-        ghr::protocol::Message msg(data, dataCapacity);
+        ghr::protocol::Buffer msg(data, dataCapacity);
         msg.writeFullInt(new_message_number);
-        ghr::protocol::v7_6::writeGameState(state, msg);
+        ghr::protocol::v8_0::writeGameState(state, msg);
         int dataLength = msg.getPosition();
         client.send_data("s", "", data, dataLength);
         ghr::print("\nSent state\n");
     };
     client.on_data = [&](std::string event, std::string payload, uint8_t *data, std::size_t dataLength) {
         ghr::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
-        ghr::protocol::Message msg(data, dataLength);
+        ghr::protocol::Buffer msg(data, dataLength);
         if (event[0] == 's')
         {
             state.clear();
             message_number = msg.readFullInt();
-            ghr::protocol::v7_6::readGameState(state, msg);
+            ghr::protocol::v8_0::readGameState(state, msg);
         }
     };
     time_since_sent_state = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::system_clock::now().time_since_epoch());
@@ -180,11 +180,11 @@ int main()
         if (current >= end)
         {
             end = read(sock, (char *)input_buffer, bufferCapacity);
-            //ghr::print("Read network: ", end, "\n");
-            current = 0;
+            ghr::print("Read network: ", end, "\n");
         }
         client.update();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        current = 0;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
         auto now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::system_clock::now().time_since_epoch());
         if (now - time_since_sent_state > time_send_state_interval)
         {

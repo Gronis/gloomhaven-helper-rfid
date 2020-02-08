@@ -12,8 +12,6 @@
     #define SWIG_FILE_WITH_INIT
     #define SWIG_PYTHON_EXTRA_NATIVE_CONTAINERS
 
-    // #include "optional.hpp"
-
     // Include enums first. Somehow swig will intruduce memory leaks if included in this order
     #include "model/attackModifier.hpp"
     #include "model/characterClass.hpp"
@@ -31,13 +29,11 @@
     #include "model/playerActor.hpp"
     #include "model/gameState.hpp"
 
-    #include "protocol/message.hpp"
-
-    #include "protocol/decoding.hpp"
-    #include "protocol/encoding.hpp"
+    #include "protocol/buffer.hpp"
 
     using namespace ghr;
     using namespace ghr::protocol;
+    using namespace tl;
 %}
 
 // Rename all enums
@@ -48,6 +44,18 @@
 %rename(MonsterType) MonsterTypeNS;
 %rename(PlayerInit) PlayerInitNS;
 %rename(SummonColor) SummonColorNS;
+
+// Create tl::optional templates for some classes. Enums are represented as an integer in python
+template_optional_object(ghr::MonsterActor, MonsterActor);
+template_optional_object(ghr::PlayerActor, PlayerActor);
+template_optional_integral(int, int);
+template_optional_integral(ghr::AttackModifierNS::Value, AttackModifier);
+template_optional_integral(ghr::CharacterClassNS::Value, CharacterClass);
+template_optional_integral(ghr::ConditionNS::Value, Condition);
+template_optional_integral(ghr::ElementStateNS::Value, ElementState);
+template_optional_integral(ghr::MonsterTypeNS::Value, MonsterType);
+template_optional_integral(ghr::PlayerInitNS::Value, PlayerInit);
+template_optional_integral(ghr::SummonColorNS::Value, SummonColor);
 
 // Include enums first. Somehow swig will intruduce memory leaks if included in this order
 %include "model/attackModifier.hpp"
@@ -66,18 +74,10 @@
 %include "model/playerActor.hpp"
 %include "model/gameState.hpp"
 
-%include "protocol/message.hpp"
+// Include classes used for serializing and deserializing the model
+%include "protocol/buffer.hpp"
 
-%include "protocol/decoding.hpp"
-%include "protocol/encoding.hpp"
-// namespace ghr{
-//     %extend PlayerActor {
-//         char *__str__() {
-//             static char tmp[1024];
-//             sprintf(tmp, "PlayerActor(%s)", $self->name);
-//         }
-//     };
-// }
+%template(IntVector) std::vector<int>;
 
 // We need to template every class that we want to iterate over in python.
 // Define templates for enums
@@ -92,29 +92,9 @@
 // Define templates for classes
 %template(ActorVector) std::vector<ghr::Actor>;
 %template(GameStateVector) std::vector<ghr::GameState>;
-%template(MonsterAbilityDeckVector) std::vector<ghr::MonsterAbilityDeck>;
 %template(MonsterActorVector) std::vector<ghr::MonsterActor>;
 %template(MonsterInstanceVector) std::vector<ghr::MonsterInstance>;
 %template(PlayerActorVector) std::vector<ghr::PlayerActor>;
 
-// %template(MonsterAbilityDeckLookupMap) std::map<int, MonsterAbilityDeck>;
+%template(MonsterAbilityDeckLookupMap) std::map<int, ghr::MonsterAbilityDeck>;
 
-// %typemap(in) tl::optional<ghr::MonsterActor &> %{
-//     if($input == Py_None)
-//         $1 = tl::optional<ghr::MonsterActor &>();
-//     else
-//         $1 = tl::optional<ghr::MonsterActor &>(PyObject($input));
-// %}
-
-
-%template(OptionalAttackModifier) tl::optional<ghr::AttackModifierNS::Value>;
-%template(OptionalInt) tl::optional<int>;
-// %typemap(out) tl::optional<ghr::AttackModifierNS::Value> %{
-//     if(!!$1)
-//         $result = PyObject($1.value());
-//     else
-//     {
-//         $result = Py_None;
-//         Py_INCREF(Py_None);
-//     }
-// %}

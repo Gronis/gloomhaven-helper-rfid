@@ -14,7 +14,7 @@ namespace ghr
 namespace protocol
 {
 
-class Message
+class Buffer
 {
 private:
     uint8_t *__data;
@@ -24,7 +24,7 @@ private:
     bool __free_on_delete;
 
 public:
-    Message()
+    Buffer()
         : __data((uint8_t *)malloc(1024)),
           __dataLength(1024),
           __position(0),
@@ -32,14 +32,14 @@ public:
     {
     }
 
-    ~Message()
+    ~Buffer()
     {
         if(__free_on_delete){
             free(__data);
         }
     }
 
-    Message(
+    Buffer(
         uint8_t *data,
         std::size_t dataLength)
         : __data(data),

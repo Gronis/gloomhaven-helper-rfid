@@ -26,19 +26,19 @@ struct Actor
 
     //public:
     bool turn_completed = false;
-    std::vector<MonsterInstance> instances;
+    std::vector<ghr::MonsterInstance> instances;
 
-    Actor(const MonsterActor & monster) : __is_player(false), __monster(monster)
+    Actor(const ghr::MonsterActor & monster) : __is_player(false), __monster(monster)
     {
     }
-    Actor(const PlayerActor & player) : __is_player(true), __player(player)
+    Actor(const ghr::PlayerActor & player) : __is_player(true), __player(player)
     {
     }
 
-    Actor(MonsterActor * monster) : __is_player(false), __monster(*monster)
+    Actor(ghr::MonsterActor * monster) : __is_player(false), __monster(*monster)
     {
     }
-    Actor(PlayerActor * player) : __is_player(true), __player(*player)
+    Actor(ghr::PlayerActor * player) : __is_player(true), __player(*player)
     {
     }
 
@@ -46,20 +46,20 @@ struct Actor
     {
     }
 
-    tl::optional<MonsterActor &> getMonster()
+    tl::optional<ghr::MonsterActor &> getMonster()
     {
         return __is_player ? tl::nullopt : tl::optional<MonsterActor &>(__monster);
     }
-    tl::optional<PlayerActor &> getPlayer()
+    tl::optional<ghr::PlayerActor &> getPlayer()
     {
         return __is_player ? tl::optional<PlayerActor &>(__player) : tl::nullopt;
     }
 
-    tl::optional<const MonsterActor &> getMonster() const
+    tl::optional<const ghr::MonsterActor &> getMonster() const
     {
         return __is_player ? tl::nullopt : tl::optional<const MonsterActor &>(__monster);
     }
-    tl::optional<const PlayerActor &> getPlayer() const
+    tl::optional<const ghr::PlayerActor &> getPlayer() const
     {
         return __is_player ? tl::optional<const PlayerActor &>(__player) : tl::nullopt;
     }
