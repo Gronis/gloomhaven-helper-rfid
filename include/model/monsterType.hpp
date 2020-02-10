@@ -30,7 +30,7 @@ struct MonsterTypeNS{
 
 using MonsterType = MonsterTypeNS::Value;
 
-std::vector<MonsterType> getMonsterTypeValues()
+inline std::vector<MonsterType> getMonsterTypeValues()
 {
     return {
         MonsterType::Normal,
@@ -51,7 +51,7 @@ std::vector<MonsterType> getMonsterTypeValues()
         MonsterType::value16};
 }
 
-void print(const MonsterType &arg)
+inline void print(const MonsterType &arg)
 {
     switch (arg)
     {

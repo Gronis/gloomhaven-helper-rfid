@@ -34,7 +34,7 @@ struct ConditionNS
 
 using Condition = ConditionNS::Value;
 
-std::vector<Condition> getConditionValues()
+inline std::vector<Condition> getConditionValues()
 {
     return {
         Condition::value1,
@@ -58,7 +58,7 @@ std::vector<Condition> getConditionValues()
         Condition::value19};
 }
 
-void print(const Condition &arg)
+inline void print(const Condition &arg)
 {
     switch (arg)
     {

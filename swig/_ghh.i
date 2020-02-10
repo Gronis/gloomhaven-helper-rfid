@@ -31,15 +31,9 @@
 
     #include "protocol/buffer.hpp"
 
-    #include "protocol/v7_6/protocol.hpp"
-    #include "protocol/v8_0/protocol.hpp"
-
     using namespace ghh;
-    using namespace ghh::protocol;
     using namespace tl;
 %}
-%rename(readGameState_v7_6) ghh::protocol::v7_6::readGameState;
-%rename(readGameState_v8_0) ghh::protocol::v8_0::readGameState;
 
 // Rename all enums
 %rename(AttackModifier) AttackModifierNS;
@@ -79,36 +73,14 @@ template_optional_integral(ghh::SummonColorNS::Value, SummonColor);
 %include "model/playerActor.hpp"
 %include "model/gameState.hpp"
 
-// Include classes used for serializing and deserializing the model
+
 %include "protocol/buffer.hpp"
 
-namespace ghh
-{
-namespace protocol
-{
-namespace v8_0
-{
-void readGameState(GameState &state, Buffer &buffer);
-}
-}
-}
-namespace ghh
-{
-namespace protocol
-{
-namespace v7_6
-{
-void readGameState(GameState &state, Buffer &buffer);
-}
-}
-}
-
-
+// Used for abilities
 %template(IntVector) std::vector<int>;
 
 // We need to template every class that we want to iterate over in python.
 // Define templates for enums
-%template(AttackModifierVector) std::vector<ghh::AttackModifierNS::Value>;
 %template(CharacterClassVector) std::vector<ghh::CharacterClassNS::Value>;
 %template(ConditionVector) std::vector<ghh::ConditionNS::Value>;
 %template(ElementStateVector) std::vector<ghh::ElementStateNS::Value>;
@@ -118,10 +90,6 @@ void readGameState(GameState &state, Buffer &buffer);
 
 // Define templates for classes
 %template(ActorVector) std::vector<ghh::Actor>;
-%template(GameStateVector) std::vector<ghh::GameState>;
-%template(MonsterActorVector) std::vector<ghh::MonsterActor>;
 %template(MonsterInstanceVector) std::vector<ghh::MonsterInstance>;
-%template(PlayerActorVector) std::vector<ghh::PlayerActor>;
-
 %template(MonsterAbilityDeckLookupMap) std::map<int, ghh::MonsterAbilityDeck>;
 

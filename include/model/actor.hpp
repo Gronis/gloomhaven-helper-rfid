@@ -46,26 +46,26 @@ struct Actor
     {
     }
 
-    tl::optional<ghh::MonsterActor &> getMonster()
+    inline tl::optional<ghh::MonsterActor &> getMonster()
     {
         return __is_player ? tl::nullopt : tl::optional<MonsterActor &>(__monster);
     }
-    tl::optional<ghh::PlayerActor &> getPlayer()
+    inline tl::optional<ghh::PlayerActor &> getPlayer()
     {
         return __is_player ? tl::optional<PlayerActor &>(__player) : tl::nullopt;
     }
 
-    tl::optional<const ghh::MonsterActor &> getMonster() const
+    inline tl::optional<const ghh::MonsterActor &> getMonster() const
     {
         return __is_player ? tl::nullopt : tl::optional<const MonsterActor &>(__monster);
     }
-    tl::optional<const ghh::PlayerActor &> getPlayer() const
+    inline tl::optional<const ghh::PlayerActor &> getPlayer() const
     {
         return __is_player ? tl::optional<const PlayerActor &>(__player) : tl::nullopt;
     }
 };
 
-void print(const Actor &arg)
+inline void print(const Actor &arg)
 {
     const auto monster = arg.getMonster();
     const auto player = arg.getPlayer();

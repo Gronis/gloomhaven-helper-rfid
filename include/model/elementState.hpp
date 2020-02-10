@@ -18,7 +18,7 @@ struct ElementStateNS
 
 using ElementState = ElementStateNS::Value;
 
-std::vector<ElementState> getElementStateValues()
+inline std::vector<ElementState> getElementStateValues()
 {
     return {
         ElementState::Inert,
@@ -26,7 +26,7 @@ std::vector<ElementState> getElementStateValues()
         ElementState::Waning};
 }
 
-void print(const ElementState &arg)
+inline void print(const ElementState &arg)
 {
     switch (arg)
     {

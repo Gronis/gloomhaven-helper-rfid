@@ -77,7 +77,7 @@ struct GameState
                   actors()
     {
     }
-    void clear()
+    inline void clear()
     {
         attack_modifiers_discard.clear();
         attack_modifiers.clear();
@@ -87,7 +87,7 @@ struct GameState
     }
 };
 
-void print(const GameState &arg)
+inline void print(const GameState &arg)
 {
     ghh::print("round: ", arg.round, "\n");
     ghh::print("scen nr: ", arg.scenario_number, "\n");

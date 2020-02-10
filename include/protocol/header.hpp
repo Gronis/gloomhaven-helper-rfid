@@ -1,9 +1,8 @@
 #ifndef __PROTOCOL_HEADER_H__
 #define __PROTOCOL_HEADER_H__
 
-#include <vector>
-
-#include "optional.hpp"
+#include <string>
+#include <cstddef>
 
 namespace ghh
 {

@@ -31,7 +31,7 @@ struct MonsterAbilityDeck
     }
 };
 
-void print(const MonsterAbilityDeck &arg)
+inline void print(const MonsterAbilityDeck &arg)
 {
     print("id: ", arg.id, "\n");
     print("shuffle: ", arg.shuffle, "\n");

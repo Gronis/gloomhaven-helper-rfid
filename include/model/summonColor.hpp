@@ -23,7 +23,7 @@ struct SummonColorNS
 using SummonColor = SummonColorNS::Value;
 
 
-std::vector<SummonColor> getSummonColorValues()
+inline std::vector<SummonColor> getSummonColorValues()
 {
     return {
         SummonColor::None,
@@ -38,7 +38,7 @@ std::vector<SummonColor> getSummonColorValues()
     };
 }
 
-void print(const SummonColor &arg)
+inline void print(const SummonColor &arg)
 {
     switch (arg)
     {

@@ -21,7 +21,7 @@ struct PlayerInitNS
 
 using PlayerInit = PlayerInitNS::Value;
 
-std::vector<PlayerInit> getPlayerInitValues()
+inline std::vector<PlayerInit> getPlayerInitValues()
 {
     return {
         PlayerInit::value1,
@@ -31,7 +31,7 @@ std::vector<PlayerInit> getPlayerInitValues()
         PlayerInit::value5};
 }
 
-void print(const PlayerInit &arg)
+inline void print(const PlayerInit &arg)
 {
     switch (arg)
     {

@@ -5,7 +5,7 @@ namespace ghh
 {
 
 // Copy bytes from src to dest until count or till buffer is full.
-std::size_t copyBytes(
+inline std::size_t copyBytes(
     const uint8_t *src, uint8_t *dest, std::size_t count, const std::size_t bufferSize)
 {
     if(count >= bufferSize)
@@ -17,7 +17,7 @@ std::size_t copyBytes(
 }
 
 template <typename T>
-void reverse(std::size_t count, T *data)
+inline void reverse(std::size_t count, T *data)
 {
     std::size_t i = 0, ii = count - 1;
     uint8_t tmp;

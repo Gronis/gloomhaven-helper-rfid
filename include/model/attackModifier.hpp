@@ -24,7 +24,7 @@ struct AttackModifierNS
 
 using AttackModifier = AttackModifierNS::Value;
 
-std::vector<AttackModifier> getAttackModifierValues()
+inline std::vector<AttackModifier> getAttackModifierValues()
 {
     return {
         AttackModifier::Zero,
@@ -39,7 +39,7 @@ std::vector<AttackModifier> getAttackModifierValues()
     };
 }
 
-void print(const AttackModifier &arg)
+inline void print(const AttackModifier &arg)
 {
     switch (arg)
     {

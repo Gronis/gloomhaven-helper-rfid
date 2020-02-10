@@ -36,7 +36,7 @@ struct CharacterClassNS {
 using CharacterClass = CharacterClassNS::Value;
 
 
-std::vector<CharacterClass> getCharacterClassValues()
+inline std::vector<CharacterClass> getCharacterClassValues()
 {
     return {
         CharacterClass::Escort,
@@ -62,7 +62,7 @@ std::vector<CharacterClass> getCharacterClassValues()
         CharacterClass::value20};
 }
 
-void print(const CharacterClass & arg)
+inline void print(const CharacterClass & arg)
 {
     switch (arg)
     {

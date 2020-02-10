@@ -11,7 +11,7 @@ namespace ghh
 {
 
 template <typename T>
-void __print_dec__(const T &arg)
+inline void __print_dec__(const T &arg)
 {
 #ifdef ARDUINO
     Serial1.print(arg, DEC);
@@ -20,47 +20,47 @@ void __print_dec__(const T &arg)
 #endif // ARDUINO
 }
 
-void print(const int &&arg)
+inline void print(const int &&arg)
 {
     __print_dec__(arg);
 }
 
-void print(const unsigned int &&arg)
+inline void print(const unsigned int &&arg)
 {
     __print_dec__(arg);
 }
 
-void print(const short &&arg)
+inline void print(const short &&arg)
 {
     __print_dec__(arg);
 }
 
-void print(const unsigned short &&arg)
+inline void print(const unsigned short &&arg)
 {
     __print_dec__(arg);
 }
 
-void print(const long &&arg)
+inline void print(const long &&arg)
 {
     __print_dec__(arg);
 }
 
-void print(const unsigned long &&arg)
+inline void print(const unsigned long &&arg)
 {
     __print_dec__(arg);
 }
 
-void print(const float &&arg)
+inline void print(const float &&arg)
 {
     __print_dec__(arg);
 }
 
-void print(const double &&arg)
+inline void print(const double &&arg)
 {
     __print_dec__(arg);
 }
 
-void print(const std::string &&arg)
+inline void print(const std::string &&arg)
 {
 #ifdef ARDUINO
     Serial1.print(arg.c_str());
@@ -69,7 +69,7 @@ void print(const std::string &&arg)
 #endif // ARDUINO
 }
 
-void print(const char* arg)
+inline void print(const char* arg)
 {
 #ifdef ARDUINO
     Serial1.print(arg.c_str());
@@ -79,7 +79,7 @@ void print(const char* arg)
 }
 
 template <typename T>
-void print(const T &&arg)
+inline void print(const T &&arg)
 {
 #ifdef ARDUINO
     Serial1.print(arg);
@@ -89,7 +89,7 @@ void print(const T &&arg)
 }
 
 template <typename T>
-void print(const T &arg)
+inline void print(const T &arg)
 {
 #ifdef ARDUINO
     Serial1.print(arg);
@@ -99,13 +99,13 @@ void print(const T &arg)
 }
 
 template <typename T, typename... Args>
-void print(const T &arg, const Args &... args)
+inline void print(const T &arg, const Args &... args)
 {
     print(arg);
     print(args...);
 }
 template <typename T, typename... Args>
-void print(const T &&arg, const Args &&... args)
+inline void print(const T &&arg, const Args &&... args)
 {
     print(arg);
     print(args...);

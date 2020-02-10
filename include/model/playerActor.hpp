@@ -41,12 +41,9 @@ struct PlayerActor
     {
     }
 
-    explicit operator std::string() const {
-        return "Name: %s" + name;
-    }
 };
 
-void print(const PlayerActor &arg)
+inline void print(const PlayerActor &arg)
 {
     print("   {\n");
     print("       name: ", arg.name, "\n");

@@ -3,9 +3,9 @@
 
 #include <stdint.h>
 #include <string>
+#include <vector>
 
 #include "optional.hpp"
-
 #include "protocol/deserializer.hpp"
 #include "protocol/serializer.hpp"
 
@@ -49,12 +49,12 @@ public:
     {
     }
 
-    std::size_t getPosition()
+    inline std::size_t getPosition()
     {
         return __position;
     }
 
-    int readInt(bool optimizePositive)
+    inline int readInt(bool optimizePositive)
     {
         tl::optional<int32_t> result;
         __position += ghh::protocol::readVarInt(
@@ -62,13 +62,13 @@ public:
         return result? result.value() : 0;
     }
 
-    void writeInt(int value, bool optimizePositive)
+    inline void writeInt(int value, bool optimizePositive)
     {
         __position += ghh::protocol::writeVarInt(
             __data +  __position, __dataLength - __position, optimizePositive, value);
     }
 
-    uint8_t readByte()
+    inline uint8_t readByte()
     {
         tl::optional<uint8_t> result;
         __position += ghh::protocol::readByte(
@@ -76,13 +76,13 @@ public:
         return result? result.value() : 0;
     }
 
-    void writeByte(uint8_t value)
+    inline void writeByte(uint8_t value)
     {
         __position += ghh::protocol::writeByte(
             __data +  __position, __dataLength - __position, value);
     }
 
-    int readFullInt()
+    inline int readFullInt()
     {
         tl::optional<int32_t> result;
         __position += ghh::protocol::readInt(
@@ -90,13 +90,13 @@ public:
         return result? result.value() : 0;
     }
 
-    void writeFullInt(int value)
+    inline void writeFullInt(int value)
     {
         __position += ghh::protocol::writeInt(
             __data +  __position, __dataLength - __position, value);
     }
 
-    tl::optional<std::string> readString()
+    inline tl::optional<std::string> readString()
     {
         tl::optional<std::string> result;
         __position += ghh::protocol::readString(
@@ -104,36 +104,36 @@ public:
         return result;
     }
 
-    void writeString(tl::optional<std::string> value)
+    inline void writeString(tl::optional<std::string> value)
     {
         __position += ghh::protocol::writeString(
             __data +  __position, __dataLength - __position, value);
     }
 
-    bool readBoolean()
+    inline bool readBoolean()
     {
         return readByte();
     }
 
-    void writeBoolean(bool value)
+    inline void writeBoolean(bool value)
     {
         writeByte(value);
     }
 
     template <typename T>
-    void writeEnum(T value)
+    inline void writeEnum(T value)
     {
         writeInt((int)value, true);
     }
 
     template <typename T>
-    T readEnum(std::vector<T> values)
+    inline T readEnum(std::vector<T> values)
     {
         return values[readInt(true)];
     }
 
     template <typename T>
-    void writeEnumOrNull(tl::optional<T> value)
+    inline void writeEnumOrNull(tl::optional<T> value)
     {
         if (!value)
             writeByte(0);
@@ -142,7 +142,7 @@ public:
     }
 
     template <typename T>
-    tl::optional<T> readEnumOrNull(std::vector<T> values)
+    inline tl::optional<T> readEnumOrNull(std::vector<T> values)
     {
         int value = readInt(true);
         if (value == 0)
@@ -151,7 +151,7 @@ public:
     }
 
     template <typename T>
-    int writeArrayStart(std::vector<T> vec)
+    inline int writeArrayStart(std::vector<T> vec)
     {
         int size = vec.size();
         writeInt(size, true);
@@ -159,7 +159,7 @@ public:
     }
 
     template <typename T>
-    void writeEnumArray(std::vector<T> vec)
+    inline void writeEnumArray(std::vector<T> vec)
     {
         int length = vec.size();
         writeInt(length, true);
@@ -170,7 +170,7 @@ public:
     }
 
     template <typename T>
-    void readEnumArray(std::vector<T> &vec, std::vector<T> values)
+    inline void readEnumArray(std::vector<T> &vec, std::vector<T> values)
     {
         int length = readInt(true);
         vec.reserve(length);
@@ -178,7 +178,7 @@ public:
             vec.push_back(readEnum(values));
     }
 
-    void writeIntArray(std::vector<int> vec, bool optimizePositive)
+    inline void writeIntArray(std::vector<int> vec, bool optimizePositive)
     {
         int length = vec.size();
         writeInt(length, true);
@@ -187,7 +187,7 @@ public:
         for (int i = 0, n = vec.size(); i < n; i++)
             writeInt(vec[i], optimizePositive);
     }
-    void readIntArray(std::vector<int> &vec, bool optimizePositive)
+    inline void readIntArray(std::vector<int> &vec, bool optimizePositive)
     {
         int length = readInt(true);
         vec.reserve(length);

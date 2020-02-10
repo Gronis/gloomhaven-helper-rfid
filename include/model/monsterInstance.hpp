@@ -41,7 +41,7 @@ struct MonsterInstance
     }
 };
 
-void print(const MonsterInstance &arg)
+inline void print(const MonsterInstance &arg)
 {
     print("   {\n");
     print("       number: ", arg.number, "\n");
