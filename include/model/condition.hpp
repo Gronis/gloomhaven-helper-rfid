@@ -5,7 +5,7 @@
 
 #include "print.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct ConditionNS
 {
@@ -63,65 +63,65 @@ void print(const Condition &arg)
     switch (arg)
     {
     case Condition::value1:
-        ghr::print("value1");
+        ghh::print("value1");
         break;
     case Condition::value2:
-        ghr::print("value2");
+        ghh::print("value2");
         break;
     case Condition::Summon:
-        ghr::print("Summon");
+        ghh::print("Summon");
         break;
     case Condition::Stuned:
-        ghr::print("Stuned");
+        ghh::print("Stuned");
         break;
     case Condition::Immobilized:
-        ghr::print("Immobilized");
+        ghh::print("Immobilized");
         break;
     case Condition::Disarmed:
-        ghr::print("Disarmed");
+        ghh::print("Disarmed");
         break;
     case Condition::Wounded:
-        ghr::print("Wounded");
+        ghh::print("Wounded");
         break;
     case Condition::Muddle:
-        ghr::print("Muddle");
+        ghh::print("Muddle");
         break;
     case Condition::Poisoned:
-        ghr::print("Poisoned");
+        ghh::print("Poisoned");
         break;
     case Condition::Strengthen:
-        ghr::print("Strengthen");
+        ghh::print("Strengthen");
         break;
     case Condition::Invisible:
-        ghr::print("Invisible");
+        ghh::print("Invisible");
         break;
     case Condition::value12:
-        ghr::print("value12");
+        ghh::print("value12");
         break;
     case Condition::value13:
-        ghr::print("value13");
+        ghh::print("value13");
         break;
     case Condition::value14:
-        ghr::print("value14");
+        ghh::print("value14");
         break;
     case Condition::value15:
-        ghr::print("value15");
+        ghh::print("value15");
         break;
     case Condition::value16:
-        ghr::print("value16");
+        ghh::print("value16");
         break;
     case Condition::value17:
-        ghr::print("value17");
+        ghh::print("value17");
         break;
     case Condition::value18:
-        ghr::print("value18");
+        ghh::print("value18");
         break;
     case Condition::value19:
-        ghr::print("value19");
+        ghh::print("value19");
         break;
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __CONDITION_H__

@@ -9,7 +9,7 @@
 #include "model/condition.hpp"
 #include "model/characterClass.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct PlayerActor
 {
@@ -76,6 +76,6 @@ void print(const PlayerActor &arg)
     print("   }\n");
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __PLAYER_ACTOR_H__

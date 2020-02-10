@@ -5,7 +5,7 @@
 
 #include "print.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct ElementStateNS
 {
@@ -31,17 +31,17 @@ void print(const ElementState &arg)
     switch (arg)
     {
     case ElementState::Inert:
-        ghr::print("Inert");
+        ghh::print("Inert");
         break;
     case ElementState::Waning:
-        ghr::print("Waning");
+        ghh::print("Waning");
         break;
     case ElementState::Strong:
-        ghr::print("Strong");
+        ghh::print("Strong");
         break;
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __ELEMENT_STATE_H__

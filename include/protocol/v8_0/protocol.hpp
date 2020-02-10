@@ -12,7 +12,7 @@
 #include "model/playerActor.hpp"
 #include "model/gameState.hpp"
 
-namespace ghr
+namespace ghh
 {
 namespace protocol
 {
@@ -111,15 +111,15 @@ void readGameState(GameState &state, Buffer &msg)
     state.calculate_stats = msg.readBoolean();
     state.can_draw = msg.readBoolean();
     state.needs_shuffle = msg.readBoolean();
-    state.player_init = msg.readEnum(ghr::getPlayerInitValues());
-    msg.readEnumArray(state.attack_modifiers, ghr::getAttackModifierValues());
-    msg.readEnumArray(state.attack_modifiers_discard, ghr::getAttackModifierValues());
-    state.fire = msg.readEnum(ghr::getElementStateValues());
-    state.ice = msg.readEnum(ghr::getElementStateValues());
-    state.air = msg.readEnum(ghr::getElementStateValues());
-    state.earth = msg.readEnum(ghr::getElementStateValues());
-    state.light = msg.readEnum(ghr::getElementStateValues());
-    state.dark = msg.readEnum(ghr::getElementStateValues());
+    state.player_init = msg.readEnum(ghh::getPlayerInitValues());
+    msg.readEnumArray(state.attack_modifiers, ghh::getAttackModifierValues());
+    msg.readEnumArray(state.attack_modifiers_discard, ghh::getAttackModifierValues());
+    state.fire = msg.readEnum(ghh::getElementStateValues());
+    state.ice = msg.readEnum(ghh::getElementStateValues());
+    state.air = msg.readEnum(ghh::getElementStateValues());
+    state.earth = msg.readEnum(ghh::getElementStateValues());
+    state.light = msg.readEnum(ghh::getElementStateValues());
+    state.dark = msg.readEnum(ghh::getElementStateValues());
     msg.readIntArray(state.removed_abilities, true);
     state.bad_omen = msg.readInt(true);
 
@@ -280,6 +280,6 @@ void writeGameState(const GameState &state, Buffer &msg)
 
 } // namespace v8_0
 } // namespace protocol
-} // namespace ghr
+} // namespace ghh
 
 #endif // __PROTOCOL_V8_0_PROTOCOL_H__

@@ -7,7 +7,7 @@
 #include "print.hpp"
 #include "optional.hpp"
 
-namespace ghr
+namespace ghh
 {
 
 void writeByte(uint8_t *data, std::size_t &pos, uint8_t value)
@@ -42,14 +42,14 @@ void writeInt(uint8_t *data, std::size_t &pos, int value, bool optimizePositive)
 
 void writeAscii(uint8_t *data, std::size_t &pos, std::string value)
 {
-    ghr::print("Wrote ascii string: ");
+    ghh::print("Wrote ascii string: ");
     for (std::size_t i = 0; i < value.length(); i++, pos++)
     {
-        ghr::print("Wrote ascii string: [", i, "]\n");
-        ghr::print(value[i]);
+        ghh::print("Wrote ascii string: [", i, "]\n");
+        ghh::print(value[i]);
         data[pos] = value[i];
     };
-    ghr::print("\n");
+    ghh::print("\n");
     data[pos - 1] |= 0x80;
 }
 
@@ -69,6 +69,6 @@ void writeString(uint8_t *data, std::size_t &pos, tl::optional<std::string> valu
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __ENCODING_H__

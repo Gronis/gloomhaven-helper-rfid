@@ -59,12 +59,12 @@ const uint16_t port = 58888;
 String last_host;
 String server_host;
 WiFiClient tcp_connection;
-ghr::GameState state;
+ghh::GameState state;
 int message_number = 0;
-ghr::Led led(READ_LED_PIN);
+ghh::Led led(READ_LED_PIN);
 
-std::function<void(ghr::GameState &, ghr::Buffer &)> readGameState;
-std::function<void(const ghr::GameState &, ghr::Buffer &)> writeGameState;
+std::function<void(ghh::GameState &, ghh::Buffer &)> readGameState;
+std::function<void(const ghh::GameState &, ghh::Buffer &)> writeGameState;
 
 boolean waitingDHCP = false;
 char last_mac[18];
@@ -73,7 +73,7 @@ char last_mac[18];
 void on_new_station(WiFiEventSoftAPModeStationConnected sta_info)
 {
   sprintf(last_mac, "%02X:%02X:%02X:%02X:%02X:%02X", MAC2STR(sta_info.mac));
-  ghr::print("New Station, MAC: ", last_mac, ", id: ", sta_info.aid, "\n");
+  ghh::print("New Station, MAC: ", last_mac, ", id: ", sta_info.aid, "\n");
   waitingDHCP = true;
 }
 
@@ -108,11 +108,11 @@ void connect_to_host(String host)
   if (host.length() > 0)
   {
     led.blink(0, 1.0);
-    ghr::print("Connecting to ", host, "\n");
+    ghh::print("Connecting to ", host, "\n");
     WiFiClient tmp_tcp_connection;
     if (tmp_tcp_connection.connect(host, port))
     {
-      ghr::print("Connected!\n");
+      ghh::print("Connected!\n");
       tcp_connection = tmp_tcp_connection;
       server_host = host;
       led.blink(3, 4.0);
@@ -122,13 +122,13 @@ void connect_to_host(String host)
 
 void on_packet(std::string event, std::string payload, uint8_t *data, std::size_t dataLength)
 {
-  ghr::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
+  ghh::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
   if (tcp_connection.connected())
   {
-    ghr::Buffer msg(data, dataLength);
+    ghh::Buffer msg(data, dataLength);
     if (event[0] == 's')
     {
-      std::vector<ghr::AttackModifier> attackModifiers = {};
+      std::vector<ghh::AttackModifier> attackModifiers = {};
       // 4 bytes representing message number. Throw away for now
       message_number = msg.readFullInt();
       state.clear();
@@ -139,19 +139,19 @@ void on_packet(std::string event, std::string payload, uint8_t *data, std::size_
       std::string version = payload;
       if (version == "7.6")
       {
-        ghr::print("version ", version, " is supported\n");
-        readGameState = ghr::protocol::v7_6::readGameState;
-        writeGameState = ghr::protocol::v7_6::writeGameState;
+        ghh::print("version ", version, " is supported\n");
+        readGameState = ghh::protocol::v7_6::readGameState;
+        writeGameState = ghh::protocol::v7_6::writeGameState;
       }
       else if (version == "8.0")
       {
-        ghr::print("version ", version, " is supported\n");
-        readGameState = ghr::protocol::v8_0::readGameState;
-        writeGameState = ghr::protocol::v8_0::writeGameState;
+        ghh::print("version ", version, " is supported\n");
+        readGameState = ghh::protocol::v8_0::readGameState;
+        writeGameState = ghh::protocol::v8_0::writeGameState;
       }
       else
       {
-        ghr::print("version ", version, " is unsupported. Disconnecting\n");
+        ghh::print("version ", version, " is unsupported. Disconnecting\n");
         tcp_connection.stop();
         last_host = "";
         led.blink(10000, 0.15);
@@ -160,17 +160,17 @@ void on_packet(std::string event, std::string payload, uint8_t *data, std::size_
   }
 }
 
-void send_packet(ghr::Client client)
+void send_packet(ghh::Client client)
 {
   message_number = message_number + 1;
   std::size_t dataCapacity = 1024;
   uint8_t data[dataCapacity];
-  ghr::Buffer msg(data, dataCapacity);
+  ghh::Buffer msg(data, dataCapacity);
   msg.writeFullInt(message_number);
   writeGameState(state, msg);
   int dataLength = msg.getPosition();
   client.send_data("s", "", data, dataLength);
-  ghr::print("\nSent state\n");
+  ghh::print("\nSent state\n");
 }
 
 const int read()
@@ -187,11 +187,11 @@ const uint8_t write(uint8_t value)
   std::size_t result = tcp_connection.write(static_cast<char>(value));
   if (result == 1)
   {
-    ghr::print((uint32_t)value, " ");
+    ghh::print((uint32_t)value, " ");
   }
   else
   {
-    ghr::print("-- ");
+    ghh::print("-- ");
   }
   if (tcp_connection.available())
   {
@@ -201,9 +201,9 @@ const uint8_t write(uint8_t value)
 const std::size_t bufferCapacity = 1024;
 uint8_t input_buffer[bufferCapacity];
 uint8_t output_buffer[bufferCapacity];
-ghr::InputStream input(&read, input_buffer, bufferCapacity);
-ghr::OutputStream output(&write, output_buffer, bufferCapacity);
-ghr::Client client(input, output);
+ghh::InputStream input(&read, input_buffer, bufferCapacity);
+ghh::OutputStream output(&write, output_buffer, bufferCapacity);
+ghh::Client client(input, output);
 
 void setup()
 {
@@ -217,8 +217,8 @@ void setup()
   WiFi.mode(WIFI_AP);
   WiFi.softAP(ssid, password); // Start the access point
 
-  ghr::print("Access Point: ", ssid, " started\n");
-  ghr::print("IP address: ", WiFi.softAPIP(), "\n");
+  ghh::print("Access Point: ", ssid, " started\n");
+  ghh::print("IP address: ", WiFi.softAPIP(), "\n");
 
   static WiFiEventHandler e1;
   e1 = WiFi.onSoftAPModeStationConnected(on_new_station);
@@ -230,7 +230,7 @@ void loop()
   {
     if (get_device_ip(last_mac, last_host))
     {
-      ghr::print("New host connected: ", last_host, "\n");
+      ghh::print("New host connected: ", last_host, "\n");
     }
   }
   if (!tcp_connection.connected())
@@ -246,7 +246,7 @@ void loop()
     /* if non-zero tag_id, update() returns true- a new tag is near! */
     if (rdm6300.update())
     {
-      ghr::print(rdm6300.get_tag_id(), "\n");
+      ghh::print(rdm6300.get_tag_id(), "\n");
       led.blink(1, 1.0);
       send_packet(client);
     }

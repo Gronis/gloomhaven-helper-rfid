@@ -7,7 +7,7 @@
 #include <iostream>
 #endif // ARDUINO
 
-namespace ghr
+namespace ghh
 {
 
 template <typename T>
@@ -111,6 +111,6 @@ void print(const T &&arg, const Args &&... args)
     print(args...);
 }
 
-} // end namespace ghr
+} // end namespace ghh
 
 #endif // __PRINT_H_:

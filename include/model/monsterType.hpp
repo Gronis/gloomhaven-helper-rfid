@@ -5,7 +5,7 @@
 #include <vector>
 
 
-namespace ghr
+namespace ghh
 {
 struct MonsterTypeNS{
     enum Value{
@@ -56,55 +56,55 @@ void print(const MonsterType &arg)
     switch (arg)
     {
     case MonsterType::Normal:
-        ghr::print("Normal");
+        ghh::print("Normal");
         break;
     case MonsterType::Elite:
-        ghr::print("Elite");
+        ghh::print("Elite");
         break;
     case MonsterType::value3:
-        ghr::print("value3");
+        ghh::print("value3");
         break;
     case MonsterType::Summon:
-        ghr::print("Summon");
+        ghh::print("Summon");
         break;
     case MonsterType::value5:
-        ghr::print("value5");
+        ghh::print("value5");
         break;
     case MonsterType::value6:
-        ghr::print("value6");
+        ghh::print("value6");
         break;
     case MonsterType::value7:
-        ghr::print("value7");
+        ghh::print("value7");
         break;
     case MonsterType::value8:
-        ghr::print("value8");
+        ghh::print("value8");
         break;
     case MonsterType::value9:
-        ghr::print("value9");
+        ghh::print("value9");
         break;
     case MonsterType::value10:
-        ghr::print("value10");
+        ghh::print("value10");
         break;
     case MonsterType::value11:
-        ghr::print("value11");
+        ghh::print("value11");
         break;
     case MonsterType::value12:
-        ghr::print("value12");
+        ghh::print("value12");
         break;
     case MonsterType::value13:
-        ghr::print("value13");
+        ghh::print("value13");
         break;
     case MonsterType::value14:
-        ghr::print("value14");
+        ghh::print("value14");
         break;
     case MonsterType::value15:
-        ghr::print("value15");
+        ghh::print("value15");
         break;
     case MonsterType::value16:
-        ghr::print("value16");
+        ghh::print("value16");
         break;
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 #endif // __MONSTER_TYPE_H__

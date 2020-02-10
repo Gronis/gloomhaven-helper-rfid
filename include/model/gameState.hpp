@@ -14,7 +14,7 @@
 #include "model/playerInit.hpp"
 #include "model/elementState.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct GameState
 {
@@ -89,60 +89,60 @@ struct GameState
 
 void print(const GameState &arg)
 {
-    ghr::print("round: ", arg.round, "\n");
-    ghr::print("scen nr: ", arg.scenario_number, "\n");
-    ghr::print("scen lvl: ", arg.scenario_level, "\n");
-    ghr::print("track standees: ", arg.track_standees, "\n");
-    ghr::print("ability cards: ", arg.ability_cards, "\n");
-    ghr::print("rand standees: ", arg.random_standees, "\n");
-    ghr::print("elite first: ", arg.elites_first, "\n");
-    ghr::print("expire cond: ", arg.expire_conditions, "\n");
-    ghr::print("solo: ", arg.solo, "\n");
-    ghr::print("hide stats: ", arg.hide_stats, "\n");
-    ghr::print("calc stats: ", arg.calculate_stats, "\n");
-    ghr::print("can draw: ", arg.can_draw, "\n");
-    ghr::print("needs shuffle: ", arg.needs_shuffle, "\n");
-    ghr::print("player init: ", arg.player_init, "\n");
+    ghh::print("round: ", arg.round, "\n");
+    ghh::print("scen nr: ", arg.scenario_number, "\n");
+    ghh::print("scen lvl: ", arg.scenario_level, "\n");
+    ghh::print("track standees: ", arg.track_standees, "\n");
+    ghh::print("ability cards: ", arg.ability_cards, "\n");
+    ghh::print("rand standees: ", arg.random_standees, "\n");
+    ghh::print("elite first: ", arg.elites_first, "\n");
+    ghh::print("expire cond: ", arg.expire_conditions, "\n");
+    ghh::print("solo: ", arg.solo, "\n");
+    ghh::print("hide stats: ", arg.hide_stats, "\n");
+    ghh::print("calc stats: ", arg.calculate_stats, "\n");
+    ghh::print("can draw: ", arg.can_draw, "\n");
+    ghh::print("needs shuffle: ", arg.needs_shuffle, "\n");
+    ghh::print("player init: ", arg.player_init, "\n");
     for (const auto am : arg.attack_modifiers)
     {
-        ghr::print("attack modifier: ", am, "\n");
+        ghh::print("attack modifier: ", am, "\n");
     }
     for (const auto am : arg.attack_modifiers_discard)
     {
-        ghr::print("attack modifier discard: ", am, "\n");
+        ghh::print("attack modifier discard: ", am, "\n");
     }
     if (arg.attack_modifier1)
     {
-        ghr::print("attack modifier 1: ", arg.attack_modifier1.value(), "\n");
+        ghh::print("attack modifier 1: ", arg.attack_modifier1.value(), "\n");
     }
     if (arg.attack_modifier2)
     {
-        ghr::print("attack modifier 2: ", arg.attack_modifier2.value(), "\n");
+        ghh::print("attack modifier 2: ", arg.attack_modifier2.value(), "\n");
     }
-    ghr::print("fire state:  ", arg.fire, "\n");
-    ghr::print("ics state:   ", arg.ice, "\n");
-    ghr::print("air state:   ", arg.air, "\n");
-    ghr::print("earth state: ", arg.earth, "\n");
-    ghr::print("light state: ", arg.light, "\n");
-    ghr::print("dark state:  ", arg.dark, "\n");
-    ghr::print("removed abilities: {");
+    ghh::print("fire state:  ", arg.fire, "\n");
+    ghh::print("ics state:   ", arg.ice, "\n");
+    ghh::print("air state:   ", arg.air, "\n");
+    ghh::print("earth state: ", arg.earth, "\n");
+    ghh::print("light state: ", arg.light, "\n");
+    ghh::print("dark state:  ", arg.dark, "\n");
+    ghh::print("removed abilities: {");
     for (const auto ab : arg.removed_abilities)
     {
-        ghr::print(ab, " ");
+        ghh::print(ab, " ");
     }
-    ghr::print("}\n");
-    ghr::print("bad omen: ", arg.bad_omen, "\n");
+    ghh::print("}\n");
+    ghh::print("bad omen: ", arg.bad_omen, "\n");
     for (const auto ab : arg.ability_decks)
     {
         const MonsterAbilityDeck deck = ab.second;
-        ghr::print("monster ability deck: ", deck);
+        ghh::print("monster ability deck: ", deck);
     }
     for (const auto a : arg.actors)
     {
-        ghr::print("actor: ", a);
+        ghh::print("actor: ", a);
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __GAME_STATE_H__

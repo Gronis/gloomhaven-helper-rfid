@@ -5,7 +5,7 @@
 #include "inputStream.hpp"
 #include "outputStream.hpp"
 
-namespace ghr
+namespace ghh
 {
 
 class Client
@@ -73,5 +73,5 @@ public:
         this->__input.update(std::bind(&Client::__read_header, this));
     }
 };
-} // namespace ghr
+} // namespace ghh
 #endif // __CLIENT_H__

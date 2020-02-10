@@ -10,7 +10,7 @@
 #include "model/monsterActor.hpp"
 #include "model/playerActor.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct Actor
 {
@@ -26,19 +26,19 @@ struct Actor
 
     //public:
     bool turn_completed = false;
-    std::vector<ghr::MonsterInstance> instances;
+    std::vector<ghh::MonsterInstance> instances;
 
-    Actor(const ghr::MonsterActor & monster) : __is_player(false), __monster(monster)
+    Actor(const ghh::MonsterActor & monster) : __is_player(false), __monster(monster)
     {
     }
-    Actor(const ghr::PlayerActor & player) : __is_player(true), __player(player)
+    Actor(const ghh::PlayerActor & player) : __is_player(true), __player(player)
     {
     }
 
-    Actor(ghr::MonsterActor * monster) : __is_player(false), __monster(*monster)
+    Actor(ghh::MonsterActor * monster) : __is_player(false), __monster(*monster)
     {
     }
-    Actor(ghr::PlayerActor * player) : __is_player(true), __player(*player)
+    Actor(ghh::PlayerActor * player) : __is_player(true), __player(*player)
     {
     }
 
@@ -46,20 +46,20 @@ struct Actor
     {
     }
 
-    tl::optional<ghr::MonsterActor &> getMonster()
+    tl::optional<ghh::MonsterActor &> getMonster()
     {
         return __is_player ? tl::nullopt : tl::optional<MonsterActor &>(__monster);
     }
-    tl::optional<ghr::PlayerActor &> getPlayer()
+    tl::optional<ghh::PlayerActor &> getPlayer()
     {
         return __is_player ? tl::optional<PlayerActor &>(__player) : tl::nullopt;
     }
 
-    tl::optional<const ghr::MonsterActor &> getMonster() const
+    tl::optional<const ghh::MonsterActor &> getMonster() const
     {
         return __is_player ? tl::nullopt : tl::optional<const MonsterActor &>(__monster);
     }
-    tl::optional<const ghr::PlayerActor &> getPlayer() const
+    tl::optional<const ghh::PlayerActor &> getPlayer() const
     {
         return __is_player ? tl::optional<const PlayerActor &>(__player) : tl::nullopt;
     }
@@ -80,6 +80,6 @@ void print(const Actor &arg)
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __ACTOR_H__

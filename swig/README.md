@@ -12,7 +12,7 @@ make python
 
 # Usage
 
-In the `out` directory, there will two files after building, `ghr.py` and `_ghr.so`.
+In the `out` directory, there will two files after building, `ghh.py` and `_ghh.so`.
 Go to this directory (or copy these files) and launch `python3`
 
 Right now, only the model is exposed. Serializing and Deserializing is unavailable at this moment.
@@ -20,14 +20,14 @@ Right now, only the model is exposed. Serializing and Deserializing is unavailab
 
 Example usage:
 ```python
-import ghr
+import ghh
 
-s = ghr.GameState()
+s = ghh.GameState()
 
-ghr._print(s)
+ghh.print(s)
 
 s.round = 3
-s.dark = ghr.ElementState.Strong
+s.dark = ghh.ElementState.Strong
 ```
 
 # TODO:

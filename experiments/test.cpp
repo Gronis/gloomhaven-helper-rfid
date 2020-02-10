@@ -24,7 +24,7 @@ const char *host = "127.0.0.1";
 int message_number;
 std::chrono::milliseconds time_send_state_interval = std::chrono::seconds(10);
 std::chrono::milliseconds time_since_sent_state;
-ghr::GameState state;
+ghh::GameState state;
 
 // const std::vector<const int32_t> input_dummy_buffer{0x00, -1, 0x01, -1, 0x73, -1, -1};
 const std::vector<int32_t> input_dummy_buffer{
@@ -87,7 +87,7 @@ const std::vector<int32_t> input_dummy_buffer{
 
 int main()
 {
-    ghr::print("Start\n");
+    ghh::print("Start\n");
     int sock = 0, valread;
     struct sockaddr_in serv_addr;
     const std::size_t bufferCapacity = 1024;
@@ -115,7 +115,7 @@ int main()
         printf("\nConnection Failed \n");
         return -1;
     }
-    ghr::print("Connected\n");
+    ghh::print("Connected\n");
 
     auto read_network_data = [&]() {
         if (end == -1)
@@ -124,7 +124,7 @@ int main()
         }
         if (current < end)
         {
-            ghr::print("Got: ", (int)input_buffer[current], ", current: ", current, "\n");
+            ghh::print("Got: ", (int)input_buffer[current], ", current: ", current, "\n");
             return (int)input_buffer[current++];
         }
         return -1;
@@ -149,29 +149,29 @@ int main()
         return value;
     };
 
-    ghr::OutputStream output(write_network_data, output_buffer, bufferCapacity);
-    ghr::InputStream input(read_network_data, input_buffer, bufferCapacity);
-    ghr::Client client(input, output);
+    ghh::OutputStream output(write_network_data, output_buffer, bufferCapacity);
+    ghh::InputStream input(read_network_data, input_buffer, bufferCapacity);
+    ghh::Client client(input, output);
 
     auto send_game_state = [&]() {
         int new_message_number = message_number + 1;
         std::size_t dataCapacity = 1024;
         uint8_t data[dataCapacity];
-        ghr::protocol::Buffer msg(data, dataCapacity);
+        ghh::protocol::Buffer msg(data, dataCapacity);
         msg.writeFullInt(new_message_number);
-        ghr::protocol::v8_0::writeGameState(state, msg);
+        ghh::protocol::v8_0::writeGameState(state, msg);
         int dataLength = msg.getPosition();
         client.send_data("s", "", data, dataLength);
-        ghr::print("\nSent state\n");
+        ghh::print("\nSent state\n");
     };
     client.on_data = [&](std::string event, std::string payload, uint8_t *data, std::size_t dataLength) {
-        ghr::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
-        ghr::protocol::Buffer msg(data, dataLength);
+        ghh::print("Event: ", event, ", payload: ", payload, ", data length: ", dataLength, "\n");
+        ghh::protocol::Buffer msg(data, dataLength);
         if (event[0] == 's')
         {
             state.clear();
             message_number = msg.readFullInt();
-            ghr::protocol::v8_0::readGameState(state, msg);
+            ghh::protocol::v8_0::readGameState(state, msg);
         }
     };
     time_since_sent_state = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::system_clock::now().time_since_epoch());
@@ -180,7 +180,7 @@ int main()
         if (current >= end)
         {
             end = read(sock, (char *)input_buffer, bufferCapacity);
-            ghr::print("Read network: ", end, "\n");
+            ghh::print("Read network: ", end, "\n");
         }
         client.update();
         current = 0;

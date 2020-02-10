@@ -12,7 +12,7 @@
 #include "model/playerActor.hpp"
 #include "model/gameState.hpp"
 
-namespace ghr
+namespace ghh
 {
 namespace protocol
 {
@@ -103,16 +103,16 @@ void readGameState(GameState &state, Buffer &msg)
     state.calculate_stats = msg.readBoolean();
     state.can_draw = msg.readBoolean();
     state.needs_shuffle = msg.readBoolean();
-    state.player_init = msg.readEnum(ghr::getPlayerInitValues());
-    msg.readEnumArray(state.attack_modifiers, ghr::getAttackModifierValues());
-    state.attack_modifier1 = msg.readEnumOrNull(ghr::getAttackModifierValues());
-    state.attack_modifier2 = msg.readEnumOrNull(ghr::getAttackModifierValues());
-    state.fire = msg.readEnum(ghr::getElementStateValues());
-    state.ice = msg.readEnum(ghr::getElementStateValues());
-    state.air = msg.readEnum(ghr::getElementStateValues());
-    state.earth = msg.readEnum(ghr::getElementStateValues());
-    state.light = msg.readEnum(ghr::getElementStateValues());
-    state.dark = msg.readEnum(ghr::getElementStateValues());
+    state.player_init = msg.readEnum(ghh::getPlayerInitValues());
+    msg.readEnumArray(state.attack_modifiers, ghh::getAttackModifierValues());
+    state.attack_modifier1 = msg.readEnumOrNull(ghh::getAttackModifierValues());
+    state.attack_modifier2 = msg.readEnumOrNull(ghh::getAttackModifierValues());
+    state.fire = msg.readEnum(ghh::getElementStateValues());
+    state.ice = msg.readEnum(ghh::getElementStateValues());
+    state.air = msg.readEnum(ghh::getElementStateValues());
+    state.earth = msg.readEnum(ghh::getElementStateValues());
+    state.light = msg.readEnum(ghh::getElementStateValues());
+    state.dark = msg.readEnum(ghh::getElementStateValues());
 
 
     for (int i = 0, n = msg.readInt(true); i < n; i++)
@@ -252,6 +252,6 @@ void writeGameState(const GameState &state, Buffer &msg)
 
 } // namespace v7_6
 } // namespace protocol
-} // namespace ghr
+} // namespace ghh
 
 #endif // __PROTOCOL_V7_6_PROTOCOL_H__

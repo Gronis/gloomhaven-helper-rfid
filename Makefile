@@ -13,8 +13,8 @@ PYTHON_DIR:=python
 
 .PHONY: python test clean
 
-#$(OUTDIR)/$(PYTHON_MODULE) $(OUTDIR)/$(PYTHON_MODULE)/_ghr.so $(OUTDIR)/$(PYTHON_MODULE)/ghr.py
-python: $(OUTDIR) $(addprefix $(OUTDIR)/, _ghr.so ghr.py __init__.py)
+#$(OUTDIR)/$(PYTHON_MODULE) $(OUTDIR)/$(PYTHON_MODULE)/_ghh.so $(OUTDIR)/$(PYTHON_MODULE)/ghh.py
+python: $(OUTDIR) $(addprefix $(OUTDIR)/, _ghh.so ghh.py __init__.py)
 
 main: $(OUTDIR) $(OUTDIR)/main
 test: $(OUTDIR) $(OUTDIR)/test

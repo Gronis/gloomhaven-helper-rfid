@@ -9,7 +9,7 @@
 #include "protocol/deserializer.hpp"
 #include "protocol/serializer.hpp"
 
-namespace ghr
+namespace ghh
 {
 namespace protocol
 {
@@ -57,56 +57,56 @@ public:
     int readInt(bool optimizePositive)
     {
         tl::optional<int32_t> result;
-        __position += ghr::protocol::readVarInt(
+        __position += ghh::protocol::readVarInt(
             __data + __position, __dataLength - __position, optimizePositive, result);
         return result? result.value() : 0;
     }
 
     void writeInt(int value, bool optimizePositive)
     {
-        __position += ghr::protocol::writeVarInt(
+        __position += ghh::protocol::writeVarInt(
             __data +  __position, __dataLength - __position, optimizePositive, value);
     }
 
     uint8_t readByte()
     {
         tl::optional<uint8_t> result;
-        __position += ghr::protocol::readByte(
+        __position += ghh::protocol::readByte(
             __data + __position, __dataLength - __position, result);
         return result? result.value() : 0;
     }
 
     void writeByte(uint8_t value)
     {
-        __position += ghr::protocol::writeByte(
+        __position += ghh::protocol::writeByte(
             __data +  __position, __dataLength - __position, value);
     }
 
     int readFullInt()
     {
         tl::optional<int32_t> result;
-        __position += ghr::protocol::readInt(
+        __position += ghh::protocol::readInt(
             __data + __position, __dataLength - __position, result);
         return result? result.value() : 0;
     }
 
     void writeFullInt(int value)
     {
-        __position += ghr::protocol::writeInt(
+        __position += ghh::protocol::writeInt(
             __data +  __position, __dataLength - __position, value);
     }
 
     tl::optional<std::string> readString()
     {
         tl::optional<std::string> result;
-        __position += ghr::protocol::readString(
+        __position += ghh::protocol::readString(
             __data + __position, __dataLength - __position, result);
         return result;
     }
 
     void writeString(tl::optional<std::string> value)
     {
-        __position += ghr::protocol::writeString(
+        __position += ghh::protocol::writeString(
             __data +  __position, __dataLength - __position, value);
     }
 
@@ -197,6 +197,6 @@ public:
 };
 
 } // namespace protocol
-} // namespace ghr
+} // namespace ghh
 
 #endif // __PROTOCOL_MESSAGE_H__

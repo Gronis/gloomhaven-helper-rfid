@@ -5,7 +5,7 @@
 
 #include "optional.hpp"
 
-namespace ghr
+namespace ghh
 {
 namespace protocol
 {
@@ -19,6 +19,6 @@ struct Header
 
 
 } // namespace protocol
-} // namespace ghr
+} // namespace ghh
 
 #endif // __PROTOCOL_HEADER_H__

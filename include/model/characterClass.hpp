@@ -3,7 +3,7 @@
 
 #include "print.hpp"
 
-namespace ghr
+namespace ghh
 {
 
 struct CharacterClassNS {
@@ -67,71 +67,71 @@ void print(const CharacterClass & arg)
     switch (arg)
     {
     case CharacterClass::Escort:
-        ghr::print("Escort");
+        ghh::print("Escort");
         break;
     case CharacterClass::Objective:
-        ghr::print("Objective");
+        ghh::print("Objective");
         break;
     case CharacterClass::Brute:
-        ghr::print("Brute");
+        ghh::print("Brute");
         break;
     case CharacterClass::Cragheart:
-        ghr::print("Cragheart");
+        ghh::print("Cragheart");
         break;
     case CharacterClass::Mindtheif:
-        ghr::print("Mindtheif");
+        ghh::print("Mindtheif");
         break;
     case CharacterClass::Scoundrel:
-        ghr::print("Scoundrel");
+        ghh::print("Scoundrel");
         break;
     case CharacterClass::Spellweaver:
-        ghr::print("Spellweaver");
+        ghh::print("Spellweaver");
         break;
     case CharacterClass::Tinkerer:
-        ghr::print("Tinkerer");
+        ghh::print("Tinkerer");
         break;
     case CharacterClass::Diviner:
-        ghr::print("Diviner");
+        ghh::print("Diviner");
         break;
     case CharacterClass::TwoMinis:
-        ghr::print("TwoMinis");
+        ghh::print("TwoMinis");
         break;
     case CharacterClass::Lightning:
-        ghr::print("Lightning");
+        ghh::print("Lightning");
         break;
     case CharacterClass::AngryFace:
-        ghr::print("AngryFace");
+        ghh::print("AngryFace");
         break;
     case CharacterClass::Triangles:
-        ghr::print("Triangles");
+        ghh::print("Triangles");
         break;
     case CharacterClass::Moon:
-        ghr::print("Moon");
+        ghh::print("Moon");
         break;
     case CharacterClass::ChuluFace:
-        ghr::print("ChuluFace");
+        ghh::print("ChuluFace");
         break;
     case CharacterClass::TrippleArrow:
-        ghr::print("TrippleArrow");
+        ghh::print("TrippleArrow");
         break;
     case CharacterClass::Saw:
-        ghr::print("Saw");
+        ghh::print("Saw");
         break;
     case CharacterClass::MusicNote:
-        ghr::print("MusicNote");
+        ghh::print("MusicNote");
         break;
     case CharacterClass::Circles:
-        ghr::print("Circles");
+        ghh::print("Circles");
         break;
     case CharacterClass::Sun:
-        ghr::print("Sun");
+        ghh::print("Sun");
         break;
     case CharacterClass::value20:
-        ghr::print("value20");
+        ghh::print("value20");
         break;
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __CHARACTER_CLASS_H__

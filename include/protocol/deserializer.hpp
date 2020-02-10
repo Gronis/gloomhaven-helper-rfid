@@ -8,7 +8,7 @@
 #include "utils.hpp"
 #include "protocol/header.hpp"
 
-namespace ghr
+namespace ghh
 {
 namespace protocol
 {
@@ -274,6 +274,6 @@ std::size_t readHeader(
 }
 
 } // namespace protocol
-} // namespace ghr
+} // namespace ghh
 
 #endif // __PROTOCOL_DESERIALIZER_H__

@@ -7,7 +7,7 @@
 #include "print.hpp"
 #include "optional.hpp"
 
-namespace ghr
+namespace ghh
 {
 
 uint8_t readByte(const uint8_t *data, std::size_t &pos)
@@ -135,6 +135,6 @@ tl::optional<std::string> readString(uint8_t *data, std::size_t &pos)
     return readUtf8(data, pos, charCount);
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __DECODING_H__

@@ -1,20 +1,23 @@
 
 
-from . import ghr as __ghr
+from . import ghh as __ghh
 
-Actor = __ghr.Actor
-AttackModifier = __ghr.AttackModifier
-CharacterClass = __ghr.CharacterClass
-Condition = __ghr.Condition
-ElementState = __ghr.ElementState
-GameState = __ghr.GameState
-MonsterAbilityDeck = __ghr.MonsterAbilityDeck
-MonsterActor = __ghr.MonsterActor
-MonsterInstance = __ghr.MonsterInstance
-MonsterType = __ghr.MonsterType
-PlayerActor = __ghr.PlayerActor
-PlayerInit = __ghr.PlayerInit
-SummonColor = __ghr.SummonColor
+Actor = __ghh.Actor
+AttackModifier = __ghh.AttackModifier
+CharacterClass = __ghh.CharacterClass
+Condition = __ghh.Condition
+ElementState = __ghh.ElementState
+GameState = __ghh.GameState
+MonsterAbilityDeck = __ghh.MonsterAbilityDeck
+MonsterActor = __ghh.MonsterActor
+MonsterInstance = __ghh.MonsterInstance
+MonsterType = __ghh.MonsterType
+PlayerActor = __ghh.PlayerActor
+PlayerInit = __ghh.PlayerInit
+SummonColor = __ghh.SummonColor
+
+readGameState_v7_6 = __ghh.readGameState_v7_6
+readGameState_v8_0 = __ghh.readGameState_v8_0
 
 
 def __init__():
@@ -33,7 +36,7 @@ def __init__():
         return property(new_get, new_set)
 
     # Find every property which is using tl::optional and replace them
-    __classes = [__c for __c in __ghr.__dict__.values() if inspect.isclass(__c)]
+    __classes = [__c for __c in __ghh.__dict__.values() if inspect.isclass(__c)]
     for __c in __classes:
         __properties = {(__n, __p)
                         for (__n, __p) in __c.__dict__.items() if isinstance(__p, property)}
@@ -41,7 +44,7 @@ def __init__():
             if __p.__doc__.find("tl::optional") > 0:
                 __opt_name = "Optional" + __p.__doc__.split("tl::optional")[-1].replace(
                     "(", "").replace(")", "").replace("<", "").replace(">", "").split("::")[-1]
-                __opt_class = __ghr.__dict__.get(__opt_name, None)
+                __opt_class = __ghh.__dict__.get(__opt_name, None)
                 if __opt_class:
                     print("self {}, replaced {}, {}".format(__c, __n, __p.__doc__))
                     setattr(__c, __n, __remove_optional_from_property(__p, __opt_class))
@@ -50,4 +53,4 @@ def __init__():
 
 
 __init__()
-print = __ghr._print
+print = __ghh._print

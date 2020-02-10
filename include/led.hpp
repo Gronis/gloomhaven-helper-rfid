@@ -6,7 +6,7 @@
 
 #include <Arduino.h>
 
-namespace ghr
+namespace ghh
 {
 
 class Led
@@ -44,6 +44,6 @@ public:
     }
 };
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __LED_H__

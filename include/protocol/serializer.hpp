@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace ghr
+namespace ghh
 {
 namespace protocol
 {
@@ -142,6 +142,6 @@ std::size_t writeHeader(uint8_t *buffer, const std::size_t bufferSize, const Hea
 }
 
 } // namespace protocol
-} // namespace ghr
+} // namespace ghh
 
 #endif // __PROTOCOL_SERIALIZER_H__

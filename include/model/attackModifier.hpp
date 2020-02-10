@@ -5,7 +5,7 @@
 
 #include "print.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct AttackModifierNS
 {
@@ -44,35 +44,35 @@ void print(const AttackModifier &arg)
     switch (arg)
     {
     case AttackModifier::Zero:
-        ghr::print("0");
+        ghh::print("0");
         break;
     case AttackModifier::Plus1:
-        ghr::print("+1");
+        ghh::print("+1");
         break;
     case AttackModifier::Plus2:
-        ghr::print("+2");
+        ghh::print("+2");
         break;
     case AttackModifier::Minus1:
-        ghr::print("-1");
+        ghh::print("-1");
         break;
     case AttackModifier::Minus2:
-        ghr::print("-2");
+        ghh::print("-2");
         break;
     case AttackModifier::Miss:
-        ghr::print("x0");
+        ghh::print("x0");
         break;
     case AttackModifier::Crit:
-        ghr::print("x2");
+        ghh::print("x2");
         break;
     case AttackModifier::Bless:
-        ghr::print("x2*");
+        ghh::print("x2*");
         break;
     case AttackModifier::Curse:
-        ghr::print("x0*");
+        ghh::print("x0*");
         break;
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __ATTACK_MODIFIER_H__

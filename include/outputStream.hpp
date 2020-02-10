@@ -15,7 +15,7 @@
 // Provide a read function which reads from a input stream, and returns one character if data is available
 // or -1 if no data is available.
 
-namespace ghr
+namespace ghh
 {
 
 class OutputStream
@@ -59,7 +59,7 @@ public:
     void writeVarint(int value)
     {
         std::size_t pos = 0;
-        ghr::writeInt(_buffer, pos, value, true);
+        ghh::writeInt(_buffer, pos, value, true);
         __write_buffer(pos);
     }
     void writeBytes(const uint8_t *data, const std::size_t dataLength)
@@ -72,6 +72,6 @@ public:
     }
 };
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __OUTPUT_STREAM_H__

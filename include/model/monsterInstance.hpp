@@ -9,7 +9,7 @@
 #include "model/monsterType.hpp"
 #include "model/summonColor.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct MonsterInstance
 {
@@ -74,6 +74,6 @@ void print(const MonsterInstance &arg)
     print("   }\n");
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __MONSTER_INSTANCE_H__

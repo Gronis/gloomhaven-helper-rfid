@@ -58,27 +58,27 @@ int main()
     uint8_t outputBuffer[1024];
 
     while(true){
-        tl::optional<ghr::protocol::Header> header;
-        auto bytesRead = ghr::protocol::readHeader(bufferPos, bufferSize, header);
+        tl::optional<ghh::protocol::Header> header;
+        auto bytesRead = ghh::protocol::readHeader(bufferPos, bufferSize, header);
         bufferSize -= bytesRead;
         bufferPos += bytesRead;
         if(header.has_value())
         {
-            auto bytesWritten = ghr::protocol::writeHeader(outputBuffer, 1024, header.value());
-            ghr::protocol::readHeader(outputBuffer, 1024, header);
+            auto bytesWritten = ghh::protocol::writeHeader(outputBuffer, 1024, header.value());
+            ghh::protocol::readHeader(outputBuffer, 1024, header);
             auto head = header.value();
             std::cout << "Event: " << head.event << ", payload: " << head.payload << ", data length: " << head.length << "\n";
 
             if (head.event == "s"){
                 if (head.length <= bufferSize){
-                    ghr::protocol::Buffer m(bufferPos, head.length);
-                    ghr::GameState s;
+                    ghh::protocol::Buffer m(bufferPos, head.length);
+                    ghh::GameState s;
                     int32_t message_number = m.readFullInt();
-                    ghr::protocol::v7_6::readGameState(s, m);
-                    ghr::protocol::Buffer m2(outputBuffer, head.length);
+                    ghh::protocol::v7_6::readGameState(s, m);
+                    ghh::protocol::Buffer m2(outputBuffer, head.length);
                     m2.writeFullInt(message_number);
-                    ghr::print("################################################\n");
-                    ghr::protocol::v7_6::writeGameState(s, m2);
+                    ghh::print("################################################\n");
+                    ghh::protocol::v7_6::writeGameState(s, m2);
 
                     auto ok = true;
                     for (auto i = 0; i < head.length; i++){
@@ -108,9 +108,9 @@ int main()
                         }
                         std::cout << std::dec << "\n";
                     }
-                    ghr::protocol::Buffer m3(outputBuffer, head.length);
+                    ghh::protocol::Buffer m3(outputBuffer, head.length);
                     message_number = m3.readFullInt();
-                    ghr::protocol::v7_6::readGameState(s, m3);
+                    ghh::protocol::v7_6::readGameState(s, m3);
                 }
                 else
                 {

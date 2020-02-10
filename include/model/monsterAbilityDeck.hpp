@@ -6,7 +6,7 @@
 #include "print.hpp"
 #include "optional.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct MonsterAbilityDeck
 {
@@ -51,6 +51,6 @@ void print(const MonsterAbilityDeck &arg)
     print("}\n");
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __MONSTER_ABILITY_DECK_H__

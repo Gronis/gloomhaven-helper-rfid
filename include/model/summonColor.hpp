@@ -3,7 +3,7 @@
 
 #include "print.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct SummonColorNS
 {
@@ -43,35 +43,35 @@ void print(const SummonColor &arg)
     switch (arg)
     {
     case SummonColor::None:
-        ghr::print("None");
+        ghh::print("None");
         break;
     case SummonColor::Turquise:
-        ghr::print("Turquise");
+        ghh::print("Turquise");
         break;
     case SummonColor::Green:
-        ghr::print("Green");
+        ghh::print("Green");
         break;
     case SummonColor::Yellow:
-        ghr::print("Yellow");
+        ghh::print("Yellow");
         break;
     case SummonColor::Orange:
-        ghr::print("Orange");
+        ghh::print("Orange");
         break;
     case SummonColor::White:
-        ghr::print("White");
+        ghh::print("White");
         break;
     case SummonColor::Purple:
-        ghr::print("Purple");
+        ghh::print("Purple");
         break;
     case SummonColor::Pink:
-        ghr::print("Pink");
+        ghh::print("Pink");
         break;
     case SummonColor::Red:
-        ghr::print("Red");
+        ghh::print("Red");
         break;
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __SUMMON_COLOR_H__

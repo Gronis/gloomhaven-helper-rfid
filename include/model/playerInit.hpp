@@ -5,7 +5,7 @@
 
 #include "print.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct PlayerInitNS
 {
@@ -36,23 +36,23 @@ void print(const PlayerInit &arg)
     switch (arg)
     {
     case PlayerInit::value1:
-        ghr::print("value1");
+        ghh::print("value1");
         break;
     case PlayerInit::value2:
-        ghr::print("value2");
+        ghh::print("value2");
         break;
     case PlayerInit::value3:
-        ghr::print("value3");
+        ghh::print("value3");
         break;
     case PlayerInit::value4:
-        ghr::print("value4");
+        ghh::print("value4");
         break;
     case PlayerInit::value5:
-        ghr::print("value5");
+        ghh::print("value5");
         break;
     }
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __PLAYER_INIT_H__

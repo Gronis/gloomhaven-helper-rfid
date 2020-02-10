@@ -1,7 +1,7 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-namespace ghr
+namespace ghh
 {
 
 // Copy bytes from src to dest until count or till buffer is full.
@@ -57,5 +57,5 @@ static inline std::string trim(std::string s)
     return s;
 }
 
-} // namespace ghr
+} // namespace ghh
 #endif // __UTILS_H__

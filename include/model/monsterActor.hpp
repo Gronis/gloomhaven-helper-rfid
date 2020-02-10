@@ -3,7 +3,7 @@
 
 #include "print.hpp"
 
-namespace ghr
+namespace ghh
 {
 struct MonsterActor
 {
@@ -26,6 +26,6 @@ void print(const MonsterActor &arg)
     print("  }\n");
 }
 
-} // namespace ghr
+} // namespace ghh
 
 #endif // __MONSTER_ACTOR_H__
