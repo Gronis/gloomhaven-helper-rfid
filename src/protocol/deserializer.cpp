@@ -116,21 +116,20 @@ std::size_t ghh::protocol::readUTFString(
 }
 
 
-
-
-
 std::size_t ghh::protocol::readUTFStringLength(
     const uint8_t *buffer, const std::size_t bufferSize, tl::optional<int32_t> &out)
 {
-    int32_t b = 0;
     int32_t result = 0;
     uint8_t varIntBuffer[5];
     std::size_t count = 5;
     auto actualCount = copyBytes(buffer, varIntBuffer, count, bufferSize);
+    uint8_t b = varIntBuffer[0];
 
+    result |= (b & 0x3F);
     if ((b & 0x40) == 0)
     {
-        result |= (b & 0x3F);
+        out = result;
+        return 1;
     }
 
     for (auto i = 1; i < actualCount; i++)
@@ -199,12 +198,12 @@ std::size_t ghh::protocol::readString(
         out = tl::nullopt;
         return 0;
     }
+    count --;
     // ASCII.
     if ((b.value() & 0x80) == 0)
     {
-        count --;
         count += readAscii(buffer + count, bufferSize - count, out);
-        //std::cout << count << out.value() << "\n";
+        // std::cout << "ascii " << count << out.value() << "\n";
         return count;
     }
     // Null, empty, or UTF8.
@@ -221,7 +220,7 @@ std::size_t ghh::protocol::readString(
                 return 1;
         }
     }
-    count--;
-    count += readUTFStringValue(buffer + count, bufferSize - count, size.value(), out);
+    // Because size 1 means empty string, reduce size by one
+    count += readUTFStringValue(buffer + count, bufferSize - count, size.value() - 1, out);
     return count;
 }
