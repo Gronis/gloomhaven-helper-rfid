@@ -22,6 +22,9 @@ Tested with Gloomhaven Helper versions:
 - `7.6`
 - `8.0`
 - `8.1`
+- `8.2.*`
+- `8.3.0`
+- `8.3.1`
 
 
 Example usage:
@@ -52,4 +55,3 @@ asyncio.get_event_loop().run_forever()
 # TODO:
 
 * Add send game state functionality
-* Verify and possibly implement additional support, if necessary, for `v8.2`, `8.3` and `8.3.1` of Gloomhaven Helper.
