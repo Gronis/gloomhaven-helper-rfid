@@ -73,7 +73,8 @@ template_optional_integral(ghh::SummonColorNS::Value, SummonColor);
 %include "model/playerActor.hpp"
 %include "model/gameState.hpp"
 
-
+// TODO: This typedef is required for writeByte to work. Include standard typedef instead
+typedef unsigned char uint8_t;
 %include "protocol/buffer.hpp"
 
 // Used for abilities

@@ -49,6 +49,10 @@ public:
     {
     }
 
+    inline void setPosition(std::size_t pos)
+    {
+        __position = pos;
+    }
     inline std::size_t getPosition()
     {
         return __position;
@@ -194,6 +198,7 @@ public:
         for (int i = 0; i < length; i++)
             vec.push_back(readInt(optimizePositive));
     }
+
 };
 
 } // namespace protocol
