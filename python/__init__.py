@@ -88,19 +88,13 @@ class Client:
                 if not has_header:
                     has_header = ghh.readHeader(header, receive_buffer)
                     need_more_data = not has_header
-                print("event: ", header.event, ",",
-                      "payload: ", header.payload, ",",
-                      "length: ", header.length)
                 if header.event == 'v':
                     version = header.payload
                     read_game_state = read_game_state_versions.get(version, None)
                     write_game_state = write_game_state_versions.get(version, None)
                     version_is_supported = read_game_state is not None
-                    if version_is_supported:
-                        print("Using supported version {}".format(version))
-                    else:
-                        print("Unsupported version {}".format(version))
-                        exit(1)
+                    if not version_is_supported:
+                        raise ValueError("Unsupported version {}".format(version))
                     has_header = False
                 if header.event == 's':
                     if header.length <= receive_buffer.getSize():
@@ -149,4 +143,4 @@ def __init__():
 
 
 __init__()
-#print = ghh._print
+print = ghh._print
