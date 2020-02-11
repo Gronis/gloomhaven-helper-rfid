@@ -2,7 +2,6 @@
 #define __PROTOCOL_DESERIALIZER_H__
 
 #include "optional.hpp"
-#include "protocol/header.hpp"
 
 namespace ghh
 {
@@ -45,11 +44,6 @@ std::size_t readAscii(
 std::size_t readString(
     const uint8_t *buffer, const std::size_t bufferSize, tl::optional<std::string> &out);
 
-// Attempts to read a message
-// Returns the number of bytes read.
-// The header is put in the out argument
-std::size_t readHeader(
-    const uint8_t *buffer, const std::size_t bufferSize, tl::optional<Header> &out);
 
 } // namespace protocol
 } // namespace ghh

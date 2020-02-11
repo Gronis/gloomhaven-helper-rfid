@@ -19,7 +19,8 @@ class Buffer
 private:
     uint8_t *__data;
     std::size_t __dataLength;
-    std::size_t __position;
+    std::size_t __read_position;
+    std::size_t __write_position;
 
     bool __free_on_delete;
 
@@ -27,7 +28,8 @@ public:
     Buffer()
         : __data((uint8_t *)malloc(1024)),
           __dataLength(1024),
-          __position(0),
+          __read_position(0),
+          __write_position(0),
           __free_on_delete(true)
     {
     }
@@ -44,74 +46,116 @@ public:
         std::size_t dataLength)
         : __data(data),
           __dataLength(dataLength),
-          __position(0),
+          __read_position(0),
+          __write_position(dataLength),
           __free_on_delete(false)
     {
     }
 
-    inline void setPosition(std::size_t pos)
+    // Move data backwards in buffer to reuse free space
+    inline void flush()
     {
-        __position = pos;
+        auto length = __write_position - __read_position;
+        if (__write_position >= __read_position && length < __read_position){
+            std::memcpy(reinterpret_cast<void*>(__data[0]),
+                        reinterpret_cast<void*>(__data[__read_position]), length);
+            __write_position -= __read_position;
+            __read_position = 0;
+        }
+    }
+
+    inline void clear()
+    {
+        __read_position = 0;
+        __write_position = 0;
+    }
+
+    inline void setReadPosition(std::size_t position)
+    {
+        __read_position = position;
+    }
+
+    inline std::size_t getReadPosition()
+    {
+        return __read_position;
     }
     inline std::size_t getPosition()
     {
-        return __position;
+        return __write_position;
+    }
+    inline std::size_t getSize()
+    {
+        return __write_position - __read_position;
     }
 
     inline int readInt(bool optimizePositive)
     {
         tl::optional<int32_t> result;
-        __position += ghh::protocol::readVarInt(
-            __data + __position, __dataLength - __position, optimizePositive, result);
+        __read_position += ghh::protocol::readVarInt(
+            __data + __read_position, __write_position - __read_position, optimizePositive, result);
         return result? result.value() : 0;
     }
 
     inline void writeInt(int value, bool optimizePositive)
     {
-        __position += ghh::protocol::writeVarInt(
-            __data +  __position, __dataLength - __position, optimizePositive, value);
+        __write_position += ghh::protocol::writeVarInt(
+            __data +  __write_position, __dataLength - __write_position, optimizePositive, value);
     }
 
     inline uint8_t readByte()
     {
         tl::optional<uint8_t> result;
-        __position += ghh::protocol::readByte(
-            __data + __position, __dataLength - __position, result);
+        __read_position += ghh::protocol::readByte(
+            __data + __read_position, __write_position - __read_position, result);
         return result? result.value() : 0;
     }
 
     inline void writeByte(uint8_t value)
     {
-        __position += ghh::protocol::writeByte(
-            __data +  __position, __dataLength - __position, value);
+        __write_position += ghh::protocol::writeByte(
+            __data +  __write_position, __dataLength - __write_position, value);
     }
 
     inline int readFullInt()
     {
         tl::optional<int32_t> result;
-        __position += ghh::protocol::readInt(
-            __data + __position, __dataLength - __position, result);
+        __read_position += ghh::protocol::readInt(
+            __data + __read_position, __write_position - __read_position, result);
         return result? result.value() : 0;
     }
 
     inline void writeFullInt(int value)
     {
-        __position += ghh::protocol::writeInt(
-            __data +  __position, __dataLength - __position, value);
+        __write_position += ghh::protocol::writeInt(
+            __data +  __write_position, __dataLength - __write_position, value);
     }
 
     inline tl::optional<std::string> readString()
     {
         tl::optional<std::string> result;
-        __position += ghh::protocol::readString(
-            __data + __position, __dataLength - __position, result);
+        __read_position += ghh::protocol::readString(
+            __data + __read_position, __write_position - __read_position, result);
         return result;
     }
 
     inline void writeString(tl::optional<std::string> value)
     {
-        __position += ghh::protocol::writeString(
-            __data +  __position, __dataLength - __position, value);
+        __write_position += ghh::protocol::writeString(
+            __data +  __write_position, __dataLength - __write_position, value);
+    }
+
+    inline tl::optional<std::string> readUTFString()
+    {
+        tl::optional<std::string> result;
+        __read_position += ghh::protocol::readUTFString(
+            __data + __read_position, __write_position - __read_position, result);
+        return result;
+    }
+
+    inline void writeUTFString(std::string value)
+    {
+        __write_position += ghh::protocol::writeUTFString(
+            __data +  __write_position, __dataLength - __write_position, value);
     }
 
     inline bool readBoolean()

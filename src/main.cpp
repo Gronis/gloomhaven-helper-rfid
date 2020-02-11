@@ -57,70 +57,29 @@ int main()
 
     uint8_t outputBuffer[1024];
 
+    ghh::protocol::Buffer b(bufferPos, bufferSize);
+
     while(true){
-        tl::optional<ghh::protocol::Header> header;
-        auto bytesRead = ghh::protocol::readHeader(bufferPos, bufferSize, header);
-        bufferSize -= bytesRead;
-        bufferPos += bytesRead;
-        if(header.has_value())
+        ghh::protocol::Header head;
+        auto ok = ghh::protocol::readHeader(head, b);
+        if(ok)
         {
-            auto bytesWritten = ghh::protocol::writeHeader(outputBuffer, 1024, header.value());
-            ghh::protocol::readHeader(outputBuffer, 1024, header);
-            auto head = header.value();
-            std::cout << "Event: " << head.event << ", payload: " << head.payload << ", data length: " << head.length << "\n";
-
+            std::cout << "Event: " << head.event
+                      << ", payload: " << head.payload
+                      << ", data length: " << head.length << "\n";
             if (head.event == "s"){
-                if (head.length <= bufferSize){
-                    ghh::protocol::Buffer m(bufferPos, head.length);
+                if (head.length <= b.getPosition()){
                     ghh::GameState s;
-                    int32_t message_number = m.readFullInt();
-                    ghh::protocol::v7_6::readGameState(s, m);
-                    ghh::protocol::Buffer m2(outputBuffer, head.length);
-                    m2.writeFullInt(message_number);
-                    ghh::print("################################################\n");
-                    ghh::protocol::v7_6::writeGameState(s, m2);
-
-                    auto ok = true;
-                    for (auto i = 0; i < head.length; i++){
-                        ok &= outputBuffer[i] == bufferPos[i];
-                    }
-                    if (!ok){
-                        std::cout << "Not OK! " << "\n";
-                        for (auto i = 0; i < head.length; i++){
-                            auto value = outputBuffer[i];
-                            ok = outputBuffer[i] == bufferPos[i];
-                            if (!ok){
-                                std::cout << std::dec << "(" << i << ")" << std::hex << (int)value;
-                                std::cout << "\n";
-                            }
-                        }
-                        std::cout << std::dec << "\n";
-                        for (auto i = 0; i < head.length; i++){
-                            auto value = outputBuffer[i];
-                            std::cout << std::hex << (int)value;
-                            std::cout << " ";
-                        }
-                        std::cout << std::dec << "\n";
-                        for (auto i = 0; i < head.length; i++){
-                            auto value = bufferPos[i];
-                            std::cout << std::hex << (int)value;
-                            std::cout << " ";
-                        }
-                        std::cout << std::dec << "\n";
-                    }
-                    ghh::protocol::Buffer m3(outputBuffer, head.length);
-                    message_number = m3.readFullInt();
-                    ghh::protocol::v7_6::readGameState(s, m3);
+                    int32_t message_number = b.readFullInt();
+                    ghh::protocol::v7_6::readGameState(s, b);
                 }
                 else
                 {
-                    std::cout << head.length << " > " << bufferSize << "\n";
+                    std::cout << head.length << " > " <<  b.getPosition() << "\n";
                     std::cout << "incomplete game state\n";
                     break;
                 }
             }
-            bufferSize -= head.length;
-            bufferPos += head.length;
         }
         else
         {
@@ -129,5 +88,5 @@ int main()
 
     }
 
-    std::cout << "readBytes: " << (bufferPos-buffer) << "\n";
+    std::cout << "readBytes: " << b.getPosition() << "\n";
 }

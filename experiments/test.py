@@ -14,11 +14,21 @@ arr = bytearray([
     0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 
 b = ghh.Buffer()
+h = ghh.Header()
 s = ghh.GameState()
 
 for c in arr:
     b.writeByte(c)
 
-# Set position to 17, this jumps over some network header and version message for now.
-b.setPosition(17)
+ghh.readHeader(h, b)
+print("event: ", h.event, ", payload: ", h.payload, ", length: ", h.length)
+ghh.readHeader(h, b)
+print("event: ", h.event, ", payload: ", h.payload, ", length: ", h.length)
+message_nr = b.readFullInt()
 ghh.protocol.v7_6.readGameState(s, b)
+ghh.print(s)
+print(b.getSize())
+print(b.getPosition())
+b.flush()
+print(b.getSize())
+print(b.getPosition())

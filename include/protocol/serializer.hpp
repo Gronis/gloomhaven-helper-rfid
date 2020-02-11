@@ -2,7 +2,6 @@
 #define __PROTOCOL_SERIALIZER_H__
 
 #include "optional.hpp"
-#include "protocol/header.hpp"
 
 namespace ghh
 {
@@ -21,8 +20,6 @@ std::size_t writeString(
     uint8_t *buffer, const std::size_t bufferSize, const tl::optional<std::string> data);
 
 std::size_t writeUTFString(uint8_t *buffer, const std::size_t bufferSize, const std::string& data);
-
-std::size_t writeHeader(uint8_t *buffer, const std::size_t bufferSize, const Header &header);
 
 } // namespace protocol
 } // namespace ghh

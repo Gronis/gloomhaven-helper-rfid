@@ -4,6 +4,8 @@
 #include <string>
 #include <cstddef>
 
+#include "protocol/buffer.hpp"
+
 namespace ghh
 {
 namespace protocol
@@ -16,6 +18,8 @@ struct Header
     std::size_t length;
 };
 
+bool readHeader(ghh::protocol::Header &state, ghh::protocol::Buffer &buffer);
+void writeHeader(const ghh::protocol::Header &state, ghh::protocol::Buffer &buffer);
 
 } // namespace protocol
 } // namespace ghh

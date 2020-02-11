@@ -128,19 +128,3 @@ std::size_t ghh::protocol::writeUTFString(
     }
     return count;
 }
-
-std::size_t ghh::protocol::writeHeader(
-    uint8_t *buffer, const std::size_t bufferSize, const Header &header)
-{
-    std::size_t count = 0;
-    std::string msg =
-        (header.payload.length() > 0) ? (header.event + " " + header.payload) : header.event;
-    count += writeUTFString(buffer + count, bufferSize - count, msg);
-    auto lenCount = writeVarInt(buffer + count, bufferSize - count, true, header.length);
-    count += lenCount;
-    if(count != msg.length() + lenCount)
-    {
-        return 0; // Buffer is full
-    }
-    return count;
-}

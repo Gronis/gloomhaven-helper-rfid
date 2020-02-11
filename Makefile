@@ -19,6 +19,7 @@ OBJS:= \
 	protocol/v8_0/protocol.o \
 	protocol/deserializer.o \
 	protocol/serializer.o \
+	protocol/header.o \
 
 .PHONY: python test clean
 
@@ -37,10 +38,11 @@ $(OUTDIR)/test: $(addprefix $(OUTDIR)/, $(OBJS) test.o)
 	$(CPP)  $(FLAGS) -I$(INCLUDE) -o $@ $^
 
 $(OUTDIR):
+	mkdir -p $(dir $@)
 	cp -r $(PYTHON_DIR) $(OUTDIR)
 
-# $(OUTDIR)/__init__.py: $(PYTHON_DIR)/__init__.py
-# 	cp $(PYTHON_DIR)/__init__.py $(OUTDIR)/__init__.py
+$(OUTDIR)/%.py: $(PYTHON_DIR)/%.py
+	cp $< $@
 
 $(OUTDIR)/%.py: $(WRAPPER_DIR)/%.i
 	swig -python -c++ -I$(INCLUDE) $<

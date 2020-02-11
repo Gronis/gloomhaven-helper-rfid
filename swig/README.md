@@ -12,25 +12,44 @@ make python
 
 # Usage
 
-In the `out` directory, there will two files after building, `ghh.py` and `_ghh.so`.
+In the `out` directory, there will be a folder called, `ghh` which is the python library.
 Go to this directory (or copy these files) and launch `python3`
 
-Right now, only the model is exposed. Serializing and Deserializing is unavailable at this moment.
+Right now, only the model and a client that can receive game state is implemented.
+
+
+Tested with Gloomhaven Helper versions:
+- `7.6`
+- `8.0`
+- `8.1`
 
 
 Example usage:
 ```python
+#!/usr/bin/env python
+
 import ghh
+import asyncio
 
-s = ghh.GameState()
+TCP_IP = '127.0.0.1'
+TCP_PORT = 58888
 
-ghh.print(s)
 
-s.round = 3
-s.dark = ghh.ElementState.Strong
+async def on_game_state(message_number, game_state):
+    print("Got game state {}, round {}".format(message_number, game_state.round))
+
+
+async def main():
+    client = ghh.Client(TCP_IP, TCP_PORT)
+    client.on_game_state = on_game_state
+    await client.connect()
+    print("Connected")
+
+asyncio.get_event_loop().create_task(main())
+asyncio.get_event_loop().run_forever()
 ```
 
 # TODO:
 
-* Expose a serilize and deserilize interface.
-* Verify and possibly implement additional support, if necessary, for `v8.2` `8.3` and `8.3.1` of Gloomhaven Helper.
+* Add send game state functionality
+* Verify and possibly implement additional support, if necessary, for `v8.2`, `8.3` and `8.3.1` of Gloomhaven Helper.

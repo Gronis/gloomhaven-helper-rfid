@@ -225,33 +225,3 @@ std::size_t ghh::protocol::readString(
     count += readUTFStringValue(buffer + count, bufferSize - count, size.value(), out);
     return count;
 }
-
-std::size_t ghh::protocol::readHeader(
-    const uint8_t *buffer, const std::size_t bufferSize, tl::optional<Header> &out)
-{
-    tl::optional<std::string> message;
-    tl::optional<int32_t> length;
-    std::size_t bytesRead = 0;
-    bytesRead += readUTFString(buffer + bytesRead, bufferSize - bytesRead, message);
-    bytesRead += readVarInt(buffer + bytesRead, bufferSize - bytesRead, true, length);
-    if(!message.has_value() || !length.has_value()){
-        out = tl::nullopt;
-        return 0;
-    }
-    std::string msg = message.value();
-    int32_t len = length.value();
-    std::size_t index = msg.find(" ");
-    out = Header();
-    if (index != -1)
-    {
-        out->event = trim(msg.substr(0, index));
-        out->payload = trim(msg.substr(index + 1));
-    }
-    else
-    {
-        out->event = trim(msg);
-        out->payload = "";
-    }
-    out->length = len;
-    return bytesRead;
-}

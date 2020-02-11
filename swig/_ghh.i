@@ -30,6 +30,7 @@
     #include "model/gameState.hpp"
 
     #include "protocol/buffer.hpp"
+    #include "protocol/header.hpp"
 
     using namespace ghh;
     using namespace tl;
@@ -76,6 +77,7 @@ template_optional_integral(ghh::SummonColorNS::Value, SummonColor);
 // TODO: This typedef is required for writeByte to work. Include standard typedef instead
 typedef unsigned char uint8_t;
 %include "protocol/buffer.hpp"
+%include "protocol/header.hpp"
 
 // Used for abilities
 %template(IntVector) std::vector<int>;
