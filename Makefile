@@ -4,10 +4,22 @@ CFLAGS:=`python3-config --cflags`
 LDFLAGS:=`python3-config --ldflags`
 FLAGS:=--std=c++11
 OUTDIR:=out/ghh
+DIST:=dist
+BUILD:=build
 INCLUDE:=include
 SOURCE:=src
 WRAPPER_DIR:=swig
 PYTHON_DIR:=python
+ARCH:=`uname -m`
+
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	PLATFORM:=manylinux1
+endif
+ifeq ($(UNAME_S),Darwin)
+	PLATFORM:=macosx_10_12
+endif
+# See https://stackoverflow.com/questions/714100/os-detecting-makefile
 
 PYTHON_SO:= \
 	_ghh.so \
@@ -23,7 +35,16 @@ OBJS:= \
 	protocol/serializer.o \
 	protocol/header.o \
 
-.PHONY: python test clean
+.PHONY: python test clean wheel upload
+
+wheel:
+	# echo ${PLATFORM}
+	make python
+	python3 setup.py bdist_wheel -p $(PLATFORM)_$(ARCH)
+
+upload:
+	make wheel
+	twine upload dist/*
 
 python: $(OUTDIR) $(addprefix $(OUTDIR)/, $(PYTHON_SO) __init__.py __main__.py)
 
@@ -32,6 +53,8 @@ test: $(OUTDIR) $(OUTDIR)/test
 
 clean:
 	rm -rf $(OUTDIR)
+	rm -rf $(DIST)
+	rm -rf $(BUILD)
 
 $(OUTDIR)/main: $(addprefix $(OUTDIR)/, $(OBJS) main.o)
 	$(CPP)  $(FLAGS) -I$(INCLUDE) -o $@ $^
