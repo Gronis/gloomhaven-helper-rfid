@@ -1,0 +1,4 @@
+include out/*.so
+include out/*.py
+recursive-include out *.py
+recursive-include out *.so

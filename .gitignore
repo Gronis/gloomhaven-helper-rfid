@@ -4,3 +4,6 @@
 .piolibdeps
 a.out*
 out/
+build/
+dist/
+gloomhavenhelper.egg-info/
