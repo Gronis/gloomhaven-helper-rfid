@@ -12,7 +12,6 @@ using namespace ghh;
 using namespace ghh::protocol;
 using namespace ghh::protocol::v8_0;
 
-
 static void __readCommonActor(Buffer &buffer, Actor &actor)
 {
     actor.turn_completed = buffer.readBoolean();
@@ -45,6 +44,7 @@ static void __readCommonActor(Buffer &buffer, Actor &actor)
 
 static Actor __readPlayerActor(Buffer &buffer)
 {
+    print("Reading player actor");
     PlayerActor player;
     auto name = buffer.readString();
     player.character_class = buffer.readEnum(getCharacterClassValues());
@@ -80,6 +80,7 @@ static tl::optional<int> __readMonsterAbility(Buffer &buffer)
 
 static Actor __readMonsterActor(Buffer &buffer)
 {
+    print("Reading monster actor");
     MonsterActor monster = MonsterActor();
     monster.id = buffer.readInt(true);
     monster.level = buffer.readInt(true);
@@ -118,7 +119,9 @@ void ghh::protocol::v8_0::readGameState(GameState &state, Buffer &buffer)
     buffer.readIntArray(state.removed_abilities, true);
     state.bad_omen = buffer.readInt(true);
 
-    for (int i = 0, n = buffer.readInt(true); i < n; i++)
+    int nrMonsterAbilityDecks = buffer.readInt(true);
+    print("Nr monster ability decks: ", nrMonsterAbilityDecks, "\n");
+    for (int i = 0, n = nrMonsterAbilityDecks; i < n; i++)
     {
         auto deck = MonsterAbilityDeck(buffer.readInt(true));
         deck.shuffle = buffer.readBoolean();
@@ -134,7 +137,9 @@ void ghh::protocol::v8_0::readGameState(GameState &state, Buffer &buffer)
         state.ability_decks[deck.id] = deck;
     }
 
-    for (int i = 0, n = buffer.readInt(true); i < n; i++)
+    int nrActors = buffer.readInt(true);
+    print("Nr actors: ", nrActors, "\n");
+    for (int i = 0, n = nrActors; i < n; i++)
     {
         if (buffer.readBoolean())
         {

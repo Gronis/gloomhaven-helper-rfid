@@ -67,6 +67,7 @@ class Client:
             '8.1': protocol.v8_0.readGameState,
             '8.2': protocol.v8_0.readGameState,
             '8.3': protocol.v8_0.readGameState,
+            '8.4': protocol.v8_4.readGameState,
         }
 
         write_game_state_versions = {
@@ -75,6 +76,7 @@ class Client:
             '8.1': protocol.v8_0.writeGameState,
             '8.2': protocol.v8_0.writeGameState,
             '8.3': protocol.v8_0.writeGameState,
+            '8.4': protocol.v8_4.writeGameState,
         }
 
         has_header = False

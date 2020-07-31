@@ -13,10 +13,12 @@ PYTHON_SO:= \
 	_ghh.so \
 	protocol/_v7_6.so \
 	protocol/_v8_0.so \
+	protocol/_v8_4.so \
 
 OBJS:= \
 	protocol/v7_6/protocol.o \
 	protocol/v8_0/protocol.o \
+	protocol/v8_4/protocol.o \
 	protocol/deserializer.o \
 	protocol/serializer.o \
 	protocol/header.o \
