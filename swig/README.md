@@ -22,7 +22,7 @@ Tested with Gloomhaven Helper versions:
 - `7.6`
 - `8.0`
 - `8.1`
-- `8.2.*`
+- `8.2.1`
 - `8.3.0`
 - `8.3.1`
 
