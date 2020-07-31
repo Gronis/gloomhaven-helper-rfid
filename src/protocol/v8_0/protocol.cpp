@@ -44,7 +44,6 @@ static void __readCommonActor(Buffer &buffer, Actor &actor)
 
 static Actor __readPlayerActor(Buffer &buffer)
 {
-    print("Reading player actor");
     PlayerActor player;
     auto name = buffer.readString();
     player.character_class = buffer.readEnum(getCharacterClassValues());
@@ -80,7 +79,6 @@ static tl::optional<int> __readMonsterAbility(Buffer &buffer)
 
 static Actor __readMonsterActor(Buffer &buffer)
 {
-    print("Reading monster actor");
     MonsterActor monster = MonsterActor();
     monster.id = buffer.readInt(true);
     monster.level = buffer.readInt(true);

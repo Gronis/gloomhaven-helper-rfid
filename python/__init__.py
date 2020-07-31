@@ -105,6 +105,7 @@ class Client:
                 if header.event == 's':
                     if header.length <= receive_buffer.getSize():
                         game_state_buffer.clear()
+                        game_state = ghh.GameState()
                         for _ in range(header.length):
                             game_state_buffer.writeByte(receive_buffer.readByte())
                         message_nr = game_state_buffer.readFullInt()
