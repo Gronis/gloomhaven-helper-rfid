@@ -28,5 +28,5 @@ setup(
     package_dir={'gloomhavenhelper': 'out/ghh'},
     include_package_data=True,
     install_requires=[],
-
+    setup_requires=['wheel', 'twine'],
 )
