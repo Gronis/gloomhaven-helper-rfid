@@ -1,6 +1,7 @@
 #ifndef __PROTOCOL_MESSAGE_H__
 #define __PROTOCOL_MESSAGE_H__
 
+#include <cstring>
 #include <stdint.h>
 #include <string>
 #include <vector>

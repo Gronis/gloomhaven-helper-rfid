@@ -1,4 +1,5 @@
 #include <string>
+#include <cstring>
 
 #include "protocol/deserializer.hpp"
 #include "utils.hpp"
