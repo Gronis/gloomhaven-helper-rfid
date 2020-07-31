@@ -25,7 +25,7 @@ OBJS:= \
 
 .PHONY: python test clean
 
-python: $(OUTDIR) $(addprefix $(OUTDIR)/, $(PYTHON_SO) __init__.py)
+python: $(OUTDIR) $(addprefix $(OUTDIR)/, $(PYTHON_SO) __init__.py __main__.py)
 
 main: $(OUTDIR) $(OUTDIR)/main
 test: $(OUTDIR) $(OUTDIR)/test
