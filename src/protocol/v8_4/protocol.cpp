@@ -172,8 +172,7 @@ static void __writePlayerActor(Buffer &buffer, const Actor &actor) {
   buffer.writeInt(player.hp_max, true);
   buffer.writeInt(player.level, true);
   buffer.writeInt(player.loot, true);
-  // TODO Remove and replace with acctual initiative
-  buffer.writeInt(78, true);  // buffer.writeInt(player.initiative, true);
+  buffer.writeInt(player.initiative, true);
   buffer.writeEnumArray(player.conditions);
   buffer.writeEnumArray(player.conditions_expired);
   buffer.writeEnumArray(player.conditions_current_turn);
