@@ -21,7 +21,7 @@ For an x86 (intel/amd cpu) running linux or macos, install with pip (3):
 
 For arm64/aarch64 systems, install with:
 
-`pip install https://github.com/Gronis/gloomhaven-helper-rfid/releases/download/0.1.1/gloomhavenhelper-0.1.1-py3-none-linux_aarch64.whl`
+`pip install https://github.com/Gronis/gloomhaven-helper-rfid/releases/download/v0.1.3/gloomhavenhelper-0.1.3-py3-none-linux_aarch64.whl`
 
 for older arm versions, open an issue and I can see if I can provide a build for those systems as well.
 
