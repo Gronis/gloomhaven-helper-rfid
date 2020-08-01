@@ -1,7 +1,9 @@
 Gloomhaven Helper Server Client
 =
 
-This project provides an open source alternative to talk to the application "Gloomhaven Helper".
+Supports Gloomhaven Helper with network sync up to version `8.4.x`
+
+This project provides an open source alternative to talk to the application ["Gloomhaven Helper"](http://esotericsoftware.com/gloomhaven-helper).
 
 A simple example would be to run a headless server (no GUI) and connect to it with your clients. The purpose of this would be to have a small inexpensive always-on computer with your gloomhaven game state (like a raspberry pi). With port-forwarding enabled in your router, your friends can connect over the internet and you don't have to forward internet traffic to your personal computer.
 
