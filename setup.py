@@ -11,7 +11,7 @@ with open("README.md", "rt") as f:
 # This call to setup() does all the work
 setup(
     name="gloomhavenhelper",
-    version="0.1.2",
+    version="0.1.3",
     description="A server and client implementation to talk to GloomhavenHelper Application",
     long_description=README,
     long_description_content_type="text/markdown",
