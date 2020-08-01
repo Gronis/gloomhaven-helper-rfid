@@ -1,58 +1,71 @@
-Gloomhaven Helper RFID
+Gloomhaven Helper Server Client
 =
 
-Connect an RFID reader to your Gloomhaven Helper app, and scan tags to interface with Gloomhaven Helper app.
+This project provides an open source alternative to talk to the application "Gloomhaven Helper".
 
-Gloomhaven Helper app is about reducing the number of components on the board when playing Gloomhaven Board Game. The problem with the app is that it takes the focus off the board, and onto a screen (if you play a boardgame, you kind of want to avoid screens, otherwise you could just play a video game).
+A simple example would be to run a headless server (no GUI) and connect to it with your clients. The purpose of this would be to have a small inexpensive always-on computer with your gloomhaven game state (like a raspberry pi). With port-forwarding enabled in your router, your friends can connect over the internet and you don't have to forward internet traffic to your personal computer.
 
-This project is about using the board game to interface with the app by placing rfid taggs onto tokens, cards, standees, minis etc. Then you can scan the tag and send an action to Gloomhaven Helper app.
+Another use-case is to connect as a client and hook it up to a bounch of hardware that changes depending on the game state.
 
-Examples:
+The original purpose for this project was to connect an inexpensive wifi-enabled micro-controller to Gloomhaven Helper app and scan rfid/nfc tags to interact with the game state (like setting initiative or adding/removing characters)
 
-    - Scan your ability card and automatically set your initiative to that cards initiative (visible ass ?? in the app until round begins)
-    - Scan miniature/standee/card and automatically add new enemy.
-    - Scan Element tokens to put the element to strong.
-    - Scan Summon token to summon with preset HP, attack, move, range
+###Installation
 
-[Video](https://seafile.robingronberg.se/f/2d55fbea824c434eb6b7/) of scanning a tag/card and changing initiative
--
+Requires python 3.7 or higher
 
-The app has access to the entire game state, so any action is possible. Each tag can be programmed to perform a specific action.
+For an x86 (intel/amd cpu) running linux or macos, install with pip (3):
 
-To implement this, an LR rfid, 125kHz (rmd6300/rmd630) reader is used with an ESP8266 Wifi enabled microcontroller (tested with Wemos Mini lite).
+`pip install gloomhavenhelper`
 
-It would be nice if NFC tags (HF 13.56MHz rfid tags) could be used. This would require another rfid reader and other tags. These tags are smaller (requires smaller antenna), can write data (EM4100 only holds 4 static bytes) and is compatible with most nfc enabled phones. If you want to contribute send a pull request.
+For arm64/aarch64 systems, install with:
 
-Development setup:
--
+`pip install https://github.com/Gronis/gloomhaven-helper-rfid/releases/download/0.1.1/gloomhavenhelper-0.1.1-py3-none-linux_aarch64.whl`
 
-Use platformio. If you have problems setting up your develop environment, building the software or similar, open an issue, and we can improve the docs from there.
+for older arm versions, open an issue and I can see if I can provide a build for those systems as well.
 
-Components needed:
--
-    - Wemos mini lite (basically an ESP8266 with a few Accessible GPIO:s)
-    - RMD6300 125kHz EM4100 rfid scanner
-    - 3pcs 10kOhm-30kOhm resistors (rmd6300 uses 5V, we want 3.3V for ESP8266)
-    - 1pcs led
-    - wire
-    - Alot of EM4100 compatible RFID tags
+Windows is not supported or tested. If you have a windows machine and want to host a server, I recommend just to use the original Gloomhaven Helper java application as a server.
 
-TODO/fix:
--
-    - When tag is scanned, use the id of the tag and perform action based on id
-    - Programming of tags (web interface?)
-    - Document Schematics
-    - Write build guide
-    - Design a case
-    - Print the case
+###Usage:
 
-Done:
--
-    - Add support for different app versions (v7.6 and v8.0 works)
-    - Communicate with RFID reader (rmd6300)
-    - Connect to tcp server when a client connects (hard coded to port 58888)
-    - Read game state from Gloomhaven Helper tcp server
-    - Write game state to Gloomhaven Helper tcp server when a card is scanned.
+Use as a sever
+
+`python -m gloomhavenhelper`
+
+Use as a client
+
+```python
+#!/usr/bin/env python
+
+import glommhavenhelper as ghh
+import asyncio
+
+TCP_IP = '127.0.0.1' # server ip
+TCP_PORT = 58888     # server port
+
+
+async def on_game_state(message_number, game_state):
+    # Do things with the game state.
+    print("Got game state {}, round {}".format(message_number, game_state.round))
+    # To understand what you can get out of the game state
+    # use ghh.print(game_state)
+
+
+async def main():
+    client = ghh.Client(TCP_IP, TCP_PORT)
+    client.on_game_state = on_game_state
+    await client.connect()
+    print("Connected")
+
+asyncio.get_event_loop().create_task(main())
+asyncio.get_event_loop().run_forever()
+
+```
+
+###Example of projects:
+- [Video](https://seafile.robingronberg.se/f/2d55fbea824c434eb6b7/) of scanning a tag/card and changing initiative
+
+
+
 
 License: MIT
 
