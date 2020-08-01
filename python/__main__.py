@@ -1,5 +1,6 @@
 import asyncio
-import ghh
+from . import ghh
+from . import Server
 
 
 async def on_game_state(message_nr, game_state):
@@ -7,7 +8,7 @@ async def on_game_state(message_nr, game_state):
 
 
 async def start_server():
-    server = ghh.Server()
+    server = Server()
     server.on_game_state = on_game_state
     await server.serve_forever('0.0.0.0', 58888)
     print("Exiting")
