@@ -72,9 +72,20 @@ asyncio.get_event_loop().run_forever()
 This project requires
 - `g++/clang++` or another c++ compiler
 - `python3`
+- `pip`
 - `swig`
 - `wheels` (build wheels binary)
+- `setuptools` (wheels binary)
 - `twine` (upload wheels binary to pypi repository)
+
+#### Install build tools
+
+Make sure the required tools are installed:
+
+```bash
+apt update
+apt install build-essential swig python3-dev python3-pip
+```
 
 #### How to build
 
