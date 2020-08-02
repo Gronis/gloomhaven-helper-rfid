@@ -13,8 +13,13 @@ PYTHON_DIR:=python
 ARCH:=`uname -m`
 
 UNAME_S := $(shell uname -s)
+UNAME_M := $(shell uname -m)
 ifeq ($(UNAME_S),Linux)
+ifeq ($(UNAME_M),x86_64)
 	PLATFORM:=manylinux1
+else
+	PLATFORM:=linux
+endif
 endif
 ifeq ($(UNAME_S),Darwin)
 	PLATFORM:=macosx_10_12
