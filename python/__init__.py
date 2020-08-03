@@ -152,9 +152,14 @@ async def read_network_loop(reader, callbacks, default_version=None):
             if header.event == 'v':
                 version = header.payload
                 await callbacks.get('v', no_callback)(version)
-            if header.event == 's':
+            elif header.event == 's':
                 res = read_game_state_message(version, receive_buffer)
                 await callbacks.get('s', no_callback)(*res)
+            else:
+                _print("Unsupported message received: {}, length {}, skipping".format(
+                    header.event, header.length))
+                receive_buffer.setReadPosition(receive_buffer.getReadPosition() + header.length)
+                receive_buffer.flush()
 
 
 class Client:
