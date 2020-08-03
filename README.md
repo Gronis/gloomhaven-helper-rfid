@@ -19,11 +19,9 @@ For an x86 (intel/amd cpu) running linux or macos, install with pip (3):
 
 `pip install gloomhavenhelper`
 
-For arm64/aarch64 systems, install with:
+For arm systems, install with (arm64 and armv7l supported):
 
-`pip install https://github.com/Gronis/gloomhaven-helper-rfid/releases/download/v0.1.3/gloomhavenhelper-0.1.3-py3-none-linux_aarch64.whl`
-
-for older arm versions, open an issue and I can see if I can provide a build for those systems as well.
+`pip install https://github.com/Gronis/gloomhaven-helper-rfid/releases/download/v0.1.3/gloomhavenhelper-0.1.3-py3-none-linux_$(uname -m).whl`
 
 Windows is not supported or tested. If you have a windows machine and want to host a server, I recommend just to use the original Gloomhaven Helper java application as a server.
 
