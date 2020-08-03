@@ -89,7 +89,7 @@ apt install build-essential swig python3-dev python3-pip
 
 #### How to build
 
-Run `make python` to build python code. The python module is placed in a `out` directory. Change to this directory and `import gloomhavenhelper` to try out your new build: `cd out && python`.
+Run `make python` to build python code. The python module is placed in a `out` directory. Change to this directory and `import ghh` to try out your new build: `cd out && python`.
 
 Run `make wheel` to build wheel library. The build will be located in `dist` folder. You can then install it with `pip install dist/gloomhavenhelper-<some-more-stuff-here>.whl`
 
