@@ -60,7 +60,7 @@ struct GameState {
         calculate_stats(false),
         can_draw(false),
         needs_shuffle(false),
-        player_init(PlayerInit::value1),
+        player_init(PlayerInit::DragOrder),
         attack_modifiers({}),
         attack_modifiers_discard({}),
         attack_modifier1(tl::nullopt),

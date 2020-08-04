@@ -53,7 +53,7 @@ def is_version_supported(version):
     return version in _game_state_reader_versions.keys()
 
 
-def read_game_state_message(version, data):
+def read_game_state_message_body(version, data):
     '''
     Read the game state from a byte array or ghh.Buffer object
     Provide the version, to use when parsing and the byte array/ghh.Buffer object
@@ -76,7 +76,7 @@ def read_game_state_message(version, data):
     return None, None
 
 
-def write_game_state_message(version, message_nr, game_state):
+def write_game_state_message_body(version, message_nr, game_state):
     '''
     Write the game state into a bytes array.
     Provide the version, which message number to use, and the game state.
@@ -92,10 +92,10 @@ def write_game_state_message(version, message_nr, game_state):
         return data
 
 
-def write_game_state_header(data):
+def write_game_state_message(data):
     '''
     Write the game state header to a new bytes array.
-    Provid the serialized game state data from write_game_state_message
+    Provid the serialized game state data from write_game_state_message_body
     '''
     write_buffer = ghh.Buffer()
     header = ghh.Header()
@@ -106,7 +106,7 @@ def write_game_state_header(data):
     return bytes([write_buffer.readByte() for _ in range(size)]) + data
 
 
-def write_version_header(version):
+def write_version_message(version):
     '''
     Write the version header to a new bytes array.
     Provide the version.
@@ -153,7 +153,7 @@ async def read_network_loop(reader, callbacks, default_version=None):
                 version = header.payload
                 await callbacks.get('v', no_callback)(version)
             elif header.event == 's':
-                res = read_game_state_message(version, receive_buffer)
+                res = read_game_state_message_body(version, receive_buffer)
                 await callbacks.get('s', no_callback)(*res)
             else:
                 _print("Unsupported message received: {}, length {}, skipping".format(
@@ -211,12 +211,13 @@ class Server:
     async def serve_handler(self, reader, writer):
 
         def make_version_message():
-            msg = write_version_header(self.__version)
+            msg = write_version_message(self.__version)
             return msg
 
         def make_game_state_message():
-            body = write_game_state_message(self.__version, self.__message_nr, self.__game_state)
-            msg = write_game_state_header(body)
+            body = write_game_state_message_body(
+                self.__version, self.__message_nr, self.__game_state)
+            msg = write_game_state_message(body)
             return msg
 
         async def send(msg, writer):
@@ -270,9 +271,9 @@ class Server:
             version = self.__version
             game_state = self.__game_state
             path = self.__path
-            v_msg = write_version_header(version)
-            body = write_game_state_message(version, message_nr, game_state)
-            s_msg = write_game_state_header(body)
+            v_msg = write_version_message(version)
+            body = write_game_state_message_body(version, message_nr, game_state)
+            s_msg = write_game_state_message(body)
 
             with open(path, "wb") as f:
                 f.write(v_msg)
@@ -297,7 +298,7 @@ class Server:
         ok = readHeader(header, file_buffer)
         if not ok or header.event != 's':
             return
-        self.__message_nr, self.__game_state = read_game_state_message(version, file_buffer)
+        self.__message_nr, self.__game_state = read_game_state_message_body(version, file_buffer)
 
 
 def __init__():
