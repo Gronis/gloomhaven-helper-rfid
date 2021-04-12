@@ -98,3 +98,5 @@ License: MIT
 Contributers
 
     - Robin Grönberg
+
+Big thanks to [Esoteric Software](http://esotericsoftware.com/), the author of [Gloomhaven Helper App](http://esotericsoftware.com/gloomhaven-helper), for providing details about the tcp/ip protocol that Gloomhaven Helper uses.
