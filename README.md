@@ -36,7 +36,7 @@ Use as a client
 ```python
 #!/usr/bin/env python
 
-import glommhavenhelper as ghh
+import gloomhavenhelper as ghh
 import asyncio
 
 TCP_IP = '127.0.0.1' # server ip
